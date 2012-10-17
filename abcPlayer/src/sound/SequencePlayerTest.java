@@ -186,8 +186,8 @@ public class SequencePlayerTest
             composer.addOne('C',1/2.,Pitch.OCTAVE);
             composer.addOne('D',1/2.,Pitch.OCTAVE);
             composer.addOne('C',3/4.,Pitch.OCTAVE);
-
-//            player.addNote(new Pitch('C').transpose(Pitch.OCTAVE).toMidiNote(), 7, 1);
+ 
+            //player.addNote(new Pitch('C').transpose(Pitch.OCTAVE).toMidiNote(), 7, 1);
             //assertEquals(player.toString(), "C C C3/4 D/4 E | E3/4 D/4 E3/4 F/4 G2 | (3DDD (3GGG (3EEE (3CCC | G3/4 F/4 E3/4 D/4 C2 ||");            
             
             player.play();
