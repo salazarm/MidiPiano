@@ -223,7 +223,6 @@ public class SequencePlayerTest
             composer.addOne('E',1,Pitch.OCTAVE);
             composer.addOne('C',1/2.,Pitch.OCTAVE);
             composer.addOne('D',1/2.,Pitch.OCTAVE);
-
             composer.addOne('B',3/4., Pitch.OCTAVE);
             composer.padSection();
             composer.verifySection();
