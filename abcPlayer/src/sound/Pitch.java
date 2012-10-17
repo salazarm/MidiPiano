@@ -24,8 +24,8 @@ public class Pitch {
     //   AF(scale[D], 0, 0), 
     //   ..., 
     //   AF(scale[B], 0, 0) map to middle C, D, E, F, G, A, B
-    //   AF(x, y, 0) maps to x sharps applied to A(x, 0, 0)
-    //   AF(x, -y, 0) maps to x flats applied to A(x, 0, 0)
+    //   AF(x, y, 0) maps to y sharps applied to A(x, 0, 0)
+    //   AF(x, -y, 0) maps to y flats applied to A(x, 0, 0)
     //   AF(x, y, n) maps to n octaves above middle AF(x, y, 0)
     //   AF(x, y, -n) maps to n octaves below AF(x, y, 0)
     
