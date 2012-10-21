@@ -15,16 +15,15 @@ import org.junit.Test;
  * Main entry point of your application.
  */
 public class Main {
+    
+    /**
+     * Read the entire file and return the string.
+     * 
+     * @param path the path of a file
+     * @return The whold text in an abc file
+     * @throws IOException
+     */
 
-	/**
-	 * Plays the input file using Java MIDI API and displays
-	 * header information to the standard output stream.
-	 * 
-	 * <p>Your code <b>should not</b> exit the application abnormally using
-	 * System.exit()</p>
-	 * 
-	 * @param file the name of input abc file
-	 */
     public static String readFile(String path) throws IOException
     {
         BufferedReader br = new BufferedReader(new FileReader(path));
@@ -39,6 +38,18 @@ public class Main {
 
         return sb.toString();
     }
+	    
+    /**
+     * Plays the input file using Java MIDI API and displays
+     * header information to the standard output stream.
+     * 
+     * <p>Your code <b>should not</b> exit the application abnormally using
+     * System.exit()</p>
+     * 
+     * @param file the name of input abc file
+     * @throws IOException
+     */
+	    
 	public static void play(String file) throws IOException{
 
 	    // TODO: new Lexer(readFile(file)))...
@@ -86,7 +97,5 @@ public class Main {
         assertEquals("", err.toString());
         System.setOut(null);
         System.setErr(null);
-        
-        
     }
 }

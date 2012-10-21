@@ -84,8 +84,8 @@ public class Repeat implements MusicSequence {
 	}
 
 	@Override
-	public void schedule(Visitor v) {
-		v.onRepeat(this);
-	}
+    public <R> R accept(Visitor<R> v) {
+        return v.onRepeat(this);
+    }
 
 }

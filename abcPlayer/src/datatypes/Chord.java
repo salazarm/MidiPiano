@@ -42,7 +42,7 @@ public class Chord implements MusicSequence {
 	}
 
 	@Override
-	public void schedule(Visitor v) {
-		v.onChord(this);
-	}
+    public <R> R accept(Visitor<R> v) {
+        return v.onChord(this);
+    }
 }

@@ -42,7 +42,7 @@ public class Rest implements MusicSequence {
 	}
 
 	@Override
-	public void schedule(Visitor v) {
-		 v.onRest(this);
-	}
+    public <R> R accept(Visitor<R> v) {
+        return v.onRest(this);
+    }
 }
