@@ -18,7 +18,7 @@ public class Note implements MusicSequence {
 	 * note. Passed value of 0 means no octave modification.
 	 * @param accidentalModifier Accidental object representing the accidental applied to this
 	 * Note. A passed value of null corresponds to no accidental. 
-	 * @param noteMultiplier double Modifier of the note length. A passed value of 1 indicates
+	 * @param noteMultiplier double modifier of the note length. A passed value of 1 indicates
 	 * that note length is equal to the default note length specified in the Header 
 	 * associated with the Player object that this Note belongs to.
 	 * @param player Player object that this Note is to be played by
@@ -35,9 +35,11 @@ public class Note implements MusicSequence {
 	
 	private Accidental setAccidentalModifier(Accidental accidentalModifier) {
 		if(accidentalModifier==null) {
+			// TODO: Check here to see what the key signature is
 			return new Accidental(Accidental.Type.NEUTRAL, "=");
 		}
 		else {
+			// TODO: And here
 			return accidentalModifier;
 		}
 	}
@@ -58,8 +60,8 @@ public class Note implements MusicSequence {
 		 * duration = Note Multiplier * Default Note Length * Number of Ticks Per Note
 		 * The unit of duration is discrete "ticks".  
 		 */
-		return (int) this.noteMultiplier * this.player.getHeader().getDefaultNoteLength() 
-				* 4 * this.player.getTicksPerQuarterNote();
+		return (int) (this.noteMultiplier * this.player.getHeader().getDefaultNoteLength() 
+				* 4 * this.player.getTicksPerQuarterNote());
 	}
 
 	@Override

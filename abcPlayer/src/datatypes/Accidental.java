@@ -2,19 +2,31 @@ package datatypes;
 
 public class Accidental {
 	
-	// Type represents the different types of accidentals
+	/* Type represents the different types of accidentals. Each type has an intRep
+	 * property corresponding to the integer representation of that Accidental type
+	 * in the Pitch class.
+	 */
+	
 	public static enum Type {
-		SHARP,
-		NEUTRAL,
-		FLAT,
-		DOUBLE_SHARP,
-		DOUBLE_FLAT,
+		
+		SHARP (1),
+		NEUTRAL (0),
+		FLAT (-1),
+		DOUBLE_SHARP (2),
+		DOUBLE_FLAT (-2);
+		
+		private final int intRep;
+		Type(int intRep) {
+			this.intRep = intRep;
+		}
+		
+		public int getIntRep() {
+			return this.intRep;
+		}
 	}
 	
 	private final Type type;
 	private final String stringRep;
-	private final Type[] types = {Type.SHARP, Type.NEUTRAL, Type.FLAT, Type.DOUBLE_SHARP, Type.DOUBLE_FLAT};
-	private final int[] intReps = {1, 0, -1, 2, -2};
 	
 	public Accidental(Type type, String stringRep) {
 		this.type = type;
@@ -22,6 +34,7 @@ public class Accidental {
 	}
 	
 	public Type getType() {
+		// TODO: IS THIS REP EXPOSURE?
 		return type;
 	}
 
@@ -36,16 +49,19 @@ public class Accidental {
 	 * @throws RuntimeException in case of unexpected Type
 	 */
 	public int getIntRep() {
-		for (int i = 0; i < types.length; i++) {
-			if (this.getType()==types[i]) {
-				return intReps[i];
-			}
-		}
-		throw new RuntimeException("Invalid type");
+		return this.type.getIntRep();
 	}
 
-	public boolean equals(Accidental other) {
-		return (this.getType()==other.getType() && 
-				this.getStringRep().equals(other.getStringRep()));		
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof Accidental)) return false;
+		Accidental otherObject = (Accidental) other;
+		return (this.getType()==otherObject.getType() && 
+				this.getStringRep().equals(otherObject.getStringRep()));		
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getType().getIntRep();
 	}
 }
