@@ -13,7 +13,7 @@ public class Lexer {
 	
 	Lexer(String input){
 	this.headerTokens = processHeader(input);
-//	this.bodyTokens = processBody(input);
+	this.bodyTokens = processBody(input);
 	}
 	
 	
@@ -28,7 +28,7 @@ public class Lexer {
 		for(int i = bodyStartIndex; i<input.length(); i++){
 			if(Pattern.matches("\\s",""+input.charAt(i))){
 				int j;
-				for(int k =1;!Pattern.matches("\\s",""+input.charAt(i)); k++){
+				for(int k =1;!Pattern.matches("\\s",""+input.charAt(i+k)); k++){
 					j =k;
 					if (Pattern.matches("[a-gA-Gz,\\^_']","+input.charAt(i+k)")){
 						tokens.add(new Token(input.charAt(i+k)+"",input.charAt(i+k)+""));
@@ -41,10 +41,10 @@ public class Lexer {
 					else if(Pattern.matches("\\|",""+input.charAt(i+k))){
 						tokens.add(new Token("\\|:","\\|:")); i+=1;
 					}
-					else if(Pattern.matches("([2-4]",""+input.charAt(i+k)+input.charAt(i+k+1))){
+					else if(Pattern.matches("\\([2-4]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("("+input.charAt(i+k+1), "("+input.charAt(i+k+1))); i+=1;
 					}
-					else if(Pattern.matches("[\\0-9]",""+input.charAt(i+k))){
+					else if(Pattern.matches("\\[0-9]",""+input.charAt(i+k))){
 						if(Pattern.matches("[ \\t\\n]",""+input.charAt(i+k+1))){
 							tokens.add(new Token(""+input.charAt(i+k),""+input.charAt(i+k)));
 						}
@@ -86,12 +86,10 @@ public class Lexer {
 			if (input.charAt(i)==':'){
 				int k = 1;
 				StringBuilder sb = new StringBuilder();
-				while(!Pattern.matches("[$^]",input.charAt(i+k)+"")){
+				while(!Pattern.matches("\\n",input.charAt(i+k)+"")){
 					sb.append(input.charAt(i+k));
-					System.out.println(sb.toString());
 					k+=1;
 					if(i+k > input.length()){
-//						System.out.println(input.charAt(i+k-1));
 						throw new RuntimeException("Illegal character sequence found");
 					}
 				}

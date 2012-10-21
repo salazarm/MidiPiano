@@ -34,5 +34,11 @@ public class TokenTest {
 		}
 		String input = sb.toString();
 		Lexer result = new Lexer(input);
+		for (Token c: result.getBody()){
+			System.out.println(c.getValue());
+		}
+		for (Token c: result.getHeader()){
+			System.out.println(c.getValue());
+		}
 	}
 }
