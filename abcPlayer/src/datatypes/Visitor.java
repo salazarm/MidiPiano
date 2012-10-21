@@ -6,4 +6,6 @@ public interface Visitor {
 	public void onRest(Rest rest);
 	public void onRepeat(Repeat repeat);
 	public void onTuplet(Tuplet tuplet);
+	public void onVoice(Voice voice);
+	public void onBody(Body body);
 }
