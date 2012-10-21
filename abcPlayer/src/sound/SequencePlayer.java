@@ -50,7 +50,6 @@ public class SequencePlayer {
 
         // Create an empty track. Notes will be added to this track.
         this.track = sequence.createTrack();
-
         sequencer.setSequence(sequence);
 
         checkRep();
