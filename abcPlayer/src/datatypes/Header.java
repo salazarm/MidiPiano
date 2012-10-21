@@ -1,7 +1,5 @@
 package datatypes;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class Header {
 	
 	private String composer = "Unknown";

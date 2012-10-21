@@ -65,9 +65,10 @@ public class Note implements MusicSequence {
 	}
 
 	@Override
-    public <R> R accept(Visitor<R> v) {
-        return v.onNote(this);
-    }
+	public void schedule(Visitor visitor) {
+		visitor.onNote(this);
+
+	}
 	
 	public char getBaseNote() {
 		return this.baseNote;

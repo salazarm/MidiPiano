@@ -1,7 +1,5 @@
 package datatypes;
 
-import java.util.List;
-
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
@@ -42,50 +40,4 @@ public class Player {
 	public int getBeatsPerMinute() {
 		return this.beatsPerMinute;
 	}
-	
-	public void schedule(final int voice)
-    {
-	    final int [] timeline = new int[header.getVoiceNames().length];
-	    
-        class Schedule implements Visitor<Void>
-        {
-            public Void onNote(Note note)
-            {
-                int len = note.getDuration();
-                seqPlayer.addNote(note.getNotePitch().toMidiNote(), timeline[voice], len);
-                timeline[voice] += len;
-                return null;
-            }
-            public Void onChord(Chord chord)
-            {
-                int len = chord.getDuration();
-                List<Note> notes = chord.getNotes();
-                seqPlayer.addNote(notes.get(0).getNotePitch().toMidiNote(), timeline[voice], len);
-                seqPlayer.addNote(notes.get(1).getNotePitch().toMidiNote(), timeline[voice], len);
-                seqPlayer.addNote(notes.get(2).getNotePitch().toMidiNote(), timeline[voice], len);
-                timeline[voice] += len;
-                return null;
-            }
-            public Void onRest(Rest rest)
-            {
-                timeline[voice] += rest.getDuration();
-                return null;                
-            }
-            public Void onRepeat(Repeat repeat)
-            {
-                return null;
-            }
-            public Void onTuplet(Tuplet tuplet)
-            {
-                int i, len = tuplet.getDuration();
-                List<Note> notes = tuplet.getNotes();
-                for(i=0;i<notes.size();i++)
-                {
-                    seqPlayer.addNote(notes.get(0).getNotePitch().toMidiNote(), timeline[voice], len);
-                    timeline[voice] += len;
-                }
-                return null;
-            }
-        };
-    }
 }

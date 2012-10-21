@@ -29,23 +29,16 @@ public class Tuplet implements MusicSequence {
 		}
 		this.player = player;
 	}
-	
-	public List<Note> getNotes()
-	{
-	    return notes;
-	}
 
 	@Override
 	public int getDuration() {
-	    //if(tupleNumber == 2) return notes.get(0).getDuration();
-	    //if(tupleNumber == 3) return notes.get(0).getDuration()*3/2;
-	    //return notes.get(0).getDuration();
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public <R> R accept(Visitor<R> v) {
-		return v.onTuplet(this);
+	public void schedule(Visitor v) {
+		v.onTuplet(this);
 	}
+
 }
