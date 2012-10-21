@@ -1,11 +1,11 @@
 package datatypes;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Voice {
 	
 	private final String voiceName;
-	private ArrayList<MusicSequence> musicSequences;
+	private List<MusicSequence> musicSequences;
 	private Player player;
 	private int curTick = 0;
 	
@@ -20,6 +20,18 @@ public class Voice {
 	
 	public String getVoiceName() {
 		return this.voiceName;
+	}
+	
+	public List<MusicSequence> getMusicSequences() {
+		return this.musicSequences;
+	}
+	
+	public Player getPlayer() {
+		return this.player;
+	}
+	
+	public int getCurTick() {
+		return this.curTick;
 	}
 
 }
