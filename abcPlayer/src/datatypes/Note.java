@@ -20,7 +20,6 @@ public class Note extends MusicSequence {
 	 * @param noteMultiplier double modifier of the note length. A passed value of 1 indicates
 	 * that note length is equal to the default note length specified in the Header 
 	 * associated with the Player object that this Note belongs to.
-	 * @param player Player object that this Note is to be played by
 	 */
 	public Note(char baseNote, int octaveModifier, Accidental accidentalModifier, 
 			double noteMultiplier) {
@@ -31,13 +30,11 @@ public class Note extends MusicSequence {
 		this.notePitch = makePitch();
 	}
 	
-	private Accidental setAccidentalModifier(Accidental accidentalModifier) {
+	private Accidental setAccidentalModifier(Accidental accidentalModifier) {		
 		if(accidentalModifier==null) {
-			// TODO: Check here to see what the key signature is
 			return new Accidental(Accidental.Type.NEUTRAL, "=");
 		}
 		else {
-			// TODO: And here
 			return accidentalModifier;
 		}
 	}
