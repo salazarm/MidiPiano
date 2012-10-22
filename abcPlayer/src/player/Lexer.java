@@ -1,19 +1,15 @@
 package player;
 
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
-
-import org.junit.Test;
 
 public class Lexer {
 	private ArrayList<Token> headerTokens;
 	private ArrayList<Token> bodyTokens;
 	private int bodyStartIndex;
 	
-	public ArrayList<Token> getHeader(){return this.headerTokens; }
+	public ArrayList<Token> getHeader(){	return this.headerTokens; }
 	public ArrayList<Token> getBody(){	return this.bodyTokens;	}
 	
 	public Lexer(String input){
@@ -25,9 +21,6 @@ public class Lexer {
 	Lexer(){}
 	
 	/**
-     * repeats end in :| start with |:
-     * tuplet starts with (
-     * things are separated by spaces
 	 * @param input
 	 * @return
 	 */
@@ -39,28 +32,26 @@ public class Lexer {
 				int j;
 				for(int k =1;!Pattern.matches("\\s",""+input.charAt(i+k)); k++){
 					j =k;
-					if (Pattern.matches("[a-gA-Gz,\\^_']","+input.charAt(i+k)")){
+					if (Pattern.matches("[a-gA-Gz,\\^_'=]",""+input.charAt(i+k))){
 						tokens.add(new Token(input.charAt(i+k)+"",input.charAt(i+k)+""));
 					}
-					else if(Pattern.matches("\\|",""+input.charAt(i+k)) && !Pattern.matches(""+input.charAt(i+k+1), "[\\]:]"))
-						tokens.add(new Token("\\|","\\|"));
 					else if(Pattern.matches( ":",""+input.charAt(i+k))){
-						tokens.add(new Token(":\\|",":\\|")); i+=1;
+						tokens.add(new Token(":|",":|")); i+=1;
 					}
-					else if(Pattern.matches("\\|",""+input.charAt(i+k))){
-						tokens.add(new Token("\\|:","\\|:")); i+=1;
+					else if(Pattern.matches("|:",""+input.charAt(i+k))){
+						tokens.add(new Token("|:","|:")); i+=1;
 					}
 					else if(Pattern.matches("\\([2-4]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("("+input.charAt(i+k+1), "("+input.charAt(i+k+1))); i+=1;
 					}
-					else if(Pattern.matches("\\[0-9]",""+input.charAt(i+k))){
-						if(Pattern.matches("[ \\t\\n]",""+input.charAt(i+k+1))){
+					else if(Pattern.matches("[\\\\0-9]",""+input.charAt(i+k))){
+						if(Pattern.matches("[^\\\\[0-9]]",""+input.charAt(i+k+1))){
 							tokens.add(new Token(""+input.charAt(i+k),""+input.charAt(i+k)));
 						}
-						else if(Pattern.matches("\\[0-9][ \\t\\n]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
+						else if(Pattern.matches("\\\\[0-9][^\\\\[0-9]]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
 							tokens.add(new Token(""+input.charAt(i+k)+input.charAt(i+k+1),""+input.charAt(i+k)+input.charAt(i+k+1)));
 						}	
-						else if(Pattern.matches("[[0-9]\\[0-9]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
+						else if(Pattern.matches("[[0-9]\\\\[0-9]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
 							tokens.add(new Token(""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2),""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2)));
 						}
 						else{
@@ -73,14 +64,30 @@ public class Lexer {
 					else if(Pattern.matches("|[|\\]]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("|"+input.charAt(i+k+1),"|"+input.charAt(i+k+1)));
 					}
-					else if(Pattern.matches("\\[[za-gA-G]",""+input.charAt(i+k)+input.charAt(i+k+1))){
+					else if(Pattern.matches("\\[[za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("[","["));
 					}
-					else if(Pattern.matches("\\][za-gA-G]",""+input.charAt(i+k)+input.charAt(i+k-1))){
+					else if(Pattern.matches("\\][za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k-1))){
 						tokens.add(new Token("]","]"));
 					}
+					else if(Pattern.matches("\\nV",""+input.charAt(i+k-1)+input.charAt(i+k))){
+						StringBuilder sb = new StringBuilder();
+						for(; !Pattern.matches("\\n",""+input.charAt(i+k));k++){
+							sb.append(input.charAt(i+k));
+						}
+						System.out.println(sb.toString());
+						tokens.add(new Token(sb.toString(),sb.toString()));
+					}
+					else if(input.charAt(i+k) == '|'){
+						tokens.add(new Token("|","|"));
+					}
+					else if(input.charAt(i+k) == '%'){
+						while (!Pattern.matches("\\n",""+input.charAt(i+k))){
+							k++;
+						}
+					}
 					else{
-						throw new RuntimeException("Unexpected Character: "+input.charAt(i+k));
+						throw new RuntimeException("Unexpected Character: "+input.charAt(i+k-1) +input.charAt(i+k)+input.charAt(i+k+1));
 					}i+=j;
 				}
 				

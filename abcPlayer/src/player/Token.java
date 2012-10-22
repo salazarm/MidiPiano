@@ -54,10 +54,10 @@ public class Token{
 		else if(Pattern.matches("\\A[a-gA-G]\\z",type)){
 			return Type.BASENOTE;
 		}
-		else if(Pattern.matches(type, "\\Az\\z")){
+		else if(Pattern.matches("\\Az\\z",type)){
 			return Type.REST;
 		}
-		else if(Pattern.matches("\\A[\\^_']\\z",type)){
+		else if(Pattern.matches("\\A[\\,^_'=]\\z",type)){
 			return Type.ACCIDENTAL;
 		}
 		else if(Pattern.matches("\\|[\\|\\]]",type)){
@@ -72,9 +72,11 @@ public class Token{
 		else if(Pattern.matches("\\A\\[[12]\\z",type)){
 			return Type.REPEATSECTION;
 		}
-		
+		else if(Pattern.matches("\\AV",type) || Pattern.matches("\\AV:.",type) ){
+			return Type.VOICE;
+		}
 		else{
-			throw new RuntimeException("Unexpected Sequence:" +type+type+type+type);
+			throw new RuntimeException("Unexpected Sequence: " +type);
 		}
 	}
 	
@@ -83,7 +85,7 @@ public class Token{
 
 	public static enum Type {
 		ACCIDENTAL, BASENOTE, CHORDSTART, CHORDEND, NOTEMULTIPLIER, 
-		BARLINE, REST, REPEATSTART, REPEATSECTION, REPEATEND, TUPLET,
+		BARLINE, REST, REPEATSTART, REPEATSECTION, REPEATEND, TUPLET, VOICE,
 		COMPOSER, TITLE, INDEX, KEY, METER, TEMPO, NOTELENGTH, ENDMAJORSECTION
 	}
 }

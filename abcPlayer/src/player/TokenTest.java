@@ -15,7 +15,7 @@ public class TokenTest {
 		DataInputStream dis = null;
 		StringBuffer sb = new StringBuffer();
 		try {
-		fis = new FileInputStream("sample_abc/piece1.abc");
+		fis = new FileInputStream("C:\\Users\\DW\\workspace\\dishaan-salazarm-donggu\\abcPlayer\\sample_abc\\fur_elise.abc");
 		bis = new BufferedInputStream(fis);
 		dis = new DataInputStream(bis);
 
