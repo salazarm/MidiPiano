@@ -3,9 +3,10 @@ package datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Repeat implements MusicSequence {
+public class Repeat extends MusicSequence {
 	
 	private final List<MusicSequence> sequences;
+	private int curTick = 0;
 	private final Player player;
 	private final List<MusicSequence> alternateEnding;
 	private final List<MusicSequence> secondPass; /* Contains the MusicSequences played in the
@@ -68,23 +69,21 @@ public class Repeat implements MusicSequence {
 		return this.alternateEnding;
 	}
 	
-	/**
-	 * Returns the duration of this Repeat in ticks.
-	 * @return duration int representation of the duration of this Repeat, which is calculated
-	 * as the duration of each of the musicSequences on both the first and second passes of the 
-	 * Repeat
-	 */
+	public void incrementCurTick(int increment) {
+		this.curTick += increment;
+	}
+	
+	public int getCurTick() {
+		return this.curTick;
+	}
+	
 	@Override
-	public int getDuration() {
-		int duration = 0;
-		for (int i = 0; i < this.sequences.size(); i++) {
-			duration += this.sequences.get(i).getDuration() + this.secondPass.get(i).getDuration();
-		}
-		return duration;
+	public int getDuration(Visitor<Integer> v) {
+		return v.onRepeat(this);
 	}
 
 	@Override
-	public void schedule(Visitor v) {
+	public void schedule(Visitor<Void> v) {
 		v.onRepeat(this);
 	}
 

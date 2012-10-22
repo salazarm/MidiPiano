@@ -2,11 +2,10 @@ package datatypes;
 
 import java.util.List;
 
-public class Voice implements MusicSequence {
+public class Voice extends MusicSequence {
 	
 	private final String voiceName;
 	private List<MusicSequence> musicSequences;
-	private Player player;
 	private int curTick = 0;
 	
 	/**
@@ -14,9 +13,8 @@ public class Voice implements MusicSequence {
 	 * @param voiceName String name of Voice object to create.
 	 * @param player Player that Voice is associated with.
 	 */
-	public Voice(String voiceName, Player player) {
+	public Voice(String voiceName) {
 		this.voiceName = voiceName;
-		this.player = player;
 	}
 	
 	/**
@@ -35,28 +33,19 @@ public class Voice implements MusicSequence {
 		return this.musicSequences;
 	}
 	
-	public Player getPlayer() {
-		return this.player;
-	}
-	
 	public int getCurTick() {
 		return this.curTick;
 	}
 	
-	/**
-	 * Get duration of this Voice in ticks. Duration is defined as the sum of the durations
-	 * of the MusicSequences that make up this Voice.
-	 * @return duration int value of duration as defined above in ticks
-	 */
-	public int getDuration() {
-		int duration = 0;
-		for (MusicSequence musicSequence : this.musicSequences) {
-			duration += musicSequence.getDuration();
-		}
-		return duration;
+	public void incrementCurTick(int increment) {
+		this.curTick += increment;
+	}
+
+	public int getDuration(Visitor<Integer> v) {
+		return v.onVoice(this);
 	}
 	
-	public void schedule(Visitor v) {
+	public void schedule(Visitor<Void> v) {
 		v.onVoice(this);
 	}
 }

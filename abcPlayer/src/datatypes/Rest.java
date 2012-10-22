@@ -1,6 +1,6 @@
 package datatypes;
 
-public class Rest implements MusicSequence {
+public class Rest extends MusicSequence {
 
 	private final double noteMultiplier;
 	private final Player player;
@@ -25,24 +25,13 @@ public class Rest implements MusicSequence {
 		return this.player;
 	}
 
-	/**
-	 * Calculates and returns the duration of this Rest in the associated Player 
-	 * in ticks.
-	 * @return duration of this Rest in ticks in associated Player 
-	 */
 	@Override
-	public int getDuration() {
-		/* The following calculates the duration of this Note according to the following
-		 * formula:
-		 * duration = Rest Note Multiplier * Default Note Length * Number of Ticks Per Note
-		 * The unit of duration is discrete "ticks".  
-		 */
-		return (int) (this.noteMultiplier * this.player.getHeader().getDefaultNoteLength() 
-				* 4 * this.player.getTicksPerQuarterNote());
+	public int getDuration(Visitor<Integer> v) {
+		return v.onRest(this);
 	}
 
 	@Override
-	public void schedule(Visitor v) {
+	public void schedule(Visitor<Void> v) {
 		 v.onRest(this);
 	}
 }

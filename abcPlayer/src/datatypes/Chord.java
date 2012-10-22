@@ -2,7 +2,7 @@ package datatypes;
 
 import java.util.List;
 
-public class Chord implements MusicSequence {
+public class Chord extends MusicSequence {
 	
 	private final List<Note> notes;
 	private final Player player;
@@ -28,12 +28,12 @@ public class Chord implements MusicSequence {
 	}
 
 	@Override
-	public int getDuration(Visitor v) {
-		return v.duration(this);
+	public int getDuration(Visitor<Integer> v) {
+		return v.onChord(this);
 	}
 
 	@Override
-	public void schedule(Visitor v) {
+	public void schedule(Visitor<Void> v) {
 		v.onChord(this);
 	}
 }

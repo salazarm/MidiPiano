@@ -3,11 +3,10 @@ package datatypes;
 import java.util.List;
 import exception.InvalidInputException;
 
-public class Tuplet implements MusicSequence {
+public class Tuplet extends MusicSequence {
 	
 	private final int tupletNumber;
 	private final List<Note> notes;
-	private final Player player;
 	
 	/**
 	 * Creates a Tuplet object
@@ -15,7 +14,7 @@ public class Tuplet implements MusicSequence {
 	 * @param notes
 	 * @param player
 	 */
-	public Tuplet(int tupletNumber, List<Note> notes, Player player) {
+	public Tuplet(int tupletNumber, List<Note> notes) {
 		if (tupletNumber!=2 && tupletNumber!=3 && tupletNumber!=4) {
 			throw new InvalidInputException(
 					String.format("Invalid tuplet number: %s", tupletNumber));
@@ -27,17 +26,19 @@ public class Tuplet implements MusicSequence {
 		else {
 			this.notes = notes;
 		}
-		this.player = player;
+	}
+	
+	public List<Note> getNotes() {
+		return this.notes;
 	}
 
 	@Override
-	public int getDuration() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getDuration(Visitor<Integer> v) {
+		return v.onTuplet(this);
 	}
 
 	@Override
-	public void schedule(Visitor v) {
+	public void schedule(Visitor<Void> v) {
 		v.onTuplet(this);
 	}
 

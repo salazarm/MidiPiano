@@ -3,14 +3,13 @@ package datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Body implements MusicSequence {
+public class Body extends MusicSequence {
 	
 	private List<Voice> voiceList;
-	private final Player player;
 	
 	public Body(Player player) {
 		this.voiceList = new ArrayList<Voice>();
-		this.player = player;
+		super.setStartTick(0);
 	}
 	
 	/**
@@ -25,24 +24,11 @@ public class Body implements MusicSequence {
 		return this.voiceList;
 	}
 	
-	public Player getPlayer() {
-		return this.player;
+	public int getDuration(Visitor<Integer> v) {
+		return v.onBody(this);
 	}
 	
-	/**
-	 * Returns duration of this Body, defined as the duration of the Voice with the longest
-	 * duration in ticks.
-	 * @return duration int value of duration in ticks, as defined above
-	 */
-	public int getDuration() {
-		int duration = 0;
-		for (Voice voice : this.voiceList) {
-			duration = voice.getDuration();
-		}
-		return duration;
-	}
-	
-	public void schedule(Visitor v) {
+	public void schedule(Visitor<Void> v) {
 		v.onBody(this);
 	}
 }
