@@ -29,45 +29,47 @@ public class Lexer {
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for(int i = bodyStartIndex; i<input.length(); i++){
 			if(Pattern.matches("\\s",""+input.charAt(i))){
-				int j;
-				for(int k =1;!Pattern.matches("\\s",""+input.charAt(i+k)); k++){
+				int j = 0;
+				for(int k =1;i+k<input.length() && !Pattern.matches("\\s",""+input.charAt(i+k)); k++){
 					j =k;
 					if (Pattern.matches("[a-gA-Gz,\\^_'=]",""+input.charAt(i+k))){
 						tokens.add(new Token(input.charAt(i+k)+"",input.charAt(i+k)+""));
 					}
 					else if(Pattern.matches( ":",""+input.charAt(i+k))){
-						tokens.add(new Token(":|",":|")); i+=1;
+						tokens.add(new Token(":|",":|")); k+=1;
 					}
 					else if(Pattern.matches("|:",""+input.charAt(i+k))){
-						tokens.add(new Token("|:","|:")); i+=1;
+						tokens.add(new Token("|:","|:")); k+=1;
 					}
 					else if(Pattern.matches("\\([2-4]",""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("("+input.charAt(i+k+1), "("+input.charAt(i+k+1))); i+=1;
+						tokens.add(new Token("("+input.charAt(i+k+1), "("+input.charAt(i+k+1))); k+=1;
 					}
-					else if(Pattern.matches("[\\\\0-9]",""+input.charAt(i+k))){
-						if(Pattern.matches("[^\\\\[0-9]]",""+input.charAt(i+k+1))){
+					else if(Pattern.matches("[/0-9]",""+input.charAt(i+k))){
+						if(Pattern.matches("[^/[0-9]]",""+input.charAt(i+k+1))){
 							tokens.add(new Token(""+input.charAt(i+k),""+input.charAt(i+k)));
 						}
-						else if(Pattern.matches("\\\\[0-9][^\\\\[0-9]]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
+						else if(Pattern.matches("/[0-9][^/[0-9]]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
 							tokens.add(new Token(""+input.charAt(i+k)+input.charAt(i+k+1),""+input.charAt(i+k)+input.charAt(i+k+1)));
+							k++;
 						}	
-						else if(Pattern.matches("[[0-9]\\\\[0-9]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
+						else if(Pattern.matches("[[0-9]/[0-9]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
 							tokens.add(new Token(""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2),""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2)));
+							k+=2;
 						}
 						else{
 							throw new RuntimeException("Invalid Character Sequence Encountered");
 						}
 					}
 					else if(Pattern.matches("\\[[12]",""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("["+input.charAt(i+k+1), "["+input.charAt(i+k+1)));
+						tokens.add(new Token("["+input.charAt(i+k+1), "["+input.charAt(i+k+1)));k++;
 					}
-					else if(Pattern.matches("|[|\\]]",""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("|"+input.charAt(i+k+1),"|"+input.charAt(i+k+1)));
+					else if(Pattern.matches("|[|]]",""+input.charAt(i+k)+input.charAt(i+k+1))){
+						tokens.add(new Token("|"+input.charAt(i+k+1),"|"+input.charAt(i+k+1)));k++;
 					}
-					else if(Pattern.matches("\\[[za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k+1))){
+					else if(Pattern.matches("\\[[\\^za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("[","["));
 					}
-					else if(Pattern.matches("\\][za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k-1))){
+					else if(Pattern.matches("\\][,za-gA-G_0-9]",""+input.charAt(i+k)+input.charAt(i+k-1))){
 						tokens.add(new Token("]","]"));
 					}
 					else if(Pattern.matches("\\nV",""+input.charAt(i+k-1)+input.charAt(i+k))){
@@ -75,7 +77,6 @@ public class Lexer {
 						for(; !Pattern.matches("\\n",""+input.charAt(i+k));k++){
 							sb.append(input.charAt(i+k));
 						}
-						System.out.println(sb.toString());
 						tokens.add(new Token(sb.toString(),sb.toString()));
 					}
 					else if(input.charAt(i+k) == '|'){
@@ -86,10 +87,13 @@ public class Lexer {
 							k++;
 						}
 					}
+					else if(input.charAt(i+k)=='/'){
+						tokens.add(new Token("/","/"));
+					}
 					else{
-						throw new RuntimeException("Unexpected Character: "+input.charAt(i+k-1) +input.charAt(i+k)+input.charAt(i+k+1));
-					}i+=j;
-				}
+						throw new RuntimeException("Unexpected Character: "+input.charAt(i+k)+" in: "+input.charAt(i+k-2) +input.charAt(i+k-1)+input.charAt(i+k)+input.charAt(i+k+1));
+					}
+				}i+=j;
 				
 			}
 		}

@@ -38,11 +38,10 @@ public class Token{
 		else if(Pattern.matches("\\A\\|\\z",type)){
 			return Type.BARLINE;
 		}
-		else if(Pattern.matches("[\\\\0-9]",type)){
+		else if(Pattern.matches("[/0-9]",type)){
 			return Type.NOTEMULTIPLIER;
 		}
-		else if(Pattern.matches("",type)){
-			this.value = type.charAt(1)+"";
+		else if(Pattern.matches("\\([2-4]",type)){
 			return Type.TUPLET;
 		}
 		else if(Pattern.matches("\\A\\[\\z",type)){

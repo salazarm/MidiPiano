@@ -41,7 +41,7 @@ public class Main {
 	public static void play(String file) throws IOException {
 	    Lexer lexer = new Lexer(readFile(file));
 	    Parser parser = new Parser(lexer);
-	    Player player = new Player(parser.getHeader(), parser.getBody(), 
+	    Player player = new Player(parser.getLexer().getHeader(), parser.getLexer().getBody(), 
 	    		parser.getBeatsPerMinute(), 12);
 	    player.scheduleBody();
 	    System.out.printf("%s", player.getHeader().toString());
