@@ -1,5 +1,6 @@
 package player;
 
+// TODO: Octave token ' and , are not accidentals.
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
