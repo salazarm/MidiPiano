@@ -7,6 +7,7 @@ public class Tuplet extends MusicSequence {
 	
 	private final int tupletNumber;
 	private final List<Note> notes;
+	private int curTick = 0;
 	
 	/**
 	 * Creates a Tuplet object
@@ -31,6 +32,18 @@ public class Tuplet extends MusicSequence {
 	public List<Note> getNotes() {
 		return this.notes;
 	}
+	
+	public int getTupletNumber() {
+		return this.tupletNumber;
+	}
+	
+	public void incrementCurTick(int increment) {
+		this.curTick += increment;
+	}
+	
+	public int getCurTick() {
+		return this.curTick;
+	}
 
 	@Override
 	public int getDuration(Visitor<Integer> v) {
@@ -41,5 +54,4 @@ public class Tuplet extends MusicSequence {
 	public void schedule(Visitor<Void> v) {
 		v.onTuplet(this);
 	}
-
 }

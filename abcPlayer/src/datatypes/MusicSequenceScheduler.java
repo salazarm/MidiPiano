@@ -1,5 +1,8 @@
 package datatypes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import sound.SequencePlayer;
 
 public class MusicSequenceScheduler implements Visitor<Void> {
@@ -25,9 +28,26 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	 */
 	@Override
 	public Void onNote(Note note) {
-		seqPlayer.addNote(note.getNotePitch().toMidiNote(), 
+		/* Examines the key signature of this abc file to determine whether any
+		 * additional accidentals have to be applied to the note. */
+		KeySignature ks = this.player.getHeader().getKeySignature();
+		int[] accidentals = ks.getKeyAccidentals();
+		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
+		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
+		this.seqPlayer.addNote(note.getNotePitch().toMidiNote(), 
 				note.getStartTick(), note.getDuration(this.duration));
 		return null;
+	}
+	
+	/**
+	 * Returns the corresponding values for baseNote arguments:
+	 * A = 1, B = 2, C = 3, D = 4, E = 5, F = 6, G = 7
+	 * @param baseNote char uppercase representation of the baseNote, must be uppercase
+	 * character between A-G inclusive
+	 * @return int index in the KeySignature accidentals array of that baseNote
+	 */
+	private int getCurNoteAsInt(char baseNote) {
+		return (int) (baseNote-64);
 	}
 
 	/**
@@ -70,10 +90,46 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		return null;
 	}
 
+	/**
+	 * Schedules a Tuplet on the Player
+	 * @param tuplet Tuplet object to schedule on the Player
+	 * @return null
+	 */
 	@Override
 	public Void onTuplet(Tuplet tuplet) {
-		// TODO Auto-generated method stub
+		List<Note> notesCorrectDuration = correctDuration(tuplet.getNotes(), 
+				tuplet.getDuration(this.duration));
+		tuplet.incrementCurTick(tuplet.getStartTick());
+		for (Note note: notesCorrectDuration) {
+			note.setStartTick(tuplet.getCurTick());
+			note.schedule(this);
+			tuplet.incrementCurTick(note.getDuration(this.duration));
+		}
 		return null;
+	}
+	
+	/**
+	 * Returns the List of Notes with their durations (and noteMultipliers) modified to
+	 * their values when they are to be scheduled to be played as part of a Tuplet 
+	 * @param notes List of Notes objects, this List is not modified
+	 * @param tupletDuration int duration of the Tuplet the notes are a part of, in ticks
+	 * @return List of Notes objects with their noteMultiplier corrected as specified above
+	 */
+	private List<Note> correctDuration(List<Note> notes, int tupletDuration) {
+		int totalNoteDuration = 0;
+		List<Note> correctDurationNotes = new ArrayList<Note>();
+		for (Note note: notes) {
+			totalNoteDuration += note.getDuration(this.duration);
+		}
+		for (Note note: notes) {
+			double ratio = note.getDuration(this.duration)/totalNoteDuration;
+			double ticksThisNote = (ratio*tupletDuration);
+			double noteMultipler = (ticksThisNote)/(this.getPlayer().getHeader().getDefaultNoteLength() 
+				* 4 * this.getPlayer().getTicksPerQuarterNote());
+			correctDurationNotes.add(new Note(note.getBaseNote(), note.getOctaveModifier(), 
+					note.getAccidentalModifier(), noteMultipler));
+		}
+		return correctDurationNotes;
 	}
 
 	/**

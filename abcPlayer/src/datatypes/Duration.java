@@ -73,10 +73,33 @@ public class Duration implements Visitor<Integer> {
 		return duration;
 	}
 
+	/**
+	 * Returns the duration of this Tuplet in ticks. See abc subset for definition of
+	 * Tuplet duration.
+	 * @return duration int representation of the duration of this Tuplet in ticks.
+	 */
 	@Override
 	public Integer onTuplet(Tuplet tuplet) {
-		// TODO Auto-generated method stub
-		return null;
+		int duration = 0;
+		if(tuplet.getTupletNumber()==2) {
+			for (Note note : tuplet.getNotes()) {
+				duration += note.getDuration(this);
+			}
+			duration = (int) ((0.5*duration)*3);
+		}
+		else if(tuplet.getTupletNumber()==3) {
+			for(Note note: tuplet.getNotes()) {
+				duration += note.getDuration(this);
+			}
+			duration = (int) ((((double) (1/3)) * duration) * 2);
+		}
+		else if(tuplet.getTupletNumber()==4) {
+			for(Note note: tuplet.getNotes()) {
+				duration += note.getDuration(this);
+			}
+			duration = (int) ((((double) (1/4)) * duration) * 3);
+		}
+		return duration;
 	}
 
 	
