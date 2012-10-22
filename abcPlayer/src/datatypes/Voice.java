@@ -2,6 +2,10 @@ package datatypes;
 
 import java.util.List;
 
+
+/**
+ * A class represents a single melody line.
+ */
 public class Voice {
 	
 	private final String voiceName;
