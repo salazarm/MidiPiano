@@ -9,7 +9,6 @@ public class Note implements MusicSequence {
 	private final Accidental accidentalModifier;
 	private final double noteMultiplier;
 	private final Pitch notePitch;
-	private final Player player;
 	
 	/**
 	 * Creates a Note object
@@ -24,13 +23,12 @@ public class Note implements MusicSequence {
 	 * @param player Player object that this Note is to be played by
 	 */
 	public Note(char baseNote, int octaveModifier, Accidental accidentalModifier, 
-			double noteMultiplier, Player player) {
+			double noteMultiplier) {
 		this.baseNote = baseNote;
 		this.octaveModifier = octaveModifier;
 		this.accidentalModifier = setAccidentalModifier(accidentalModifier);
 		this.noteMultiplier = noteMultiplier;
 		this.notePitch = makePitch();
-		this.player = player;
 	}
 	
 	private Accidental setAccidentalModifier(Accidental accidentalModifier) {
@@ -48,26 +46,14 @@ public class Note implements MusicSequence {
 		return new Pitch(this.baseNote).accidentalTranspose(accidentalModifier.getIntRep()).octaveTranspose(octaveModifier); 
 	}
 	
-	/**
-	 * Calculates and returns the duration of this Note in the associated Player 
-	 * in ticks.
-	 * @return duration of this Note in ticks in associated Player 
-	 */
 	@Override
-	public int getDuration() {
-		/* The following calculates the duration of this Note according to the following
-		 * formula:
-		 * duration = Note Multiplier * Default Note Length * Number of Ticks Per Note
-		 * The unit of duration is discrete "ticks".  
-		 */
-		return (int) (this.noteMultiplier * this.player.getHeader().getDefaultNoteLength() 
-				* 4 * this.player.getTicksPerQuarterNote());
+	public int getDuration(Visitor visitor) {
+		return visitor.duration(this);
 	}
 
 	@Override
 	public void schedule(Visitor visitor) {
 		visitor.onNote(this);
-
 	}
 	
 	public char getBaseNote() {
@@ -88,9 +74,5 @@ public class Note implements MusicSequence {
 
 	public Pitch getNotePitch() {
 		return this.notePitch;
-	}
-	
-	public Player getPlayer() {
-		return this.player;
 	}
 }

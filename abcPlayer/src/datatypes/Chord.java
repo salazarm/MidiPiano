@@ -27,18 +27,9 @@ public class Chord implements MusicSequence {
 		return this.player;
 	}
 
-	/**
-	 * Returns duration of chord, currently defined as the duration of the longest note
-	 * in the chord, in case the different notes within the chord have different lengths.
-	 * @return duration Duration of chord in ticks as defined above
-	 */
 	@Override
-	public int getDuration() {
-		int duration = 0;
-		for (Note note: this.notes) {
-			duration = Math.max(duration, note.getDuration());
-		}
-		return duration;
+	public int getDuration(Visitor v) {
+		return v.duration(this);
 	}
 
 	@Override
