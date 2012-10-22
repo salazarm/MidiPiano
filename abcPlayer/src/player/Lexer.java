@@ -1,28 +1,37 @@
 package player;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
+
+import org.junit.Test;
 
 public class Lexer {
 	private ArrayList<Token> headerTokens;
-	private ArrayList<Token>	bodyTokens;
+	private ArrayList<Token> bodyTokens;
 	private int bodyStartIndex;
 	
-	public ArrayList<Token> getHeader(){	return this.headerTokens;	}
+	public ArrayList<Token> getHeader(){return this.headerTokens; }
 	public ArrayList<Token> getBody(){	return this.bodyTokens;	}
 	
-	Lexer(String input){
-	this.headerTokens = processHeader(input);
-	this.bodyTokens = processBody(input);
+	public Lexer(String input){
+	    this.headerTokens = processHeader(input);
+	    this.bodyTokens = processBody(input);
 	}
 	
+	// For test
+	Lexer(){}
 	
-	/*
-	 * repeats end in :| start with |:
-	 * tuplet starts with (
-	 * things are seperated by spaces
-	 * 
+	/**
+     * repeats end in :| start with |:
+     * tuplet starts with (
+     * things are separated by spaces
+	 * @param input
+	 * @return
 	 */
+
 	private ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for(int i = bodyStartIndex; i<input.length(); i++){
@@ -80,28 +89,46 @@ public class Lexer {
 		return tokens;
 	}
 
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public ArrayList<Token> processHeader(String input){
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for (int i=0; i< input.length(); i++){
+		    
+		    //  i012345
+		    // T: title
+		    
 			if (input.charAt(i)==':'){
+			    if(i==0) throw new RuntimeException("a header line starts with ':'");
+
 				int k = 1;
 				StringBuilder sb = new StringBuilder();
-				while(!Pattern.matches("\\n",input.charAt(i+k)+"")){
+				while(i+k<input.length() && !Pattern.matches("\\n",input.charAt(i+k)+"")){
 					sb.append(input.charAt(i+k));
-					k+=1;
-					if(i+k > input.length()){
-						throw new RuntimeException("Illegal character sequence found");
-					}
+					k++;
 				}
-				tokens.add(new Token(input.charAt(i-1)+"",sb.toString()));
+
+				Token t = new Token(input.charAt(i-1)+"",sb.toString());
+				tokens.add(t);
 				i+=k;
-				if(tokens.get(tokens.size()-1).getType() == Token.Type.KEY){
-					this.bodyStartIndex = i+k;
-					 break;
-					}			
+                if(t.getType() == Token.Type.KEY){
+                     this.bodyStartIndex = i+k;
+                     break;
+                }			
 			}
 		}
+		
+		if(tokens.size()<3) throw new RuntimeException("A header needs at least X, T, K");
+		if(tokens.get(0).getType()!=Token.Type.INDEX)
+		    throw new RuntimeException("The first line of a header should be X");
+		if(tokens.get(1).getType()!=Token.Type.TITLE)
+            throw new RuntimeException("The second line of a header should be T");
+		if(tokens.get(tokens.size()-1).getType()!=Token.Type.KEY)
+            throw new RuntimeException("The last line of a header should be K");
+
 		return tokens;
 	}
-
 }

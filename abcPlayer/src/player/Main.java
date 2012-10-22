@@ -88,7 +88,6 @@ public class Main {
          * check displayed header
          * assertEquals("header_here", out.toString());
          */
-
         assertEquals("", err.toString());
         System.setOut(null);
         System.setErr(null);
