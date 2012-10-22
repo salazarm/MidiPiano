@@ -9,21 +9,25 @@ public class Lexer {
 	private ArrayList<Token> bodyTokens;
 	private int bodyStartIndex;
 	
+	/**
+	 * @return an ArrayList of Tokens representing the tokens in the header of the abc file
+	 */
 	public ArrayList<Token> getHeader(){	return this.headerTokens; }
+	/**
+	 * @return an ArrayList of Tokens representing the tokens in the body of the abc file
+	 */
 	public ArrayList<Token> getBody(){	return this.bodyTokens;	}
 	
+	
+	/**
+	 * Takes a String representation of an abc file as input and creates an ArrayList of tokens out of it.
+	 * @param input String representation of an abc file
+	 */
 	public Lexer(String input){
 	    this.headerTokens = processHeader(input);
 	    this.bodyTokens = processBody(input);
 	}
 	
-	// For test
-	Lexer(){}
-	
-	/**
-	 * @param input
-	 * @return
-	 */
 
 	private ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
@@ -100,12 +104,8 @@ public class Lexer {
 		return tokens;
 	}
 
-	/**
-	 * 
-	 * @param input
-	 * @return
-	 */
-	public ArrayList<Token> processHeader(String input){
+
+	private ArrayList<Token> processHeader(String input){
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for (int i=0; i< input.length(); i++){
 		    
