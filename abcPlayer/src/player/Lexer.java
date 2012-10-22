@@ -28,8 +28,12 @@ public class Lexer {
 	    this.bodyTokens = processBody(input);
 	}
 	
+	// Do not erase this constructor!!
+	// It's used by JUnit test.
+	Lexer() { }
 
-	private ArrayList<Token> processBody(String input) {
+
+	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for(int i = bodyStartIndex; i<input.length(); i++){
 			if(Pattern.matches("\\s",""+input.charAt(i))){
@@ -105,7 +109,7 @@ public class Lexer {
 	}
 
 
-	private ArrayList<Token> processHeader(String input){
+	protected ArrayList<Token> processHeader(String input){
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for (int i=0; i< input.length(); i++){
 		    
