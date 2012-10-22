@@ -3,6 +3,7 @@ package datatypes;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public enum KeySignature {
 	
 	/* This enum contains a representation of the different key signatures.
