@@ -11,45 +11,49 @@ public enum KeySignature {
 	 * key signature are sharps or flats using the following integer representation for
 	 * each key:
 	 * -1 = flat, 0 = neutral, 1 = sharp
-	 * These properties are contained in an array of integers corresponding to each 
+	 * This property is contained in an array of integers corresponding to each 
 	 * key signature with the keys in the following order: {A, B, C, D, E, F, G}
+	 * Each key signature also has a stringRep property corresponding to the abc String 
+	 * representation of the key signature.
 	 */
-	C_MAJOR (new int[] {0,0,0,0,0,0,0}),
-	A_MINOR (new int[] {0,0,0,0,0,0,0}),
-	G_MAJOR (new int[] {0,0,0,0,0,1,0}),
-	E_MINOR (new int[] {0,0,0,0,0,1,0}),
-	D_MAJOR (new int[] {0,0,1,0,0,1,0}),
-	B_MINOR (new int[] {0,0,1,0,0,1,0}),
-	A_MAJOR (new int[] {0,0,1,0,0,1,1}),
-	F_SHARP_MINOR (new int[] {0,0,1,0,0,1,1}),
-	E_MAJOR (new int[] {0,0,1,1,0,1,1}),
-	C_SHARP_MINOR (new int[] {0,0,1,1,0,1,1}),
-	B_MAJOR (new int[] {1,0,1,1,0,1,1}),
-	G_SHARP_MINOR (new int[] {1,0,1,1,0,1,1}),
-	F_SHARP_MAJOR (new int[] {1,0,1,1,1,1,1}),
-	D_SHARP_MINOR (new int[] {1,0,1,1,1,1,1}),
-	C_SHARP_MAJOR (new int[] {1,1,1,1,1,1,1}),
-	A_SHARP_MINOR (new int[] {1,1,1,1,1,1,1}),
-	F_MAJOR (new int[] {0,-1,0,0,0,0,0}),
-	D_MINOR (new int[] {0,-1,0,0,0,0,0}),
-	B_FLAT_MAJOR (new int[] {0,-1,0,0,-1,0,0}),
-	G_MINOR (new int[] {0,-1,0,0,-1,0,0}),
-	E_FLAT_MAJOR (new int[] {-1,-1,0,0,-1,0,0}),
-	C_MINOR (new int[] {-1,-1,0,0,-1,0,0}),
-	A_FLAT_MAJOR (new int[] {-1,-1,0,-1,-1,0,0}),
-	F_MINOR (new int[] {-1,-1,0,-1,-1,0,0}),
-	D_FLAT_MAJOR (new int[] {-1,-1,0,-1,-1,0,-1}),
-	B_FLAT_MINOR (new int[] {-1,-1,0,-1,-1,0,-1}),
-	G_FLAT_MAJOR (new int[] {-1,-1,-1,-1,-1,0,-1}),
-	E_FLAT_MINOR (new int[] {-1,-1,-1,-1,-1,0,-1}),
-	C_FLAT_MAJOR (new int[] {-1,-1,-1,-1,-1,-1,-1}),
-	A_FLAT_MINOR (new int[] {-1,-1,-1,-1,-1,-1,-1});
+	C_MAJOR (new int[] {0,0,0,0,0,0,0}, "C"),
+	A_MINOR (new int[] {0,0,0,0,0,0,0}, "Am"),
+	G_MAJOR (new int[] {0,0,0,0,0,1,0}, "G"),
+	E_MINOR (new int[] {0,0,0,0,0,1,0}, "Em"),
+	D_MAJOR (new int[] {0,0,1,0,0,1,0}, "D"),
+	B_MINOR (new int[] {0,0,1,0,0,1,0}, "Bm"),
+	A_MAJOR (new int[] {0,0,1,0,0,1,1}, "A"),
+	F_SHARP_MINOR (new int[] {0,0,1,0,0,1,1}, "F#m"),
+	E_MAJOR (new int[] {0,0,1,1,0,1,1}, "E"),
+	C_SHARP_MINOR (new int[] {0,0,1,1,0,1,1}, "C#m"),
+	B_MAJOR (new int[] {1,0,1,1,0,1,1}, "B"),
+	G_SHARP_MINOR (new int[] {1,0,1,1,0,1,1}, "G#m"),
+	F_SHARP_MAJOR (new int[] {1,0,1,1,1,1,1}, "F#"),
+	D_SHARP_MINOR (new int[] {1,0,1,1,1,1,1}, "D#m"),
+	C_SHARP_MAJOR (new int[] {1,1,1,1,1,1,1}, "C#"),
+	A_SHARP_MINOR (new int[] {1,1,1,1,1,1,1}, "A#m"),
+	F_MAJOR (new int[] {0,-1,0,0,0,0,0}, "F"),
+	D_MINOR (new int[] {0,-1,0,0,0,0,0}, "Dm"),
+	B_FLAT_MAJOR (new int[] {0,-1,0,0,-1,0,0}, "Bb"),
+	G_MINOR (new int[] {0,-1,0,0,-1,0,0}, "Gm"),
+	E_FLAT_MAJOR (new int[] {-1,-1,0,0,-1,0,0}, "Eb"),
+	C_MINOR (new int[] {-1,-1,0,0,-1,0,0}, "Cm"),
+	A_FLAT_MAJOR (new int[] {-1,-1,0,-1,-1,0,0}, "Ab"),
+	F_MINOR (new int[] {-1,-1,0,-1,-1,0,0}, "Fm"),
+	D_FLAT_MAJOR (new int[] {-1,-1,0,-1,-1,0,-1}, "Db"),
+	B_FLAT_MINOR (new int[] {-1,-1,0,-1,-1,0,-1}, "Bbm"),
+	G_FLAT_MAJOR (new int[] {-1,-1,-1,-1,-1,0,-1}, "Gb"),
+	E_FLAT_MINOR (new int[] {-1,-1,-1,-1,-1,0,-1}, "Ebm"),
+	C_FLAT_MAJOR (new int[] {-1,-1,-1,-1,-1,-1,-1}, "Cb"),
+	A_FLAT_MINOR (new int[] {-1,-1,-1,-1,-1,-1,-1}, "Abm");
 	
 	private int[] keyAccidentals = new int[6];
+	private final String stringRep;
 	private static Map<String, KeySignature> keySignatureMap = makeKeySignatureMap();
 	
-	KeySignature(int[] keyAccidentals) {
+	KeySignature(int[] keyAccidentals, String stringRep) {
 		this.keyAccidentals = keyAccidentals;
+		this.stringRep = stringRep;
 	}
 	
 	private static Map<String, KeySignature> makeKeySignatureMap() {
@@ -90,6 +94,10 @@ public enum KeySignature {
 	public int[] getKeyAccidentals() {
 		return this.keyAccidentals;
 	}	
+	
+	public String getStringRep() {
+		return this.stringRep;
+	}
 	
 	public KeySignature getType(String keySignature) {
 		return KeySignature.keySignatureMap.get(keySignature);

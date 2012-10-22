@@ -11,6 +11,7 @@ public class Player {
 	private Body body;
 	private final int ticksPerQuarterNote, beatsPerMinute;
 	private SequencePlayer seqPlayer;
+	private MusicSequenceScheduler scheduler = new MusicSequenceScheduler(this);
 	
 	public Player(Header header, Body body, int beatsPerMinute, int ticksPerQuarterNote) 
 			throws MidiUnavailableException, InvalidMidiDataException {
@@ -39,5 +40,12 @@ public class Player {
 
 	public int getBeatsPerMinute() {
 		return this.beatsPerMinute;
+	}
+	
+	/**
+	 * Schedules the body to be played on the SequencePlayer associated with this Player object
+	 */
+	public void scheduleBody() {
+		body.schedule(scheduler);
 	}
 }

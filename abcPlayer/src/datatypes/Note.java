@@ -2,7 +2,7 @@ package datatypes;
 
 import sound.Pitch;
 
-public class Note implements MusicSequence {
+public class Note extends MusicSequence {
 	
 	private final char baseNote;
 	private final int octaveModifier;
@@ -47,12 +47,12 @@ public class Note implements MusicSequence {
 	}
 	
 	@Override
-	public int getDuration(Visitor visitor) {
-		return visitor.duration(this);
+	public int getDuration(Visitor<Integer> visitor) {
+		return visitor.onNote(this);
 	}
 
 	@Override
-	public void schedule(Visitor visitor) {
+	public void schedule(Visitor<Void> visitor) {
 		visitor.onNote(this);
 	}
 	

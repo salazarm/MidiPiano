@@ -1,6 +1,16 @@
 package datatypes;
 
-public interface MusicSequence {
-	public int getDuration(Visitor v); // Returns duration of this MusicSequence in ticks
-	public void schedule(Visitor v);
+public abstract class MusicSequence {
+	
+	private int startTick;	
+	
+	public void setStartTick(int startTick) {
+		this.startTick = startTick;
+	}
+	public int getStartTick() {
+		return this.startTick;
+	}
+	
+	public abstract int getDuration(Visitor<Integer> v); // Returns duration of this MusicSequence in ticks
+	public abstract void schedule(Visitor<Void> v);
 }
