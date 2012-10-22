@@ -11,9 +11,9 @@ public class Lexer {
 	public ArrayList<Token> getHeader(){	return this.headerTokens;	}
 	public ArrayList<Token> getBody(){	return this.bodyTokens;	}
 	
-	Lexer(String input){
-	this.headerTokens = processHeader(input);
-	this.bodyTokens = processBody(input);
+	public Lexer(String input){
+	    this.headerTokens = processHeader(input);
+	    this.bodyTokens = processBody(input);
 	}
 	
 	

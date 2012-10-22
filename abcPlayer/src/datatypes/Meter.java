@@ -2,18 +2,22 @@ package datatypes;
 
 public class Meter {
 
-	private final int numerator, denominator;
+	private final Fraction meter;
 	
 	public Meter(int numerator, int denominator) {
-		this.numerator = numerator;
-		this.denominator = denominator;
+		this.meter = new Fraction(numerator, denominator);
 	}
 	
-	public int getNumerator() {
-		return numerator;
+	public Meter(Fraction fraction) {
+		this.meter = fraction;
 	}
-
-	public int getDenominator() {
-		return denominator;
+	
+	public Fraction getMeter() {
+		return this.meter;
+	}
+	
+	@Override
+	public String toString() {
+		return this.meter.toString();
 	}
 }

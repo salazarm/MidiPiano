@@ -2,14 +2,13 @@ package player;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-
 import org.junit.Test;
+import datatypes.Player;
 
 /**
  * Main entry point of your application.
@@ -39,20 +38,14 @@ public class Main {
 
         return sb.toString();
     }
-	public static void play(String file) throws IOException{
-
-	    // TODO: new Lexer(readFile(file)))...
-	    readFile(file);
-	    
-	    // TODO: print header information
-	    
-	    // TODO: play
-	    
-	    
-	    /**
-	     * you should play the song
-	     * and print 
-	     */
+	public static void play(String file) throws IOException {
+	    Lexer lexer = new Lexer(readFile(file));
+	    Parser parser = new Parser(lexer);
+	    Player player = new Player(parser.getHeader(), parser.getBody(), 
+	    		parser.getBeatsPerMinute(), 12);
+	    player.scheduleBody();
+	    System.out.printf("%s", player.getHeader().toString());
+	    player.play();	  
 	}
 	
 	@Test(expected = IOException.class)
