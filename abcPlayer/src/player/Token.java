@@ -7,10 +7,9 @@ public class Token{
 	private final Type type;
 	private String value;
 	
-	public Token(String inp, String string) {
+	Token(String inp, String string) {
 		this.value = string;
-		this.type = getType(inp);
-		
+		this.type = getType(inp);	
 	}
 
 	private Type getType(String type) {

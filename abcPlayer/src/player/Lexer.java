@@ -109,9 +109,6 @@ public class Lexer {
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for (int i=0; i< input.length(); i++){
 		    
-		    //  i012345
-		    // T: title
-		    
 			if (input.charAt(i)==':'){
 			    if(i==0) throw new RuntimeException("a header line starts with ':'");
 

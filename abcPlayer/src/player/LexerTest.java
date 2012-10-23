@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public class TokenTest {
+public class LexerTest {
 	@Test
 	public void testString(){
 		FileInputStream fis = null;
