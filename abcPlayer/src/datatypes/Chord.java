@@ -5,7 +5,6 @@ import java.util.List;
 public class Chord extends MusicSequence {
 	
 	private final List<Note> notes;
-	private final Player player;
 	
 	/**
 	 * Creates a Chord object
@@ -14,19 +13,14 @@ public class Chord extends MusicSequence {
 	 * @param player Player object associated with all Notes in the chord, and hence 
 	 * the chord as well 
 	 */
-	public Chord(List<Note> notes, Player player) {
+	public Chord(List<Note> notes) {
 		this.notes = notes;
-		this.player = player;
 	}
 	
 	public List<Note> getNotes() {
 		return this.notes;
 	}
 	
-	public Player getPlayer() {
-		return this.player;
-	}
-
     public <R> R accept(Visitor<R> v)
     {
         return v.onChord(this);

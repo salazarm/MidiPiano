@@ -25,7 +25,7 @@ public class Voice extends MusicSequence {
 	 * Adds passed MusicSequence to the List of MusicSequences that make up this Voice
 	 * @param musicSequence MusicSequence to add to this Voice
 	 */
-	public void addToVoice(MusicSequence musicSequence) {
+	public void add(MusicSequence musicSequence) {
 		this.musicSequences.add(musicSequence);
 	}
 	

@@ -15,18 +15,13 @@ public class Tuplet extends MusicSequence {
 	 * @param notes
 	 * @param player
 	 */
-	public Tuplet(int tupletNumber, List<Note> notes) {
+	public Tuplet(List<Note> notes) {
+	    tupletNumber = notes.size();
 		if (tupletNumber!=2 && tupletNumber!=3 && tupletNumber!=4) {
 			throw new InvalidInputException(
 					String.format("Invalid tuplet number: %s", tupletNumber));
 		}
-		this.tupletNumber = tupletNumber;
-		if (notes.size()!=this.tupletNumber) {
-			throw new InvalidInputException("Wrong number of notes in Tuplet.");
-		}
-		else {
-			this.notes = notes;
-		}
+		this.notes = notes;
 	}
 	
 	public List<Note> getNotes() {
