@@ -9,6 +9,7 @@ public class Lexer {
 	private ArrayList<Token> headerTokens;
 	private ArrayList<Token> bodyTokens;
 	private int bodyStartIndex;
+	private int headerIterator, bodyIterator;
 	
 	/**
 	 * @return an ArrayList of Tokens representing the tokens in the header of the abc file
@@ -29,9 +30,22 @@ public class Lexer {
 	    this.bodyTokens = processBody(input);
 	}
 	
-	// Do not erase this constructor!!
+	// Do not erase this constructor!
 	// It's used by JUnit test.
 	Lexer() { }
+	
+	/**
+	 * Use next() to get next a token.
+	 * Use peek() to not advance the iterator.
+	 * @return The next token if exist, or null.
+	 */
+	public Token nextHeader() { return (headerIterator < headerTokens.size())? headerTokens.get(headerIterator++) : null;}
+	public Token peekHeader() { return (headerIterator < headerTokens.size())? headerTokens.get(headerIterator  ) : null;}
+	public Token nextBody() { return (bodyIterator < bodyTokens.size())? bodyTokens.get(bodyIterator++) : null;}
+	public Token peekBody() { return (bodyIterator < bodyTokens.size())? bodyTokens.get(bodyIterator  ) : null;}
+	
+	public void consumeHeader(Token.Type type) { if( nextHeader().getType() != type ) throw new RuntimeException("Expected token: "+type.toString()); }
+	public void consumeBody(Token.Type type) { if( nextBody().getType() != type ) throw new RuntimeException("Expected token: "+type.toString()); }
 
 
 	protected ArrayList<Token> processBody(String input) {
