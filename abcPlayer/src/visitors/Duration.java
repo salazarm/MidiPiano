@@ -1,4 +1,15 @@
-package datatypes;
+package visitors;
+
+import datatypes.Body;
+import datatypes.Chord;
+import datatypes.MusicSequence;
+import datatypes.Note;
+import datatypes.Player;
+import datatypes.Repeat;
+import datatypes.Rest;
+import datatypes.Tuplet;
+import datatypes.Visitor;
+import datatypes.Voice;
 
 public class Duration implements Visitor<Integer> {
 	
@@ -37,7 +48,7 @@ public class Duration implements Visitor<Integer> {
 	public Integer onChord(Chord chord) {
 		int duration = 0;
 		for (Note note: chord.getNotes()) {
-			duration = Math.max(duration, note.getDuration(this));
+			duration = Math.max(duration, note.accept(this));
 		}
 		return duration;
 	}
@@ -68,7 +79,7 @@ public class Duration implements Visitor<Integer> {
 	public Integer onRepeat(Repeat repeat) {
 		int duration = 0;
 		for (int i = 0; i < repeat.getSequences().size(); i++) {
-			duration += repeat.getSequences().get(i).getDuration(this) + repeat.getSecondPass().get(i).getDuration(this);
+			duration += repeat.getSequences().get(i).accept(this) + repeat.getSecondPass().get(i).accept(this);
 		}
 		return duration;
 	}
@@ -83,19 +94,19 @@ public class Duration implements Visitor<Integer> {
 		int duration = 0;
 		if(tuplet.getTupletNumber()==2) {
 			for (Note note : tuplet.getNotes()) {
-				duration += note.getDuration(this);
+				duration += note.accept(this);
 			}
 			duration = (int) ((0.5*duration)*3);
 		}
 		else if(tuplet.getTupletNumber()==3) {
 			for(Note note: tuplet.getNotes()) {
-				duration += note.getDuration(this);
+				duration += note.accept(this);
 			}
 			duration = (int) ((((double) (1/3)) * duration) * 2);
 		}
 		else if(tuplet.getTupletNumber()==4) {
 			for(Note note: tuplet.getNotes()) {
-				duration += note.getDuration(this);
+				duration += note.accept(this);
 			}
 			duration = (int) ((((double) (1/4)) * duration) * 3);
 		}
@@ -112,7 +123,7 @@ public class Duration implements Visitor<Integer> {
 	public Integer onVoice(Voice voice) {
 		int duration = 0;
 		for (MusicSequence musicSequence : voice.getMusicSequences()) {
-			duration += musicSequence.getDuration(this);
+			duration += musicSequence.accept(this);
 		}
 		return duration;
 	}
@@ -125,11 +136,16 @@ public class Duration implements Visitor<Integer> {
 	@Override
 	public Integer onBody(Body body) {
 		int duration = 0;
+		Integer last = null;
+
 		for (Voice voice : body.getVoiceList()) {
-			duration = voice.getDuration(this);
+			duration = voice.accept(this);
+			
+			if(last!=null && duration!=last)
+			    throw new RuntimeException("Voices have different lengths");
+			
+			last=duration;
 		}
 		return duration;
 	}
-
-	
 }

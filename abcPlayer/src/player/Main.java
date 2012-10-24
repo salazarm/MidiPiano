@@ -67,12 +67,12 @@ public class Main {
         assertTrue("wrong suffix from readFile(prelude.abc)", str.endsWith("V:3\nC,,16|C,,16|]\n"));
     }
 	@Test(expected = IOException.class)
-    public void testPlay_wrongPath() throws IOException
+    public void testPlay_wrongPath() throws IOException, MidiUnavailableException
     {
         play("non_exist_hello_abc.abc");
     }
     @Test
-    public void testPlay_sampleABC() throws IOException
+    public void testPlay_sampleABC() throws IOException, MidiUnavailableException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ByteArrayOutputStream err = new ByteArrayOutputStream();
@@ -85,6 +85,11 @@ public class Main {
          * check displayed header
          * assertEquals("header_here", out.toString());
          */
+        
+        ///
+        // here
+        ///
+        
         assertEquals("", err.toString());
         System.setOut(null);
         System.setErr(null);

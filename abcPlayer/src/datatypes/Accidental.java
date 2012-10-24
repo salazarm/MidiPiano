@@ -28,9 +28,15 @@ public class Accidental {
 	private final Type type;
 	private final String stringRep;
 	
-	public Accidental(Type type, String stringRep) {
-		this.type = type;
-		this.stringRep = stringRep;		
+	public Accidental(String stringRep) {
+		if(stringRep.equals("^^")) this.type = Type.DOUBLE_SHARP;
+		else if(stringRep.equals("^")) this.type = Type.SHARP;
+		else if(stringRep.equals("=")) this.type = Type.NEUTRAL;
+		else if(stringRep.equals(",")) this.type = Type.FLAT;
+		else if(stringRep.equals(",,")) this.type = Type.DOUBLE_FLAT;
+		else throw new RuntimeException("I can't understand this accidental!");
+		
+		this.stringRep = stringRep;
 	}
 	
 	public Type getType() {

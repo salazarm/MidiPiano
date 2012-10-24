@@ -32,7 +32,7 @@ public class Note extends MusicSequence {
 	
 	private Accidental setAccidentalModifier(Accidental accidentalModifier) {		
 		if(accidentalModifier==null) {
-			return new Accidental(Accidental.Type.NEUTRAL, "=");
+			return new Accidental("=");
 		}
 		else {
 			return accidentalModifier;
@@ -42,15 +42,11 @@ public class Note extends MusicSequence {
 	private Pitch makePitch() {
 		return new Pitch(this.baseNote).accidentalTranspose(accidentalModifier.getIntRep()).octaveTranspose(octaveModifier); 
 	}
-	
-	@Override
-	public int getDuration(Visitor<Integer> visitor) {
-		return visitor.onNote(this);
-	}
 
-	@Override
-	public void schedule(Visitor<Void> visitor) {
-		visitor.onNote(this);
+	
+	public <R> R accept(Visitor<R> v)
+	{
+	    return v.onNote(this);
 	}
 	
 	public char getBaseNote() {

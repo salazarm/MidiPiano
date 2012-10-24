@@ -45,13 +45,8 @@ public class Tuplet extends MusicSequence {
 		return this.curTick;
 	}
 
-	@Override
-	public int getDuration(Visitor<Integer> v) {
-		return v.onTuplet(this);
-	}
-
-	@Override
-	public void schedule(Visitor<Void> v) {
-		v.onTuplet(this);
-	}
+	public <R> R accept(Visitor<R> v)
+    {
+        return v.onTuplet(this);
+    }
 }

@@ -1,7 +1,19 @@
-package datatypes;
+package visitors;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import datatypes.Body;
+import datatypes.Chord;
+import datatypes.KeySignature;
+import datatypes.MusicSequence;
+import datatypes.Note;
+import datatypes.Player;
+import datatypes.Repeat;
+import datatypes.Rest;
+import datatypes.Tuplet;
+import datatypes.Visitor;
+import datatypes.Voice;
 
 import sound.SequencePlayer;
 
@@ -35,7 +47,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
 		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
 		this.seqPlayer.addNote(note.getNotePitch().toMidiNote(), 
-				note.getStartTick(), note.getDuration(this.duration));
+				note.getStartTick(), note.accept(this.duration));
 		return null;
 	}
 	
@@ -59,7 +71,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	public Void onChord(Chord chord) {
 		for(Note note : chord.getNotes()) {
 			note.setStartTick(chord.getStartTick());
-			note.schedule(this);
+			note.accept(this);
 		}
 		return null;
 	}
@@ -79,13 +91,13 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		repeat.incrementCurTick(repeat.getStartTick());
 		for(MusicSequence firstPass : repeat.getSequences()) {
 			firstPass.setStartTick(repeat.getCurTick());
-			firstPass.schedule(this);
-			repeat.incrementCurTick(firstPass.getDuration(this.duration));
+			firstPass.accept(this);
+			repeat.incrementCurTick(firstPass.accept(this.duration));
 		}
 		for(MusicSequence secondPass : repeat.getSecondPass()) {
 			secondPass.setStartTick(repeat.getCurTick());
-			secondPass.schedule(this);
-			repeat.incrementCurTick(secondPass.getDuration(this.duration));
+			secondPass.accept(this);
+			repeat.incrementCurTick(secondPass.accept(this.duration));
 		}
 		return null;
 	}
@@ -98,12 +110,12 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	@Override
 	public Void onTuplet(Tuplet tuplet) {
 		List<Note> notesCorrectDuration = correctDuration(tuplet.getNotes(), 
-				tuplet.getDuration(this.duration));
+				tuplet.accept(this.duration));
 		tuplet.incrementCurTick(tuplet.getStartTick());
 		for (Note note: notesCorrectDuration) {
 			note.setStartTick(tuplet.getCurTick());
-			note.schedule(this);
-			tuplet.incrementCurTick(note.getDuration(this.duration));
+			note.accept(this);
+			tuplet.incrementCurTick(note.accept(this.duration));
 		}
 		return null;
 	}
@@ -119,10 +131,10 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		int totalNoteDuration = 0;
 		List<Note> correctDurationNotes = new ArrayList<Note>();
 		for (Note note: notes) {
-			totalNoteDuration += note.getDuration(this.duration);
+			totalNoteDuration += note.accept(this.duration);
 		}
 		for (Note note: notes) {
-			double ratio = note.getDuration(this.duration)/totalNoteDuration;
+			double ratio = note.accept(this.duration)/totalNoteDuration;
 			double ticksThisNote = (ratio*tupletDuration);
 			double noteMultipler = (ticksThisNote)/(this.getPlayer().getHeader().getDefaultNoteLength() 
 				* 4 * this.getPlayer().getTicksPerQuarterNote());
@@ -141,8 +153,8 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	public Void onVoice(Voice voice) {
 		for(MusicSequence musicSequence : voice.getMusicSequences()) {
 			musicSequence.setStartTick(voice.getCurTick());
-			musicSequence.schedule(this);
-			voice.incrementCurTick(musicSequence.getDuration(this.duration));
+			musicSequence.accept(this);
+			voice.incrementCurTick(musicSequence.accept(this.duration));
 		}
 		return null;
 	}
@@ -156,7 +168,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	public Void onBody(Body body) {
 		for(Voice voice : body.getVoiceList()) {
 			voice.setStartTick(body.getStartTick());
-			voice.schedule(this);
+			voice.accept(this);
 		}
 		return null;
 	}

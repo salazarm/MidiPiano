@@ -45,11 +45,8 @@ public class Voice extends MusicSequence {
 		this.curTick += increment;
 	}
 
-	public int getDuration(Visitor<Integer> v) {
-		return v.onVoice(this);
-	}
-	
-	public void schedule(Visitor<Void> v) {
-		v.onVoice(this);
-	}
+	public <R> R accept(Visitor<R> v)
+    {
+        return v.onVoice(this);
+    }
 }

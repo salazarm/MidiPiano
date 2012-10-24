@@ -25,13 +25,8 @@ public class Rest extends MusicSequence {
 		return this.player;
 	}
 
-	@Override
-	public int getDuration(Visitor<Integer> v) {
-		return v.onRest(this);
-	}
-
-	@Override
-	public void schedule(Visitor<Void> v) {
-		 v.onRest(this);
-	}
+	public <R> R accept(Visitor<R> v)
+    {
+        return v.onRest(this);
+    }
 }

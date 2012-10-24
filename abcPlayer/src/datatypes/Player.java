@@ -3,6 +3,7 @@ package datatypes;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import sound.SequencePlayer;
+import visitors.MusicSequenceScheduler;
 
 public class Player {
 	
@@ -69,8 +70,8 @@ public class Player {
 	/**
 	 * Schedules the body to be played on the SequencePlayer associated with this Player object
 	 */
-	public void scheduleBody() {
-		body.schedule(scheduler);
+	public void scheduleBody() {    
+		body.accept(scheduler);
 	}
 	
 	/**
