@@ -14,8 +14,7 @@ public class testTuplet
         notes = new ArrayList<Note>();
         notes.add(new Note('A', 0, new Accidental("="), 5.0));
         notes.add(new Note('B', 0, new Accidental("="), 5.0));
-        tuplet = new Tuplet(2, notes);
-        //tuplet.getDuration();
+        tuplet = new Tuplet(notes);
     }
     
     @Test
