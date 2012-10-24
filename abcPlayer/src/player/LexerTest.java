@@ -86,7 +86,8 @@ public class LexerTest extends Lexer
     @Test(expected = RuntimeException.class)
     public void testProcessHeader_wrongHeader_NotEndedWithKey()
     {
-        processHeader("X:9\nT:title\nK:D\nM:2/4");
+    	String inp = "X:9\nT:title\nK:D\nM:2/4";
+        Lexer l = new Lexer(inp);
     }
     @Test(expected = RuntimeException.class)
     public void testProcessHeader_wrongHeader_NotCapital()
@@ -119,20 +120,20 @@ public class LexerTest extends Lexer
         // We should extract just after ':' until the end of the line.
         list = processHeader("X: 3\nT: Turkish March\nC: W. Mozart\nM: 2/4\nL: 1/8\nK: Am");
         assertEquals("test case3: X, T, M, L, K",6,list.size());
-        assertEquals("test case3: X, T, M, L, K","2",list.get(0).getValue());
+        assertEquals("test case3: X, T, M, L, K"," 3",list.get(0).getValue());
         assertEquals("test case3: X, T, M, L, K"," Turkish March",list.get(1).getValue());
         assertEquals("test case3: X, T, M, L, K"," W. Mozart",list.get(2).getValue());
-        assertEquals("test case3: X, T, M, L, K","2/4",list.get(3).getValue());
-        assertEquals("test case3: X, T, M, L, K","1/8",list.get(4).getValue());
-        assertEquals("test case3: X, T, M, L, K","Am",list.get(5).getValue());
+        assertEquals("test case3: X, T, M, L, K"," 2/4",list.get(3).getValue());
+        assertEquals("test case3: X, T, M, L, K"," 1/8",list.get(4).getValue());
+        assertEquals("test case3: X, T, M, L, K"," Am",list.get(5).getValue());
         
-        list = processHeader(" X:  25 \nT: Mr. title.special!character \n L : 4/2 M: 1/16\nK:  Cm \n\n");
+        list = processHeader("X:  25 \nT: Mr. title.special!character \n L : 4/2 M: 1/16\nK:  Cm \n\n");
         assertEquals("test case4: X, T, L, M, K",5,list.size());
-        assertEquals("test case4: X, T, L, M, K","25",list.get(0).getValue());
+        assertEquals("test case4: X, T, L, M, K","  25",list.get(0).getValue());
         assertEquals("test case4: X, T, L, M, K"," Mr. title.special!character ",list.get(1).getValue());
-        assertEquals("test case4: X, T, L, M, K","4/2",list.get(2).getValue());
-        assertEquals("test case4: X, T, L, M, K","1/16",list.get(3).getValue());
-        assertEquals("test case4: X, T, L, M, K","Cm",list.get(4).getValue());
+        assertEquals("test case4: X, T, L, M, K"," 4/2",list.get(2).getValue());
+        assertEquals("test case4: X, T, L, M, K"," 1/16",list.get(3).getValue());
+        assertEquals("test case4: X, T, L, M, K","  Cm",list.get(4).getValue());
         
         // Voice test
         list = processHeader(" X:  25 \nT: Mr. title V: v1 \nV:  v23 42v\nL : 4/2 M: 1/16\nK:  Cm \n\n");

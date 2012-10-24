@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Lexer {
 	private ArrayList<Token> headerTokens;
 	private ArrayList<Token> bodyTokens;
-	private int bodyStartIndex;
+	public int bodyStartIndex;
 	private int headerIterator, bodyIterator;
 	
 	/**
@@ -51,7 +51,6 @@ public class Lexer {
 	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for(int i = bodyStartIndex; i<input.length(); i++){
-			if(Pattern.matches("\\s",""+input.charAt(i))){
 				int j = 0;
 				for(int k =1;i+k<input.length() && !Pattern.matches("\\s",""+input.charAt(i+k)); k++){
 					j =k;
@@ -118,7 +117,6 @@ public class Lexer {
 					}
 				}i+=j;
 				
-			}
 		}
 		return tokens;
 	}
@@ -126,8 +124,7 @@ public class Lexer {
 
 	protected ArrayList<Token> processHeader(String input){
 		ArrayList<Token> tokens = new ArrayList<Token>();
-		for (int i=0; i< input.length(); i++){
-		    
+		for (int i=0; i< input.length(); i++){		    
 			if (input.charAt(i)==':'){
 			    if(i==0) throw new RuntimeException("a header line starts with ':'");
 
@@ -137,17 +134,27 @@ public class Lexer {
 					sb.append(input.charAt(i+k));
 					k++;
 				}
-
-				Token t = new Token(input.charAt(i-1)+"",sb.toString());
+				String a;
+				if (input.charAt(i-1) == 'C'){
+					a = "Ci";
+				}
+				else{	
+					a = input.charAt(i-1)+"";
+				}
+				Token t = new Token(a,sb.toString());
+				if(Pattern.matches("\\A[MLX]",a)){
+					if (!Pattern.matches("\\A\\s*\\d++(/{1}\\d++)??\\s*\\z", t.getValue())){
+						throw new RuntimeException("Got: "+t.getValue()+", For: "+t.getType()+", Instead of: Number");
+					}
+				}
 				tokens.add(t);
 				i+=k;
-                if(t.getType() == Token.Type.KEY){
+				if(t.getType() == Token.Type.KEY){
                      this.bodyStartIndex = i+k;
                      break;
                 }			
 			}
 		}
-		
 		if(tokens.size()<3) throw new RuntimeException("A header needs at least X, T, K");
 		if(tokens.get(0).getType()!=Token.Type.INDEX)
 		    throw new RuntimeException("The first line of a header should be X");
