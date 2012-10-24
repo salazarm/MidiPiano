@@ -25,56 +25,37 @@ public class LexerTest extends Lexer
     
     @Test
     public void testString(){
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        DataInputStream dis = null;
-        StringBuffer sb = new StringBuffer();
-        try {
-        fis = new FileInputStream("sample_abc/fur_elise.abc");
-        bis = new BufferedInputStream(fis);
-        dis = new DataInputStream(bis);
-
-        while (dis.available() != 0) {
-        sb.append(dis.readLine());
-        sb.append("\n");
-        }
-        fis.close();
-        bis.close();
-        dis.close();
-
-public class LexerTest {
-	@Test
-	public void testString(){
-		FileInputStream fis = null;
-		BufferedInputStream bis = null;
-		DataInputStream dis = null;
-		StringBuffer sb = new StringBuffer();
-		try {
-		fis = new FileInputStream("C:\\Users\\DW\\workspace\\dishaan-salazarm-donggu\\abcPlayer\\sample_abc\\fur_elise.abc");
-		bis = new BufferedInputStream(fis);
-		dis = new DataInputStream(bis);
-
-		while (dis.available() != 0) {
-		sb.append(dis.readLine());
-		sb.append("\n");
-		}
-		fis.close();
-		bis.close();
-		dis.close();
-
-		} catch (FileNotFoundException e) {
-		e.printStackTrace();
-		} catch (IOException e) {
-		e.printStackTrace();
-		}
-		String input = sb.toString();
-		Lexer result = new Lexer(input);
-		for (Token c: result.getBody()){
-			System.out.println(c.getType() +":"+c.getValue());
-		}
-		for (Token c: result.getHeader()){
-			System.out.println(c.getValue());
-		}
+//        FileInputStream fis = null;
+//        BufferedInputStream bis = null;
+//        DataInputStream dis = null;
+//        StringBuffer sb = new StringBuffer();
+//        try {
+//        fis = new FileInputStream("sample_abc/fur_elise.abc");
+//        bis = new BufferedInputStream(fis);
+//        dis = new DataInputStream(bis);
+//
+//        while (dis.available() != 0) {
+//        sb.append(dis.readLine());
+//        sb.append("\n");
+//        }
+//        fis.close();
+//        bis.close();
+//        dis.close();
+//        
+//
+//		} catch (FileNotFoundException e) {
+//		e.printStackTrace();
+//		} catch (IOException e) {
+//		e.printStackTrace();
+//		}
+//		String input = sb.toString();
+//		Lexer result = new Lexer(input);
+//		for (Token c: result.getBody()){
+//			System.out.println(c.getType() +":"+c.getValue());
+//		}
+//		for (Token c: result.getHeader()){
+//			System.out.println(c.getType() + ":" + c.getValue());
+//		}
 	}
     
     @Test(expected = RuntimeException.class)
@@ -106,7 +87,8 @@ public class LexerTest {
     @Test(expected = RuntimeException.class)
     public void testProcessHeader_wrongHeader_NotEndedWithKey()
     {
-        processHeader("X:9\nT:title\nK:D\nM:2/4");
+    	String inp = "X:9\nT:title\nK:D\nM:2/4";
+        Lexer l = new Lexer(inp);
     }
     @Test(expected = RuntimeException.class)
     public void testProcessHeader_wrongHeader_NotCapital()
@@ -139,20 +121,20 @@ public class LexerTest {
         // We should extract just after ':' until the end of the line.
         list = processHeader("X: 3\nT: Turkish March\nC: W. Mozart\nM: 2/4\nL: 1/8\nK: Am");
         assertEquals("test case3: X, T, M, L, K",6,list.size());
-        assertEquals("test case3: X, T, M, L, K","2",list.get(0).getValue());
+        assertEquals("test case3: X, T, M, L, K"," 3",list.get(0).getValue());
         assertEquals("test case3: X, T, M, L, K"," Turkish March",list.get(1).getValue());
         assertEquals("test case3: X, T, M, L, K"," W. Mozart",list.get(2).getValue());
-        assertEquals("test case3: X, T, M, L, K","2/4",list.get(3).getValue());
-        assertEquals("test case3: X, T, M, L, K","1/8",list.get(4).getValue());
-        assertEquals("test case3: X, T, M, L, K","Am",list.get(5).getValue());
+        assertEquals("test case3: X, T, M, L, K"," 2/4",list.get(3).getValue());
+        assertEquals("test case3: X, T, M, L, K"," 1/8",list.get(4).getValue());
+        assertEquals("test case3: X, T, M, L, K"," Am",list.get(5).getValue());
         
-        list = processHeader(" X:  25 \nT: Mr. title.special!character \n L : 4/2 M: 1/16\nK:  Cm \n\n");
+        list = processHeader("X:  25 \nT: Mr. title.special!character \n L : 4/2 M: 1/16\nK:  Cm \n\n");
         assertEquals("test case4: X, T, L, M, K",5,list.size());
-        assertEquals("test case4: X, T, L, M, K","25",list.get(0).getValue());
+        assertEquals("test case4: X, T, L, M, K","  25",list.get(0).getValue());
         assertEquals("test case4: X, T, L, M, K"," Mr. title.special!character ",list.get(1).getValue());
-        assertEquals("test case4: X, T, L, M, K","4/2",list.get(2).getValue());
-        assertEquals("test case4: X, T, L, M, K","1/16",list.get(3).getValue());
-        assertEquals("test case4: X, T, L, M, K","Cm",list.get(4).getValue());
+        assertEquals("test case4: X, T, L, M, K"," 4/2",list.get(2).getValue());
+        assertEquals("test case4: X, T, L, M, K"," 1/16",list.get(3).getValue());
+        assertEquals("test case4: X, T, L, M, K","  Cm",list.get(4).getValue());
         
         // Voice test
         list = processHeader(" X:  25 \nT: Mr. title V: v1 \nV:  v23 42v\nL : 4/2 M: 1/16\nK:  Cm \n\n");
@@ -278,5 +260,4 @@ public class LexerTest {
         assertEquals("body test4: 34","[2",list.get(34).getValue());
         
     }
->>>>>>> branch 'master' of ssh://salazarm@athena.dialup.mit.edu/afs/athena.mit.edu/course/6/6.005/git/fa12/projects/abcPlayer/dishaan-salazarm-donggu.git
 }

@@ -13,7 +13,7 @@ public class Token{
 	}
 
 	private Type getType(String type) {
-		if (Pattern.matches("\\AC\\z",type)){
+		if (Pattern.matches("\\ACi\\z",type)){
 			return Type.COMPOSER;
 		}
 		else if(Pattern.matches("\\AX\\z",type)){
@@ -55,8 +55,11 @@ public class Token{
 		else if(Pattern.matches("\\Az\\z",type)){
 			return Type.REST;
 		}
-		else if(Pattern.matches("\\A[\\,^_'=]\\z",type)){
+		else if(Pattern.matches("\\A[\\^_=]\\z",type)){
 			return Type.ACCIDENTAL;
+		}
+		else if(Pattern.matches("\\A[\\,']", type)){
+			return Type.OCTAVE;
 		}
 		else if(Pattern.matches("\\|[\\|\\]]",type)){
 			return Type.ENDMAJORSECTION;
