@@ -2,12 +2,17 @@ package player;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+
+import javax.sound.midi.MidiUnavailableException;
+
 import org.junit.Test;
+
 import datatypes.Player;
 
 /**
@@ -38,11 +43,10 @@ public class Main {
 
         return sb.toString();
     }
-	public static void play(String file) throws IOException {
+	public static void play(String file) throws IOException, MidiUnavailableException {
 	    Lexer lexer = new Lexer(readFile(file));
 	    Parser parser = new Parser(lexer);
-	    Player player = new Player(parser.getLexer().getHeader(), parser.getLexer().getBody(), 
-	    		parser.getBeatsPerMinute(), 12);
+	    Player player = parser.parse();
 	    player.scheduleBody();
 	    System.out.printf("%s", player.getHeader().toString());
 	    player.play();	  

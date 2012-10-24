@@ -22,12 +22,27 @@ public class Player {
 	 * @throws MidiUnavailableException
 	 * @throws InvalidMidiDataException
 	 */
-	public Player(Header header, Body body, int beatsPerMinute, int ticksPerQuarterNote) 
+	public Player(Header header, Body body) 
 			throws MidiUnavailableException, InvalidMidiDataException {
 		this.header = header;
 		this.body = body;
-		this.ticksPerQuarterNote = ticksPerQuarterNote;
-		this.beatsPerMinute = beatsPerMinute;
+		//header.getDefaultNoteLength()
+		//header.getTempo()
+		/*
+		 * Input :
+		 * (1) defaultNoteLength: 1/4, 1/8..
+		 * (2) Tempo: (defaultNotes / min)
+		 * 
+		 * 1 beat = 1/4 note
+		 * (3) beatsPerMinute:  Tempo * defaultNoteLength * 4 
+		 * (4) ticksPerQuarterNote: freely chosen, as long as ticks for notes are integer.
+		 * (3)x(4) = ticks per minute. (3)x(4) ticks <-> (tempo) default notes.
+		 * One default note = [(3)*(4)/tempo] ticks = (4) * defaultNoteLength * 4
+		 */
+		this.beatsPerMinute = (int) (header.getTempo() * 4 * header.getDefaultNoteLength());
+		// choose appropriately so all notes have integer ticks
+		this.ticksPerQuarterNote = 48;
+
 		this.seqPlayer = new SequencePlayer(beatsPerMinute, ticksPerQuarterNote);
 	}
 	
