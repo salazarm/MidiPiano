@@ -77,14 +77,9 @@ public class Repeat extends MusicSequence {
 		return this.curTick;
 	}
 	
-	@Override
-	public int getDuration(Visitor<Integer> v) {
-		return v.onRepeat(this);
-	}
-
-	@Override
-	public void schedule(Visitor<Void> v) {
-		v.onRepeat(this);
-	}
+    public <R> R accept(Visitor<R> v)
+    {
+        return v.onRepeat(this);
+    }
 
 }

@@ -24,11 +24,8 @@ public class Body extends MusicSequence {
 		return this.voiceList;
 	}
 	
-	public int getDuration(Visitor<Integer> v) {
-		return v.onBody(this);
-	}
-	
-	public void schedule(Visitor<Void> v) {
-		v.onBody(this);
-	}
+    public <R> R accept(Visitor<R> v)
+    {
+        return v.onBody(this);
+    }
 }

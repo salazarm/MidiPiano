@@ -27,13 +27,8 @@ public class Chord extends MusicSequence {
 		return this.player;
 	}
 
-	@Override
-	public int getDuration(Visitor<Integer> v) {
-		return v.onChord(this);
-	}
-
-	@Override
-	public void schedule(Visitor<Void> v) {
-		v.onChord(this);
-	}
+    public <R> R accept(Visitor<R> v)
+    {
+        return v.onChord(this);
+    }
 }
