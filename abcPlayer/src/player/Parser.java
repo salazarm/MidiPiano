@@ -15,5 +15,11 @@ public class Parser {
 	public Lexer getLexer() {
 		return this.lexer;
 	}
+	
+	public void Parse(){
+		for (Token token: this.lexer.getHeader()){
+			
+		}
+	}
 
 }
