@@ -12,7 +12,7 @@ import datatypes.Note;
 import datatypes.Player;
 import datatypes.Repeat;
 import datatypes.Rest;
-import datatypes.Bar;
+import datatypes.Barline;
 import datatypes.Tuplet;
 import datatypes.Visitor;
 import datatypes.Voice;
@@ -161,6 +161,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	@Override
 	public Void onVoice(Voice voice) {
 		for(MusicSequence musicSequence : voice.getMusicSequences()) {
+		    if(musicSequence == null) continue;
 			musicSequence.setStartTick(voice.getCurTick());
 			musicSequence.accept(this);
 			voice.incrementCurTick(musicSequence.accept(this.duration));
@@ -182,8 +183,11 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		return null;
 	}
 
+	/**
+	 * It does nothing
+	 */
 	@Override
-    public Void onBar(Bar bar) {
+    public Void onBarline(Barline bar) {
 	    return null;   
 	}
 }

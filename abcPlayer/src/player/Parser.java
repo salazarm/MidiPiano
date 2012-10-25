@@ -334,9 +334,6 @@ public class Parser {
         String voiceNames[] = header.getVoiceNames();
         Voice currentVoice;
         
-        
-        //header.getKeySignature()
-        
         if(voiceNames.length > 0)
         {
             voices = new Voice[voiceNames.length];
@@ -390,6 +387,7 @@ public class Parser {
             {
                 lexer.nextBody();
                 // return to default keySignature
+                currentVoice.add(null);
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else if(type == Type.ENDMAJORSECTION)
@@ -397,13 +395,11 @@ public class Parser {
                 lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
+                currentVoice.add(null);
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else
             {
-                //if(token==null)
-                //    System.out.println("null in exception");
-                    //System.out.println("---: "+token.getValue() + " " + type.toString());
                 throw new RuntimeException("What's this token?" + " " + token.getValue() + " " + token.getType().toString());
             }
         }

@@ -8,5 +8,5 @@ public interface Visitor<R> {
 	public R onTuplet(Tuplet tuplet);
 	public R onVoice(Voice voice);
 	public R onBody(Body body);
-	public R onBar(Bar bar);
+	public R onBarline(Barline barline);
 }

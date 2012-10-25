@@ -32,7 +32,7 @@ public class Voice extends MusicSequence {
         this.musicSequences.add(musicSequence);
     }
     
-    private int repeatLeft = 0, repeatSkip = -1;
+    private int repeatLeft = -1, repeatSkip = -1;
     
     /**
      * Mark the start of repeat.
@@ -60,6 +60,7 @@ public class Voice extends MusicSequence {
         closed = true;
 
         int i;
+        if(repeatLeft == -1) repeatLeft = lastMajorend;
         if(repeatSkip == -1) // |: C D E F | G A B c :|
         {
             int repeatRight = musicSequences.size();
@@ -74,7 +75,7 @@ public class Voice extends MusicSequence {
                 musicSequences.add(musicSequences.get(i));
         }
         
-        repeatLeft = 0;
+        repeatLeft = -1;
         repeatSkip = -1;
     }
     
@@ -82,9 +83,11 @@ public class Voice extends MusicSequence {
      * Used for checking the end barline || or |].
      */
     private boolean closed = false;
-    public void setClosed()
+    private int lastMajorend = 0;
+    public void setClosed() // double bar
     {
         closed = true;
+        lastMajorend = musicSequences.size();
     }
     public boolean getClosed() { return closed; }
     

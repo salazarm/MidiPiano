@@ -1,5 +1,8 @@
 package visitors;
 
+import java.util.List;
+
+import datatypes.Barline;
 import datatypes.Body;
 import datatypes.Chord;
 import datatypes.MusicSequence;
@@ -7,7 +10,6 @@ import datatypes.Note;
 import datatypes.Player;
 import datatypes.Repeat;
 import datatypes.Rest;
-import datatypes.Bar;
 import datatypes.Tuplet;
 import datatypes.Visitor;
 import datatypes.Voice;
@@ -93,24 +95,18 @@ public class Duration implements Visitor<Integer> {
 	@Override
 	public Integer onTuplet(Tuplet tuplet) {
 		int duration = 0;
-		if(tuplet.getTupletNumber()==2) {
-			for (Note note : tuplet.getNotes()) {
-				duration += note.accept(this);
-			}
+        for (Note note : tuplet.getNotes())
+            duration += note.accept(this);
+
+		if(tuplet.getTupletNumber()==2)
 			duration = (int) (duration * 3./2);
-		}
-		else if(tuplet.getTupletNumber()==3) {
-			for(Note note: tuplet.getNotes()) {
-				duration += note.accept(this);
-			}
+		else if(tuplet.getTupletNumber()==3)
 			duration = (int) (duration * 2./3);
-		}
-		else if(tuplet.getTupletNumber()==4) {
-			for(Note note: tuplet.getNotes()) {
-				duration += note.accept(this);
-			}
+		else if(tuplet.getTupletNumber()==4)
 			duration = (int) (duration * 3./4);
-		}
+		else
+		    throw new RuntimeException("The length of tuplet should be 2 ~ 4");
+
 		return duration;
 	}
 
@@ -122,20 +118,32 @@ public class Duration implements Visitor<Integer> {
 	 */
 	@Override
     public Integer onVoice(Voice voice) {
+	    int i,n = voice.getMusicSequences().size();
         int duration = 0, oneSection = player.getTicksPerSection(), checkPoint;
+        List<MusicSequence> seq = voice.getMusicSequences();
         
         checkPoint = oneSection;
-        for (MusicSequence musicSequence : voice.getMusicSequences()) {
-            duration += musicSequence.accept(this);
-            if(duration == checkPoint) checkPoint += oneSection;
-            else if(duration > checkPoint) throw new RuntimeException("not fulfilled section");
+        for(i=0;i<n;++i)
+        {
+            if(seq.get(i)!=null)
+            {
+                if(duration >= checkPoint) throw new RuntimeException("not fulfilled section");
+                duration += seq.get(i).accept(this);
+            }
+            else // barline
+            {
+                if(duration == checkPoint)
+                    checkPoint += oneSection;
+                else
+                    throw new RuntimeException("wrong position of barline");
+            }
         }
         
-        if(duration%oneSection != 0)
+        if(duration%oneSection != 0 || seq.get(i-1)==null)
         {
             System.out.println(duration);
             System.out.println(oneSection);
-            throw new RuntimeException("not fulfilled section");
+            throw new RuntimeException("not fulfilled last section");
             
         }
         return duration;
@@ -163,11 +171,7 @@ public class Duration implements Visitor<Integer> {
 	}
 	
 	@Override
-    public Integer onBar(Bar bar) {
-        int duration = 0;
-        for (int i = 0; i < bar.getSequences().size(); i++) {
-            duration += bar.getSequences().get(i).accept(this);
-        }
-        return duration;
+    public Integer onBarline(Barline barline) {
+	    return 0;
     }
 }
