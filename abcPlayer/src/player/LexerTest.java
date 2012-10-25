@@ -31,9 +31,15 @@ public class LexerTest extends Lexer
     }
     @Test
     public void testFiles(){
-    	String[] testFiles = {"sample_abc/fur_elise.abc", "sample_abc/invention.abc", 
-    			"sample_abc/little_night_music.abc", "sample_abc/paddy.abc", "sample_abc/piece1.abc", 
-    			"sample_abc/piece2.abc", "sample_abc/prelude.abc", "sample_abc/scale.abc"};
+    	String[] testFiles = {
+    			"sample_abc/fur_elise.abc", 
+    			"sample_abc/invention.abc", 
+    			"sample_abc/little_night_music.abc", 
+    			"sample_abc/paddy.abc", 
+    			"sample_abc/piece1.abc", 
+    			"sample_abc/piece2.abc", 
+    			"sample_abc/prelude.abc", 
+    			"sample_abc/scale.abc"};
     	for (String c: testFiles){
     		compare(c);
     	}
@@ -78,6 +84,7 @@ public class LexerTest extends Lexer
         	lexToString.concat(bodyTokens.get(i).getValue());
         }
         assertEquals(lexToString,result);
+        System.out.println(lexToString);
 	}
     
     @Test(expected = RuntimeException.class)
@@ -171,11 +178,9 @@ public class LexerTest extends Lexer
         processBody("A|B|C|Z||");
     }
     @Test
-    public void testProcessBody_correct()
+    public void testProcessBodyBasic()
     {
         List<Token> list;
-        
-        // Basic
         list = processBody("  A| B |C|D|| ");
         assertEquals("body test1: 0",Token.Type.BASENOTE,list.get(0).getType());
         assertEquals("body test1: 0","A",list.get(0).getValue());
@@ -193,13 +198,10 @@ public class LexerTest extends Lexer
         assertEquals("body test1: 7",Token.Type.ENDMAJORSECTION,list.get(7).getType());
         assertEquals("body test1: 7","||",list.get(7).getValue());
         assertEquals("body test1: # token",8,list.size());
-
-        // Rest / Multiplier / newline test
-        //                        4            + 5        + 7                           + 17 = 33
+    }
+    public void testRestMultiplierNewline(){
+    	List<Token> list;
         list = processBody(" \n z A3| B/1 \n g3 |C1/ a3 C1/ |\nD/ z1/2 z/ z/4 z/ \n z1/ z/4 z16/16|] ");
-        for (int i=0; i<list.size(); i++){
-        	System.out.println(i+": "+list.get(i).getValue());
-        }
         assertEquals("body test2: 0",Token.Type.REST,list.get(0).getType());
         assertEquals("body test2: 0","z",list.get(0).getValue());
         assertEquals("body test2: 1",Token.Type.BASENOTE,list.get(1).getType());
@@ -221,13 +223,11 @@ public class LexerTest extends Lexer
         assertEquals("body test2: 32",Token.Type.ENDMAJORSECTION,list.get(32).getType());
         assertEquals("body test2: 32","|]",list.get(32).getValue());
         assertEquals("body test2: # token",33,list.size());
-        
-        
-        // Accidental / Octave / Chords / Tuplets
+    }
+    
+    public void testAccidentalOctaveChordsTuplets(){    
+    	List<Token> list;
         list = processBody(" [^c'__a'EG]5/ | [_e'__a'EG,]/ | (4^g''__A,,^B'' | (2G,/16A1/16 (3a4a4a4 ||");
-//        for (int i=0; i<list.size(); i++){
-//        	System.out.println(i+": "+list.get(i).getValue());
-//        }
         assertEquals("body test3: 0",Token.Type.CHORDSTART,list.get(0).getType());
         assertEquals("body test3: 1",Token.Type.ACCIDENTAL,list.get(1).getType());
         assertEquals("body test3: 2",Token.Type.BASENOTE,list.get(2).getType());
@@ -253,8 +253,9 @@ public class LexerTest extends Lexer
         assertEquals("body test3: 49",Token.Type.BASENOTE,list.get(49).getType());
         assertEquals("body test3: 49","a",list.get(49).getValue());
         assertEquals("body test3: # token",56,list.size());
-        
-        // Multiple voices / Repeats 
+    }
+    public void testMultipleVoicesRepeats(){
+    	List<Token> list;
         list = processBody(" A B C |: C D E | a b c | c d e :| e e e |]\nV: new voice\n"
                 + "C B A |: E D C |[1 E E E :|[2 F F F ||");
         
