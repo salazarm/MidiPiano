@@ -24,6 +24,8 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	private final SequencePlayer seqPlayer;
 	
 	public MusicSequenceScheduler(Player player) {
+	    //if(player.getSeqPlayer() == null) System.out.println("wrong init");
+	    
 		this.player = player;
 		this.seqPlayer = player.getSeqPlayer();
 		duration = new Duration(this.player);
@@ -42,10 +44,13 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	public Void onNote(Note note) {
 		/* Examines the key signature of this abc file to determine whether any
 		 * additional accidentals have to be applied to the note. */
-		KeySignature ks = this.player.getHeader().getKeySignature();
-		int[] accidentals = ks.getKeyAccidentals();
-		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
-		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
+	    
+	    // note is already transposed
+//		KeySignature ks = this.player.getHeader().getKeySignature();
+//		int[] accidentals = ks.getKeyAccidentals();
+//		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
+//		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
+	    
 		this.seqPlayer.addNote(note.getNotePitch().toMidiNote(), 
 				note.getStartTick(), note.accept(this.duration));
 		return null;

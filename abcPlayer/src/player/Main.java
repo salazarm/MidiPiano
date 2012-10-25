@@ -47,7 +47,7 @@ public class Main {
 	    Lexer lexer = new Lexer(readFile(file));
 	    Parser parser = new Parser(lexer);
 	    Player player = parser.parse();
-	    player.scheduleBody();
+	    player.schedule();
 	    System.out.printf("%s", player.getHeader().toString());
 	    player.play();	  
 	}
@@ -102,7 +102,5 @@ public class Main {
         assertEquals("", err.toString());
         System.setOut(null);
         System.setErr(null);
-        
-        
     }
 }

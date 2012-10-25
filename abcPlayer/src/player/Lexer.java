@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import player.Token.Type;
-
 public class Lexer {
-	private ArrayList<Token> headerTokens;
-	private ArrayList<Token> bodyTokens;
+    protected ArrayList<Token> headerTokens;
+	protected ArrayList<Token> bodyTokens;
 	public int bodyStartIndex;
 	private int headerIterator, bodyIterator;
 	

@@ -43,11 +43,9 @@ public class Parser {
     {
         try
         {
+            if(body == null) System.out.println("body is null in parse()");
             Player player = new Player(header, body);
-            
-            // check timing
             player.getBody().accept( new Duration(player) );
-
             return player;
         }
         catch(InvalidMidiDataException e)
@@ -288,9 +286,10 @@ public class Parser {
         header = new Header(index, title, keySignature);
         if(composer != null) header.setComposer(composer);
         if(meter != null) header.setMeter(meter);
+        if(length!=null) header.setDefaultNoteLengthFraction(length);
         header.setTempo(tempo);
         header.setVoiceNames(voiceNames.toArray(new String[]{}));
-        header.setDefaultNoteLengthFraction(length);
+        
     }
     
     /**
@@ -305,7 +304,7 @@ public class Parser {
 
         int i;
         Token token;
-        Body body = new Body();
+        body = new Body();
         
         String voiceNames[] = header.getVoiceNames();
         Voice currentVoice;
@@ -315,20 +314,20 @@ public class Parser {
         
         if(voiceNames.length > 0)
         {
-            currentVoice = readVoice();
             voices = new Voice[voiceNames.length];
             for(i=0;i<voices.length;++i)
                 body.addVoice( voices[i] = new Voice(voiceNames[i]) );
+            currentVoice = readVoice();
         }
         else
         {
-            voices = null;
+            
             body.addVoice( currentVoice = new Voice("Default voice") );
+            voices = new Voice[] {currentVoice};
         }
         
         currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
         
-        System.out.println(lexer.getBody().get(2).getValue() + " " + lexer.getBody().get(2).toString());
         while( (token=lexer.nextBody()) != null)
             System.out.println(token.getValue() + " " + token.getType().toString());
 
@@ -361,22 +360,26 @@ public class Parser {
             }
             else if(type == Type.BARLINE)
             {
+                lexer.nextBody();
                 // return to default keySignature
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
             }
             else if(type == Type.ENDMAJORSECTION)
             {
+                lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
             }
             else
             {
-                System.err.println(token.getValue() + " " + type.toString());
+                System.out.println(token.getValue() + " " + type.toString());
                 throw new RuntimeException("What's this token?");
             }
         }
 
+        for(Voice voice : voices) if(!voice.getClosed())
+            throw new RuntimeException("There is a voice not closed with || or |]");
         // TODO: Validate: all voices have same length?
     }
 }
