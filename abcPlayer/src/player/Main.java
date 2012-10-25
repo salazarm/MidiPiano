@@ -40,7 +40,7 @@ public class Main {
             sb.append(buf, 0, numRead);
         
         br.close();
-
+        
         return sb.toString();
     }
 	public static void play(String file) throws IOException, MidiUnavailableException {
@@ -73,6 +73,11 @@ public class Main {
     public void testPlay_wrongPath() throws IOException, MidiUnavailableException
     {
         play("non_exist_hello_abc.abc");
+    }
+	@Test
+    public void testPlay_playPiece1() throws IOException, MidiUnavailableException
+    {
+        play("sample_abc/piece1.abc");
     }
     @Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException

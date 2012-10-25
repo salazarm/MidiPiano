@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import player.Token.Type;
+
 public class Lexer {
 	private ArrayList<Token> headerTokens;
 	private ArrayList<Token> bodyTokens;
@@ -51,6 +53,7 @@ public class Lexer {
 
 	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
+		input = "  "+input;
 		for(int i = bodyStartIndex; i<input.length(); i++){
 				int j = 0;
 				for(int k =1;i+k<input.length() && !Pattern.matches("\\s",""+input.charAt(i+k)); k++){

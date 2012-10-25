@@ -3,6 +3,7 @@ package visitors;
 import java.util.ArrayList;
 import java.util.List;
 
+import sound.SequencePlayer;
 import datatypes.Body;
 import datatypes.Chord;
 import datatypes.KeySignature;
@@ -11,11 +12,10 @@ import datatypes.Note;
 import datatypes.Player;
 import datatypes.Repeat;
 import datatypes.Rest;
+import datatypes.Bar;
 import datatypes.Tuplet;
 import datatypes.Visitor;
 import datatypes.Voice;
-
-import sound.SequencePlayer;
 
 public class MusicSequenceScheduler implements Visitor<Void> {
 	
@@ -171,5 +171,10 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 			voice.accept(this);
 		}
 		return null;
+	}
+
+	@Override
+    public Void onBar(Bar bar) {
+	    return null;   
 	}
 }
