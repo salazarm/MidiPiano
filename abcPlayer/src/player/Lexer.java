@@ -120,11 +120,16 @@ public class Lexer {
 			}
 			else if(Pattern.matches("\\AV:[\\s\\S]*", input.substring(i,input.length()))){  // V:
 				StringBuilder sb = new StringBuilder();
-				for (int j = 0; !Pattern.matches("\n",input.charAt(i+j)+"");j++ ){
+				for (int j = 0; i+j < input.length() && !Pattern.matches("[\\n\\r]",input.charAt(i+j)+"");j++ ){
 					sb.append(input.charAt(i+j));
 				}
+				String string = sb.toString();
+				StringBuilder sb2 = new StringBuilder();
+				for(int qi =0; qi <string.length() && string.charAt(qi)!='%'; qi++){
+					sb2.append(string.charAt(qi));
+				}
 				i+=sb.length()-1;
-				tokens.add(new Token(1+sb.toString(), sb.toString()));
+				tokens.add(new Token(1+sb2.toString(), sb2.toString()));
 			}
 			else if(Pattern.matches("\\A\\s[\\s\\S]*",input.substring(i,input.length()))){ // whitespace
 				continue;
@@ -145,13 +150,19 @@ public class Lexer {
 
 	protected ArrayList<Token> processHeader(String input){
 		ArrayList<Token> tokens = new ArrayList<Token>();
-		for (int i=0; i< input.length(); i++){		    
+		for (int i=0; i< input.length(); i++){	
+			if (input.charAt(i)=='%'){
+				while(input.charAt(i) != '\n'){
+					i++;
+				}
+				continue;
+			}
 			if (input.charAt(i)==':'){
 			    if(i==0) throw new RuntimeException("a header line starts with ':'");
 
 				int k = 1;
 				StringBuilder sb = new StringBuilder();
-				while(i+k<input.length() && !Pattern.matches("\\n",input.charAt(i+k)+"")){
+				while(i+k<input.length() && !Pattern.matches("[\\r\\n]",input.charAt(i+k)+"")){
 					sb.append(input.charAt(i+k));
 					k++;
 				}
@@ -162,7 +173,12 @@ public class Lexer {
 				else{	
 					a = input.charAt(i-1)+"";
 				}
-				Token t = new Token(a,sb.toString());
+				String string = sb.toString();
+				StringBuilder sb2 = new StringBuilder();
+				for(int qi =0; qi <string.length() && string.charAt(qi)!='%'; qi++){
+					sb2.append(string.charAt(qi));
+				}
+				Token t = new Token(a,sb2.toString());
 				if(Pattern.matches("\\A[LX]",a)){
 					if (!Pattern.matches("\\A\\s*\\d++(/{1}\\d++)??\\s*\\z", t.getValue())){
 						throw new RuntimeException("Got: "+t.getValue()+", For: "+t.getType()+", Instead of: Number");

@@ -139,7 +139,7 @@ public class Parser {
 
         // Read basenote
         if(token.getType()!=Type.BASENOTE)
-            throw new RuntimeException("readNote: This is not basenote! " + token.getType() + ": " + token.getValue());
+            throw new RuntimeException("readNote: This is not basenote: " + token.getType() + " " + token.getValue());
         note = token.getValue().charAt(0);
         if(note>='a' && note<='z') {octave++; note=(char)(note-'a'+'A');}
         
@@ -167,7 +167,6 @@ public class Parser {
                         --octave;
                     else
                         throw new RuntimeException("mixed octave");
-                    
                 }
             }
             else if(str.equals("'"))
@@ -239,12 +238,13 @@ public class Parser {
         if(token.getType() != Type.VOICE)
             throw new RuntimeException("Voice expected");
         
-        for(Voice v : voices)
-            if(v.getVoiceName().equals(str))
+        for(Voice v : voices){
+            if(v.getVoiceName().trim().equals(str.trim()))
                 return v;
-        
-        throw new RuntimeException("No voice found with name: " + str);
+        }
+        throw new RuntimeException("No voice found with name: " + str);        
     }
+    
     private void parseHeader()
     {
         //*****
@@ -333,9 +333,6 @@ public class Parser {
         String voiceNames[] = header.getVoiceNames();
         Voice currentVoice;
         
-        
-        //header.getKeySignature()
-        
         if(voiceNames.length > 0)
         {
             voices = new Voice[voiceNames.length];
@@ -390,19 +387,21 @@ public class Parser {
                 lexer.nextBody();
                 // return to default keySignature
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
+                
+                // barline checking
+                //currentVoice.add(null);
             }
             else if(type == Type.ENDMAJORSECTION)
             {
                 lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
+                // barline checking
+                // currentVoice.add(null);
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else
             {
-                //if(token==null)
-                //    System.out.println("null in exception");
-                    //System.out.println("---: "+token.getValue() + " " + type.toString());
                 throw new RuntimeException("What's this token?" + " " + token.getValue() + " " + token.getType().toString());
             }
         }

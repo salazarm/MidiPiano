@@ -26,7 +26,7 @@ public class Main {
 	 * <p>Your code <b>should not</b> exit the application abnormally using
 	 * System.exit()</p>
 	 * 
-	 * @param file the name of input abc file
+	 * @param path the name of input abc file
 	 */
     public static String readFile(String path) throws IOException
     {
@@ -57,8 +57,7 @@ public class Main {
 	{
 	    readFile("non_exist_hello_abc.abc");
 	}
-	
-	@Test
+//	@Test
     public void testReadFile_sampleABC() throws IOException
     {
         String str;
@@ -77,18 +76,18 @@ public class Main {
 	@Test
     public void testPlay_playPiece1() throws IOException, MidiUnavailableException
     {
-//		play("sample_abc/extraTests/tuples.abc");
-		play("sample_abc/extraTests/sample88.abc");
-//		play("sample_abc/piece2.abc");
-//		play("sample_abc/prelude.abc");
-//	    play("sample_abc/scale.abc");
-//        play("sample_abc/little_night_music.abc");
-//	    play("sample_abc/invention.abc");
-//	    play("sample_abc/paddy.abc");
-//	    play("sample_abc/piece1.abc");
+		play("sample_abc/ExtraTestFiles/octaves.abc");
+		//play("sample_abc/fur_elise.abc");
+	    //play("sample_abc/piece1.abc");
+		//play("sample_abc/piece2.abc");
+		//play("sample_abc/prelude.abc");
+	    //play("sample_abc/scale.abc");
+        //play("sample_abc/little_night_music.abc");
+	    //play("sample_abc/invention.abc");
+	    //play("sample_abc/paddy.abc");
     }
-	
-//    @Test
+
+	//@Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -99,16 +98,16 @@ public class Main {
         
         
         assertEquals(
-            "X: 8628\n"+
-            "T: Prelude BWV 846 no. 1\n"+
-            "C: Johann Sebastian Bach\n"+
-            "M: 4/4\n"+
-            "L: 1/16\n"+
-            "Q: 280\n"+
-            "V: 1\n"+
-            "V: 2\n"+
-            "V: 3\n"+
-            "K: C\n", out.toString());
+            "X:8628\n"+
+            "T:Prelude BWV 846 no. 1\n"+
+            "C:Johann Sebastian Bach\n"+
+            "M:4/4\n"+
+            "L:1/16\n"+
+            "Q:280\n"+
+            "V:1\n"+
+            "V:2\n"+
+            "V:3\n"+
+            "K:C\n", out.toString());
         assertEquals("", err.toString());
         System.setOut(null);
         System.setErr(null);

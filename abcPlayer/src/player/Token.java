@@ -12,10 +12,10 @@ public class Token{
 	Token(String inp, String string) {
 	    this.type = getType(inp);
 	    
-	    if(type!=Type.TITLE && type!=Type.COMPOSER && type!=Type.VOICE)
+	    //if(type!=Type.TITLE && type!=Type.COMPOSER && type!=Type.VOICE)
+	    //    this.value = string.trim();
+	    //else
 	        this.value = string.trim();
-	    else
-	        this.value = string;
 			
 	}
 
@@ -88,7 +88,7 @@ public class Token{
 			return Type.VOICE;
 		}
 		else{
-			throw new RuntimeException("Unexpected Sequence: " +type);
+			throw new RuntimeException("Unexpected Sequence: " +type +": "+this.getValue());
 		}
 	}
 	

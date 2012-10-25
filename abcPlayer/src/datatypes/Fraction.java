@@ -1,25 +1,24 @@
 package datatypes;
 
-import exception.InvalidInputException;
 
 public class Fraction {
-	
+
 	private final int numerator, denominator;
-	
+
 	/**
-	 * 
+	 *
 	 * @param numerator
 	 * @param denominator
 	 */
 	public Fraction(int numerator, int denominator) {
 		if(denominator<=0) {
-			throw new InvalidInputException(
+			throw new RuntimeException(
 					String.format("Invalid denominator: %s", denominator));
 		}
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
-	
+
 	public int getNumerator() {
 		return numerator;
 	}
@@ -31,7 +30,7 @@ public class Fraction {
 	public double getValue() {
 		return ((double)numerator)/denominator;
 	}
-	
+
 	@Override
 	public String toString() {
 		return numerator + "/" + denominator;

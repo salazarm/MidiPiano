@@ -135,6 +135,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	@Override
 	public Void onVoice(Voice voice) {
 		for(MusicSequence musicSequence : voice.getMusicSequences()) {
+		    if(musicSequence == null) continue;
 			musicSequence.setStartTick(voice.getCurTick());
 			musicSequence.accept(this);
 			voice.incrementCurTick(musicSequence.accept(this.duration));
