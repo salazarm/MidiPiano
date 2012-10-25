@@ -2,13 +2,14 @@ package player;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
 import org.junit.Test;
 
 /***
@@ -23,38 +24,55 @@ public class LexerTest extends Lexer
         super();
     }
     
-	@Test
-	public void testString(){
-		FileInputStream fis = null;
-		BufferedInputStream bis = null;
-		DataInputStream dis = null;
-		StringBuffer sb = new StringBuffer();
+    @Test
+    public void testFiles(){
+    	String[] testFiles = {"sample_abc/fur_elise.abc", "sample_abc/invention.abc", 
+    			"sample_abc/little_night_music.abc", "sample_abc/paddy.abc", "sample_abc/piece1.abc", 
+    			"sample_abc/piece2.abc", "sample_abc/prelude.abc", "sample_abc/scale.abc"};
+    	for (String c: testFiles){
+    		compare(c);
+    	}
+    }
+    
+	private void compare(String testFile){
+        BufferedReader br = null;
 		try {
-		fis = new FileInputStream("sample_abc/piece1.abc");
-		bis = new BufferedInputStream(fis);
-		dis = new DataInputStream(bis);
-
-		while (dis.available() != 0) {
-		sb.append(dis.readLine());
-		sb.append("\n");
-		}
-		fis.close();
-		bis.close();
-		dis.close();
-
+			br = new BufferedReader(new FileReader(testFile));
 		} catch (FileNotFoundException e) {
-		e.printStackTrace();
+			e.printStackTrace();
+		}
+        StringBuffer sb = new StringBuffer();
+        StringBuffer cb = new StringBuffer();
+        char[] buf = new char[1024];
+        int numRead;
+        try {
+			while((numRead = br.read(buf)) != -1){
+			    sb.append(buf, 0, numRead);
+			    if(Pattern.matches("\\s", ""+numRead)){
+			    	cb.append(buf,0,numRead);
+			    }
+			}
 		} catch (IOException e) {
-		e.printStackTrace();
+			e.printStackTrace();
 		}
-		String input = sb.toString();
-		Lexer result = new Lexer(input);
-		for (Token c: result.getBody()){
-			System.out.println(c.getType() +":"+c.getValue());
+        try {
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		for (Token c: result.getHeader()){
-			System.out.println(c.getValue());
-		}
+        
+        String result = cb.toString();
+        String lexToString = "";
+        Lexer l = new Lexer(sb.toString());
+        ArrayList<Token> headerTokens = l.getHeader();
+        ArrayList<Token> bodyTokens = l.getBody();
+        for (int i =0; i<headerTokens.size(); i++) {
+        	lexToString.concat(headerTokens.get(i).getValue());
+        }
+        for (int i = 0; i<bodyTokens.size(); i++) {
+        	lexToString.concat(bodyTokens.get(i).getValue());
+        }
+        assertEquals(lexToString,result);
 	}
     
     @Test(expected = RuntimeException.class)
