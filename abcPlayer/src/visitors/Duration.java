@@ -125,22 +125,25 @@ public class Duration implements Visitor<Integer> {
         checkPoint = oneSection;
         for(i=0;i<n;++i)
         {
-            if(seq.get(i)!=null)
-            {
-                if(duration >= checkPoint) throw new RuntimeException("not fulfilled section");
-                duration += seq.get(i).accept(this);
-            }
-            else // barline
-            {
-                if(duration == checkPoint)
-                    checkPoint += oneSection;
-                else
-                    throw new RuntimeException("wrong position of barline");
-            }
+            duration += seq.get(i).accept(this);
+            
+// measurement checking
+//            if(seq.get(i)!=null)
+//            {
+//                if(duration >= checkPoint) throw new RuntimeException("not fulfilled section");
+//                duration += seq.get(i).accept(this);
+//            }
+//            else // barline
+//            {
+//                if(duration == checkPoint)
+//                    checkPoint += oneSection;
+//                else
+//                    throw new RuntimeException("wrong position of barline");
+//            }
         }
 
-        if(duration%oneSection != 0 || seq.get(n-1)!=null)
-            throw new RuntimeException("not fulfilled last section " + duration + " " + oneSection);
+        //if(duration%oneSection != 0 || seq.get(n-1)!=null)
+        //    throw new RuntimeException("not fulfilled last section " + duration + " " + oneSection);
 
         return duration;
     }
@@ -165,7 +168,7 @@ public class Duration implements Visitor<Integer> {
 		}
 		return duration;
 	}
-	
+
 	@Override
     public Integer onBarline(Barline barline) {
 	    return 0;

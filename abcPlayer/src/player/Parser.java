@@ -161,19 +161,18 @@ public class Parser {
             if(str.equals(","))
             {
                 --octave;
-                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                while(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
                 {
                     if(lexer.nextBody().getValue().equals(","))
                         --octave;
                     else
                         throw new RuntimeException("mixed octave");
-                    
                 }
             }
             else if(str.equals("'"))
             {
                 ++octave;
-                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                while(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
                 {
                     if(lexer.nextBody().getValue().equals("'"))
                         ++octave;
@@ -181,7 +180,6 @@ public class Parser {
                         throw new RuntimeException("mixed octave");
                     
                 }
-                ++octave;
             }
         }
         
@@ -387,15 +385,18 @@ public class Parser {
             {
                 lexer.nextBody();
                 // return to default keySignature
-                currentVoice.add(null);
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
+                
+                // barline checking
+                //currentVoice.add(null);
             }
             else if(type == Type.ENDMAJORSECTION)
             {
                 lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
-                currentVoice.add(null);
+                // barline checking
+                // currentVoice.add(null);
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else
@@ -409,6 +410,5 @@ public class Parser {
          * for(Voice voice : voices) if(!voice.getClosed())
             throw new RuntimeException("There is a voice not closed with || or |]");
          */
-        // TODO: Validate: all voices have same length?
     }
 }

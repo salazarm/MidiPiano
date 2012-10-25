@@ -51,7 +51,6 @@ public class Accidental {
     }
     
     public Type getType() {
-        // TODO: IS THIS REP EXPOSURE?
         return type;
     }
 
