@@ -79,12 +79,12 @@ public class Header {
 	@Override
 	public String toString() {
 		return String.format("X: %s\n" +
-				"T: %s" +
-				"C: %s" +
-				"M: %s" +
-				"Q: %s" +
-				"L: %s" +
-				"K: %s", this.getIndexNumber(), this.getTitle(), this.getComposer(),
+				"T: %s\n" +
+				"C: %s\n" +
+				"M: %s\n" +
+				"Q: %s\n" +
+				"L: %s\n" +
+				"K: %s\n", this.getIndexNumber(), this.getTitle(), this.getComposer(),
 				this.getMeter().toString(), this.getTempo(), 
 				this.getDefaultNoteLengthFraction().toString(), 
 				this.getKeySignature().getStringRep());

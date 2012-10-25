@@ -29,6 +29,33 @@ public class Voice extends MusicSequence {
 		this.musicSequences.add(musicSequence);
 	}
 	
+	private int repeatLeft = 0, repeatSkip = 0;
+	public void repeatStart() { repeatLeft = musicSequences.size(); }
+	public void repeatSection(){repeatSkip = musicSequences.size(); }
+	/**
+	 * Expand repeats,
+	 * by copying old sequence, assuming ADTs are immutable.
+	 */
+	public void repeatEnd()
+    {
+	    // Expand!!!
+	    if(repeatLeft == 0) throw new RuntimeException("No repeat start found");
+	    int i;
+	    if(repeatSkip==0) // |: C D E F | G A B c :|
+	    {
+	        int repeatRight = musicSequences.size();
+	        // [repeatLeft, repeatRight)
+	        for(i=repeatLeft;i<repeatRight;++i)
+	            musicSequences.add(musicSequences.get(i));
+	    }
+	    else // |: C D E F |[1 G A B c :|[2 F E D C |
+	    {
+	     // [repeatLeft, repeatSkip) 
+            for(i=repeatLeft;i<repeatSkip;++i)
+                musicSequences.add(musicSequences.get(i));
+	    }
+    }
+	
 	public String getVoiceName() {
 		return this.voiceName;
 	}
