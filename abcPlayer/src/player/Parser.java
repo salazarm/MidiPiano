@@ -219,6 +219,7 @@ public class Parser {
     {
         Token token = lexer.nextBody();
         String str = token.getValue();
+        str = str.substring(2,  str.length());
         
         if(token.getType() != Type.VOICE)
             throw new RuntimeException("Voice expected");
@@ -355,7 +356,8 @@ public class Parser {
             }
             else if(type == Type.REPEATEND)
             {
-                ;
+                // new Repeat();
+                
             }
             else if(type == Type.BARLINE)
             {
