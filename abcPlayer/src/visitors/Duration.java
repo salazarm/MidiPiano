@@ -5,6 +5,7 @@ import datatypes.Chord;
 import datatypes.MusicSequence;
 import datatypes.Note;
 import datatypes.Player;
+import datatypes.Repeat;
 import datatypes.Rest;
 import datatypes.Tuplet;
 import datatypes.Visitor;
@@ -69,6 +70,21 @@ public class Duration implements Visitor<Integer> {
 	}
 
 	/**
+	 * Returns the duration of this Repeat in ticks.
+	 * @return duration int representation of the duration of this Repeat, which is calculated
+	 * as the duration of each of the musicSequences on both the first and second passes of the 
+	 * Repeat
+	 */
+	@Override
+	public Integer onRepeat(Repeat repeat) {
+		int duration = 0;
+		for (int i = 0; i < repeat.getSequences().size(); i++) {
+			duration += repeat.getSequences().get(i).accept(this) + repeat.getSecondPass().get(i).accept(this);
+		}
+		return duration;
+	}
+
+	/**
 	 * Returns the duration of this Tuplet in ticks. See abc subset for definition of
 	 * Tuplet duration.
 	 * @return duration int representation of the duration of this Tuplet in ticks.
@@ -76,36 +92,43 @@ public class Duration implements Visitor<Integer> {
 	@Override
 	public Integer onTuplet(Tuplet tuplet) {
 		int duration = 0;
-        for (Note note : tuplet.getNotes()) duration += note.accept(this);
-        return (int) ( duration * Tuplet.ratio[tuplet.getTupletNumber()] );
+		if(tuplet.getTupletNumber()==2) {
+			for (Note note : tuplet.getNotes()) {
+				duration += note.accept(this);
+			}
+			duration = (int) ((0.5*duration)*3);
+		}
+		else if(tuplet.getTupletNumber()==3) {
+			for(Note note: tuplet.getNotes()) {
+				duration += note.accept(this);
+			}
+			duration = (int) ((((double) (1/3)) * duration) * 2);
+		}
+		else if(tuplet.getTupletNumber()==4) {
+			for(Note note: tuplet.getNotes()) {
+				duration += note.accept(this);
+			}
+			duration = (int) ((((double) (1/4)) * duration) * 3);
+		}
+		return duration;
 	}
 
 	
 	/**
-	 * Used for checking each section is fulfilled.
-	 * 
 	 * Get duration of this Voice in ticks. Duration is defined as the sum of the durations
 	 * of the MusicSequences that make up this Voice.
 	 * @return duration int value of duration as defined above in ticks
 	 */
-    @Override
-    public Integer onVoice(Voice voice) {
-        int duration = 0, oneSection = player.getTicksPerSection(), checkPoint;
-        
-        checkPoint = oneSection;
-        for (MusicSequence musicSequence : voice.getMusicSequences()) {
-            duration += musicSequence.accept(this);
-            if(duration == checkPoint) checkPoint += oneSection;
-            else if(duration > checkPoint) throw new RuntimeException("not fulfilled section");
-        }
-        if(duration%oneSection != 0) throw new RuntimeException("not fulfilled section");
-        return duration;
-    }
-	
+	@Override
+	public Integer onVoice(Voice voice) {
+		int duration = 0;
+		for (MusicSequence musicSequence : voice.getMusicSequences()) {
+			duration += musicSequence.accept(this);
+		}
+		return duration;
+	}
 
 	/**
-	 * Used for checking all voices have the same length.
-	 * 
 	 * Returns duration of this Body, defined as the duration of the Voice with the longest
 	 * duration in ticks.
 	 * @return duration int value of duration in ticks, as defined above
