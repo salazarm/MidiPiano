@@ -73,7 +73,11 @@ public class Token{
 		else if(Pattern.matches("\\A\\[[12]\\z",type)){
 			return Type.REPEATSECTION;
 		}
-		else if(Pattern.matches("\\AV",type) || Pattern.matches("\\AV:.",type) ){
+		else if(Pattern.matches("\\AV1V:.*",type) ){
+			this.value = type.substring(4,type.length());
+			return Type.VOICE;
+		}
+		else if(Pattern.matches("\\AV\\z",type) ){
 			return Type.VOICE;
 		}
 		else{

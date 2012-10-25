@@ -58,44 +58,55 @@ public class Lexer {
 					if (Pattern.matches("[a-gA-Gz,\\^_'=]",""+input.charAt(i+k))){
 						tokens.add(new Token(input.charAt(i+k)+"",input.charAt(i+k)+""));
 					}
+					else if(Pattern.matches("\\[[\\^za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k+1))){
+						tokens.add(new Token("[","["));
+					}
 					else if((""+input.charAt(i+k)).equals(":")){
 						tokens.add(new Token(":|",":|")); k+=1;
 					}
-					else if((""+input.charAt(i+k)).equals("|:")){
+					else if((""+input.charAt(i+k)+input.charAt(i+k+1)).equals("|:")){
 						tokens.add(new Token("|:","|:")); k+=1;
 					}
 					else if(Pattern.matches("\\([2-4]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("("+input.charAt(i+k+1), "("+input.charAt(i+k+1))); k+=1;
 					}
-					else if(Pattern.matches("\\A[/0-9]",input.charAt(i+k)+"")){
-						boolean slash = false;
-						StringBuilder num = new StringBuilder();
-						int s = 0;
-						while(Pattern.matches("\\A[/0-9]",input.charAt(i+k+s)+"")){
-							if(input.charAt(i+k+s) == '/'){
-								if(slash == true){
-									throw new RuntimeException("Invalid Character Sequence");
-								}
-								num.append('/');
-								slash = true;
-							}	
-							if(Pattern.matches("\\A[0-9]",""+input.charAt(i+k))){
-								num.append(input.charAt(i+k));
-							}	
-							s++;
-						}
-						tokens.add(new Token(num.toString(),num.toString()));
-//						System.out.println(num.toString()+" : "+ input.charAt(i+k) + (tokens.size()-1)); 
-						k += s-1;
+					else if (Pattern.matches("\\A/\\d+[\\s\\S]*", input.substring(i+k,input.length()-1))){
+					Pattern pattern = Pattern.compile("\\A/\\d+");
+					Matcher matcher = pattern.matcher(input.substring(i+k,input.length()-1));
+					matcher.find();
+					tokens.add(new Token(matcher.group(),matcher.group()));
+					k += matcher.end()-1;
 					}
+					else if(Pattern.matches("\\A[/\\d]+[\\s\\S]*",input.substring(i+k,input.length()-1))){
+		                    Pattern pattern;
+		                    if(Pattern.matches("\\A/\\d+[\\s\\S]*]",input.substring(i+k,input.length()-1))){
+		                        pattern = Pattern.compile("\\A/\\d+");
+		                    } 
+		                    else if (Pattern.matches("\\A\\d+/[^\\d][\\s\\S]*", input.substring(i+k,input.length()-1))){
+		                    	pattern = Pattern.compile("\\A\\d+/");
+		                    }
+		                    else if(Pattern.matches("\\A/[^//d][\\s\\S]*", input.substring(i+k,input.length()-1))){
+		                    	pattern = Pattern.compile("\\A/");
+		                    }
+		                    else if(Pattern.matches("\\A\\d+/\\d+[\\s\\S]*",input.substring(i+k,input.length()-1))){
+		                        pattern = Pattern.compile("\\A\\d+/\\d+");
+		                    }
+		                    else if(Pattern.matches("\\A\\d+[\\s\\S]*",input.substring(i+k,input.length()-1))){
+		                        pattern = Pattern.compile("\\A\\d+");
+		                    }
+		                    else{
+		                        throw new RuntimeException("Invalid Character Sequence Encountered"+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2));
+		                    }
+		                    Matcher matcher = pattern.matcher(input.substring(i+k,input.length()-1));
+		                    matcher.find(); 
+		                    tokens.add(new Token(matcher.group(), matcher.group()));
+		                    k+= matcher.end()-1;
+					  }
 					else if(Pattern.matches("\\[[12]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("["+input.charAt(i+k+1), "["+input.charAt(i+k+1)));k++;
 					}
 					else if( ("|]").equals(""+input.charAt(i+k)+input.charAt(i+k+1)) || ("||") .equals(""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("|"+input.charAt(i+k+1),"|"+input.charAt(i+k+1)));k++;
-					}
-					else if(Pattern.matches("\\[[\\^za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("[","["));
 					}
 					else if(Pattern.matches("\\][,za-gA-G_0-9]",""+input.charAt(i+k)+input.charAt(i+k-1))){
 						tokens.add(new Token("]","]"));
@@ -105,7 +116,7 @@ public class Lexer {
 						for(; !Pattern.matches("\\n",""+input.charAt(i+k));k++){
 							sb.append(input.charAt(i+k));
 						}
-						tokens.add(new Token(sb.toString(),sb.toString()));
+						tokens.add(new Token("V1"+sb.toString(),sb.toString()));
 					}
 					else if(input.charAt(i+k) == '|'){
 						tokens.add(new Token("|","|"));
