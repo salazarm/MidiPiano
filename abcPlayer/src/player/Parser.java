@@ -139,7 +139,7 @@ public class Parser {
 
         // Read basenote
         if(token.getType()!=Type.BASENOTE)
-            throw new RuntimeException("readNote: This is not basenote!");
+            throw new RuntimeException("readNote: This is not basenote! " + token.getType() + ": " + token.getValue());
         note = token.getValue().charAt(0);
         if(note>='a' && note<='z') {octave++; note=(char)(note-'a'+'A');}
         
@@ -243,7 +243,7 @@ public class Parser {
             if(v.getVoiceName().equals(str))
                 return v;
         
-        throw new RuntimeException("No voice found with such name");
+        throw new RuntimeException("No voice found with name: " + str);
     }
     private void parseHeader()
     {

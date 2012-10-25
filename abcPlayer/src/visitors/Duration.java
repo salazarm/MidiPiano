@@ -5,7 +5,6 @@ import datatypes.Chord;
 import datatypes.MusicSequence;
 import datatypes.Note;
 import datatypes.Player;
-import datatypes.Repeat;
 import datatypes.Rest;
 import datatypes.Tuplet;
 import datatypes.Visitor;
@@ -67,21 +66,6 @@ public class Duration implements Visitor<Integer> {
 		 */
 		return (int) (rest.getNoteMultiplier() * this.getPlayer().getHeader().getDefaultNoteLength() 
 				* 4 * this.getPlayer().getTicksPerQuarterNote()); 
-	}
-
-	/**
-	 * Returns the duration of this Repeat in ticks.
-	 * @return duration int representation of the duration of this Repeat, which is calculated
-	 * as the duration of each of the musicSequences on both the first and second passes of the 
-	 * Repeat
-	 */
-	@Override
-	public Integer onRepeat(Repeat repeat) {
-		int duration = 0;
-		for (int i = 0; i < repeat.getSequences().size(); i++) {
-			duration += repeat.getSequences().get(i).accept(this) + repeat.getSecondPass().get(i).accept(this);
-		}
-		return duration;
 	}
 
 	/**
@@ -153,8 +137,8 @@ public class Duration implements Visitor<Integer> {
 		for (Voice voice : body.getVoiceList()) {
 			duration = voice.accept(this);
 			
-			if(last!=null && duration!=last)
-			    throw new RuntimeException("Voices have different lengths");
+//			if(last!=null && duration!=last)
+//			    throw new RuntimeException("Voices have different lengths");
 			
 			last=duration;
 		}

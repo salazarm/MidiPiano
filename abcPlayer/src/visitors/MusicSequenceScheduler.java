@@ -9,7 +9,6 @@ import datatypes.Chord;
 import datatypes.MusicSequence;
 import datatypes.Note;
 import datatypes.Player;
-import datatypes.Repeat;
 import datatypes.Rest;
 import datatypes.Tuplet;
 import datatypes.Visitor;
@@ -82,27 +81,6 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 
 	@Override
 	public Void onRest(Rest rest) {
-		return null;
-	}
-
-	/**
-	 * Schedules a repeated MusicSequence on the Player
-	 * @param repeat Repeat object to be scheduled
-	 * @return null
-	 */
-	@Override
-	public Void onRepeat(Repeat repeat) {
-		repeat.incrementCurTick(repeat.getStartTick());
-		for(MusicSequence firstPass : repeat.getSequences()) {
-			firstPass.setStartTick(repeat.getCurTick());
-			firstPass.accept(this);
-			repeat.incrementCurTick(firstPass.accept(this.duration));
-		}
-		for(MusicSequence secondPass : repeat.getSecondPass()) {
-			secondPass.setStartTick(repeat.getCurTick());
-			secondPass.accept(this);
-			repeat.incrementCurTick(secondPass.accept(this.duration));
-		}
 		return null;
 	}
 

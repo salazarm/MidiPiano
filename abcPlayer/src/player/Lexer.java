@@ -100,10 +100,10 @@ public class Lexer {
 			else if(Pattern.matches("\\A\\|:[\\s\\S]*", input.substring(i,input.length()))){  // |:
 				tokens.add(new Token("|:","|:")); i++; continue;
 			}
-			else if(Pattern.matches("\\A\\|(\\||\\])[\\s\\S]*", input.substring(i,input.length()))){ // || or |]
+			else if(Pattern.matches("\\A\\|(\\||\\])[^:][\\s\\S]*", input.substring(i,input.length()))){ // || or |]
 				tokens.add(new Token("|"+input.charAt(i+1),"|"+input.charAt(i+1))); i++;
 			}
-			else if(Pattern.matches("\\A\\|[^|][\\s\\S]*", input.substring(i,input.length()))){  // |
+			else if(Pattern.matches("\\A\\|[\\s\\S]*", input.substring(i,input.length()))){  // |
 				tokens.add(new Token("|","|")); continue;
 			}
 			else if(Pattern.matches("\\A\\([2-4][\\s\\S]*", input.substring(i,input.length()))){  // (2, (3, (4
@@ -135,7 +135,7 @@ public class Lexer {
 				}
 			}
 			else{
-				throw new RuntimeException("Unexpected character sequence"+ input.substring(i-5,i+2));
+				throw new RuntimeException("Unexpected character sequence"+ input.substring(i-1,i+2));
 			}
 		}
 		

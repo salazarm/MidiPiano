@@ -2,7 +2,6 @@ package player;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
@@ -52,14 +51,13 @@ public class Main {
 	    player.play();	  
 	}
 	
-	
-	
 	/////// JUnit Tests ///////
 	@Test(expected = IOException.class)
 	public void testReadFile_wrongPath() throws IOException
 	{
 	    readFile("non_exist_hello_abc.abc");
 	}
+	
 	@Test
     public void testReadFile_sampleABC() throws IOException
     {
@@ -69,15 +67,18 @@ public class Main {
         assertTrue("wrong prefix from readFile(prelude.abc)", str.startsWith("X:8628\nT:Prelude BWV 846 no. 1\nC:Johann Sebastian Bach"));
         assertTrue("wrong suffix from readFile(prelude.abc)", str.endsWith("V:3\nC,,16|C,,16|]\n"));
     }
+	
 	@Test(expected = IOException.class)
     public void testPlay_wrongPath() throws IOException, MidiUnavailableException
     {
         play("non_exist_hello_abc.abc");
     }
+	
 	@Test
     public void testPlay_playPiece1() throws IOException, MidiUnavailableException
     {
-		play("sample_abc/fur_elise.abc");
+//		play("sample_abc/extraTests/tuples.abc");
+		play("sample_abc/extraTests/sample88.abc");
 //		play("sample_abc/piece2.abc");
 //		play("sample_abc/prelude.abc");
 //	    play("sample_abc/scale.abc");
@@ -86,7 +87,8 @@ public class Main {
 //	    play("sample_abc/paddy.abc");
 //	    play("sample_abc/piece1.abc");
     }
-    @Test
+	
+//    @Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
