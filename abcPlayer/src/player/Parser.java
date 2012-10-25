@@ -139,7 +139,7 @@ public class Parser {
 
         // Read basenote
         if(token.getType()!=Type.BASENOTE)
-            throw new RuntimeException("readNote: This is not basenote!");
+            throw new RuntimeException("readNote: This is not basenote! " + token.getValue() + " "+token.getType().toString());
         note = token.getValue().charAt(0);
         if(note>='a' && note<='z') {octave++; note=(char)(note-'a'+'A');}
         

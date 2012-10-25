@@ -77,6 +77,7 @@ public class Main {
 	@Test
     public void testPlay_playPiece1() throws IOException, MidiUnavailableException
     {
+	    play("sample_abc/fur_elise.abc");
 	    //play("sample_abc/scale.abc");
         //play("sample_abc/little_night_music.abc");
 	    //play("sample_abc/invention.abc");

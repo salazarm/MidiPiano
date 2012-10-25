@@ -138,14 +138,10 @@ public class Duration implements Visitor<Integer> {
                     throw new RuntimeException("wrong position of barline");
             }
         }
-        
-        if(duration%oneSection != 0 || seq.get(i-1)==null)
-        {
-            System.out.println(duration);
-            System.out.println(oneSection);
-            throw new RuntimeException("not fulfilled last section");
-            
-        }
+
+        if(duration%oneSection != 0 || seq.get(n-1)!=null)
+            throw new RuntimeException("not fulfilled last section " + duration + " " + oneSection);
+
         return duration;
     }
 
