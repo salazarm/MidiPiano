@@ -11,7 +11,6 @@ import datatypes.Note;
 import datatypes.Player;
 import datatypes.Repeat;
 import datatypes.Rest;
-import datatypes.Barline;
 import datatypes.Tuplet;
 import datatypes.Visitor;
 import datatypes.Voice;
@@ -178,13 +177,5 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 			voice.accept(this);
 		}
 		return null;
-	}
-
-	/**
-	 * It does nothing
-	 */
-	@Override
-    public Void onBarline(Barline bar) {
-	    return null;
 	}
 }

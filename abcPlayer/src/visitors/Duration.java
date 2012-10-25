@@ -2,7 +2,6 @@ package visitors;
 
 import java.util.List;
 
-import datatypes.Barline;
 import datatypes.Body;
 import datatypes.Chord;
 import datatypes.MusicSequence;
@@ -168,9 +167,4 @@ public class Duration implements Visitor<Integer> {
 		}
 		return duration;
 	}
-
-	@Override
-    public Integer onBarline(Barline barline) {
-	    return 0;
-    }
 }
