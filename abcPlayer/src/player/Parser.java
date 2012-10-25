@@ -7,7 +7,7 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
 import player.Token.Type;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import visitors.Duration;
 import datatypes.Accidental;
 import datatypes.Body;
 import datatypes.Chord;
@@ -26,6 +26,8 @@ public class Parser {
 	private Header header;
 	private Body body;
 	private Voice[] voices;
+	
+	private KeySignature currentKey; // used when parsing 
 
 	/**
 	 * Creates Parser over passed Lexer.
@@ -36,15 +38,17 @@ public class Parser {
 		parseHeader();
 		parseBody();
 	}
-	
-	//public Header getHeader() { return header; }
-	//public Body getBody() { return body; }
 
 	public Player parse()
 	{
 	    try
 	    {
-	        return new Player(header, body);
+	        Player player = new Player(header, body);
+	        
+	        // check timing
+	        player.getBody().accept( new Duration(player) );
+
+	        return player;
 	    }
 	    catch(InvalidMidiDataException e)
 	    {
@@ -70,9 +74,9 @@ public class Parser {
 	{
         int split = str.indexOf('/');
         
-        if(split == -1) // not fraction
+        if(split == -1) // not fraction: A2
             return Integer.parseInt(str);
-        else // fraction
+        else // fraction: A3/4
         {
             int numerator,denominator;
             
@@ -122,7 +126,6 @@ public class Parser {
 	    else
 	    {
 	        accidental = null;
-//	        accidental = last one; TODO:
 	        token = lexer.nextBody();
 	    }
 
@@ -130,6 +133,11 @@ public class Parser {
 	    if(token.getType()!=Type.BASENOTE)
 	        throw new RuntimeException("readNote: This is not basenote!");
 	    note = token.getValue().charAt(0);
+	    
+	    if(accidental != null)
+	        currentKey.setKeyAccidental(note-'A', accidental.getIntRep());
+	    else
+	        accidental = new Accidental(currentKey.getKeyAccidentals()[note-'A']);
 	    
 	    // Read octave modifiers
 	    if(lexer.peekBody().getType()==Type.OCTAVE)
@@ -292,6 +300,9 @@ public class Parser {
 	    String voiceNames[] = header.getVoiceNames();
 	    Voice currentVoice;
 	    
+	    
+	    //header.getKeySignature()
+	    
 	    if(voiceNames.length > 0)
 	    {
 	        voices = new Voice[voiceNames.length];
@@ -331,19 +342,20 @@ public class Parser {
 	            currentVoice.repeatEnd();
 	        else if(type == Type.BARLINE)
 	        {
-	            
+	            // return to default keySignature
+	            currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
 	        }
 	        else if(type == Type.ENDMAJORSECTION)
 	        {
-	            
+	            // over! but there can be still other voices
+	            currentVoice.setClosed();
+	            currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
 	        }
 	        else
 	            throw new RuntimeException("What's this token?");
 	    }
+
+	    // TODO: Validate: all voices have same length?
+	    
     }
-	
-	// Q. any chance Lexer is exposed to outsdie?
-	public Lexer getLexer() {
-		return this.lexer;
-	}
 }

@@ -67,6 +67,13 @@ public class Player {
 		return this.beatsPerMinute;
 	}
 	
+	public int getTicksPerSection()
+	{
+	    // One default note = [(3)*(4)/tempo] ticks = (4) * defaultNoteLength * 4
+	    // One section = (Meter / defaultNoteLength) default notes
+	    return (int)(header.getMeter().getValue() * 4 * ticksPerQuarterNote);
+	}
+	
 	/**
 	 * Schedules the body to be played on the SequencePlayer associated with this Player object
 	 */

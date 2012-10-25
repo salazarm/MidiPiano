@@ -47,13 +47,19 @@ public enum KeySignature {
 	C_FLAT_MAJOR (new int[] {-1,-1,-1,-1,-1,-1,-1}, "Cb"),
 	A_FLAT_MINOR (new int[] {-1,-1,-1,-1,-1,-1,-1}, "Abm");
 	
-	private int[] keyAccidentals = new int[6];
+	private int[] keyAccidentals = new int[7];
 	private final String stringRep;
 	private static Map<String, KeySignature> keySignatureMap = makeKeySignatureMap();
 	
 	KeySignature(int[] keyAccidentals, String stringRep) {
 		this.keyAccidentals = keyAccidentals;
 		this.stringRep = stringRep;
+	}
+	
+	// temporary setting accidental
+	public void setKeyAccidental(int index,int accidental)
+	{
+	    keyAccidentals[index] = accidental;
 	}
 	
 	private static Map<String, KeySignature> makeKeySignatureMap() {

@@ -26,22 +26,33 @@ public class Voice extends MusicSequence {
 	 * @param musicSequence MusicSequence to add to this Voice
 	 */
 	public void add(MusicSequence musicSequence) {
+	    if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
 		this.musicSequences.add(musicSequence);
 	}
 	
-	private int repeatLeft = 0, repeatSkip = 0;
-	public void repeatStart() { repeatLeft = musicSequences.size(); }
-	public void repeatSection(){repeatSkip = musicSequences.size(); }
+	private int repeatLeft = -1, repeatSkip = -1;
+	public void repeatStart()
+	{
+	    if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+	    repeatLeft = musicSequences.size();
+	}
+	public void repeatSection()
+	{
+	    if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+	    repeatSkip = musicSequences.size();
+	}
 	/**
 	 * Expand repeats,
 	 * by copying old sequence, assuming ADTs are immutable.
 	 */
 	public void repeatEnd()
     {
+	    if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+
 	    // Expand!!!
-	    if(repeatLeft == 0) throw new RuntimeException("No repeat start found");
+	    if(repeatLeft == -1) throw new RuntimeException("No repeat start found");
 	    int i;
-	    if(repeatSkip==0) // |: C D E F | G A B c :|
+	    if(repeatSkip == -1) // |: C D E F | G A B c :|
 	    {
 	        int repeatRight = musicSequences.size();
 	        // [repeatLeft, repeatRight)
@@ -55,6 +66,16 @@ public class Voice extends MusicSequence {
                 musicSequences.add(musicSequences.get(i));
 	    }
     }
+	/**
+	 * Used for checking the end barline || or |].
+	 */
+	private boolean closed = false;
+	public void setClosed()
+	{
+	    if(closed) throw new RuntimeException("You can't close a voice more than once");
+	    closed = true;
+	}
+	public boolean getClosed() { return closed; }
 	
 	public String getVoiceName() {
 		return this.voiceName;
