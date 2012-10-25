@@ -37,7 +37,7 @@ public class Token{
 		else if(Pattern.matches("\\A\\|\\z",type)){
 			return Type.BARLINE;
 		}
-		else if(Pattern.matches("[/0-9]",type)){
+		else if(Pattern.matches("\\d+",type)|| Pattern.matches("\\d*/\\d*", type) ){
 			return Type.NOTEMULTIPLIER;
 		}
 		else if(Pattern.matches("\\([2-4]",type)){

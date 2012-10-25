@@ -3,6 +3,7 @@ package player;
 // TODO: Octave token ' and , are not accidentals.
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
@@ -57,35 +58,38 @@ public class Lexer {
 					if (Pattern.matches("[a-gA-Gz,\\^_'=]",""+input.charAt(i+k))){
 						tokens.add(new Token(input.charAt(i+k)+"",input.charAt(i+k)+""));
 					}
-					else if(Pattern.matches( ":",""+input.charAt(i+k))){
+					else if((""+input.charAt(i+k)).equals(":")){
 						tokens.add(new Token(":|",":|")); k+=1;
 					}
-					else if(Pattern.matches("|:",""+input.charAt(i+k))){
+					else if((""+input.charAt(i+k)).equals("|:")){
 						tokens.add(new Token("|:","|:")); k+=1;
 					}
 					else if(Pattern.matches("\\([2-4]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("("+input.charAt(i+k+1), "("+input.charAt(i+k+1))); k+=1;
 					}
-					else if(Pattern.matches("[/0-9]",""+input.charAt(i+k))){
-						if(Pattern.matches("[^/[0-9]]",""+input.charAt(i+k+1))){
-							tokens.add(new Token(""+input.charAt(i+k),""+input.charAt(i+k)));
+					else if(Pattern.matches("\\A[/0-9]",input.charAt(i+k)+"")){
+						boolean slash = false;
+						StringBuilder num = new StringBuilder();
+						for(;Pattern.matches("\\A[/0-9]",input.charAt(i+k)+"");k++){
+							if(input.charAt(i+k) == '/'){
+								if(slash == true){
+									throw new RuntimeException("Invalid Character Sequence");
+								}
+								num.append('/');
+								slash = true;
+							}	
+							if(Pattern.matches("\\A[0-9]",""+input.charAt(i+k))){
+								num.append(input.charAt(i+k));
+							}	
 						}
-						else if(Pattern.matches("/[0-9][^/[0-9]]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
-							tokens.add(new Token(""+input.charAt(i+k)+input.charAt(i+k+1),""+input.charAt(i+k)+input.charAt(i+k+1)));
-							k++;
-						}	
-						else if(Pattern.matches("[[0-9]/[0-9]",""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2))){
-							tokens.add(new Token(""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2),""+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2)));
-							k+=2;
-						}
-						else{
-							throw new RuntimeException("Invalid Character Sequence Encountered");
-						}
+						tokens.add(new Token(num.toString(),num.toString()));
+//						System.out.println(num.toString()+" : "+ input.charAt(i+k) + (tokens.size()-1)); 
+						k-=1;
 					}
 					else if(Pattern.matches("\\[[12]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("["+input.charAt(i+k+1), "["+input.charAt(i+k+1)));k++;
 					}
-					else if(Pattern.matches("|[|]]",""+input.charAt(i+k)+input.charAt(i+k+1))){
+					else if( ("|]").equals(""+input.charAt(i+k)+input.charAt(i+k+1)) || ("||") .equals(""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("|"+input.charAt(i+k+1),"|"+input.charAt(i+k+1)));k++;
 					}
 					else if(Pattern.matches("\\[[\\^za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k+1))){
