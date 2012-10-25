@@ -234,9 +234,7 @@ public class LexerTest extends Lexer
         // Multiple voices / Repeats 
         list = processBody(" A B C |: C D E | a b c | c d e :| e e e |]\nV: new voice\n"
                 + "C B A |: E D C |[1 E E E :|[2 F F F ||");
-      for (int i=0; i<list.size(); i++){
-    	System.out.println(i+": "+list.get(i).getValue());
-    }
+        
         assertEquals("body test4: 3",Token.Type.REPEATSTART,list.get(3).getType());
         assertEquals("body test4: 3","|:",list.get(3).getValue());
         assertEquals("body test4: 15",Token.Type.REPEATEND,list.get(15).getType());
