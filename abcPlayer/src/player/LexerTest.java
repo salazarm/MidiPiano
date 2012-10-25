@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import org.junit.Test;
 
 /***
@@ -32,7 +31,7 @@ public class LexerTest extends Lexer
 		DataInputStream dis = null;
 		StringBuffer sb = new StringBuffer();
 		try {
-		fis = new FileInputStream("sample_abc/fur_elise.abc");
+		fis = new FileInputStream("sample_abc/piece1.abc");
 		bis = new BufferedInputStream(fis);
 		dis = new DataInputStream(bis);
 
@@ -50,13 +49,13 @@ public class LexerTest extends Lexer
 		e.printStackTrace();
 		}
 		String input = sb.toString();
-//		Lexer result = new Lexer(input);
-//		for (Token c: result.getBody()){
-//			System.out.println(c.getType() +":"+c.getValue());
-//		}
-//		for (Token c: result.getHeader()){
-//			System.out.println(c.getValue());
-//		}
+		Lexer result = new Lexer(input);
+		for (Token c: result.getBody()){
+			System.out.println(c.getType() +":"+c.getValue());
+		}
+		for (Token c: result.getHeader()){
+			System.out.println(c.getValue());
+		}
 	}
     
     @Test(expected = RuntimeException.class)
@@ -122,20 +121,20 @@ public class LexerTest extends Lexer
         // We should extract just after ':' until the end of the line.
         list = processHeader("X: 3\nT: Turkish March\nC: W. Mozart\nM: 2/4\nL: 1/8\nK: Am");
         assertEquals("test case3: X, T, M, L, K",6,list.size());
-        assertEquals("test case3: X, T, M, L, K"," 3",list.get(0).getValue());
+        assertEquals("test case3: X, T, M, L, K","3",list.get(0).getValue());
         assertEquals("test case3: X, T, M, L, K"," Turkish March",list.get(1).getValue());
         assertEquals("test case3: X, T, M, L, K"," W. Mozart",list.get(2).getValue());
-        assertEquals("test case3: X, T, M, L, K"," 2/4",list.get(3).getValue());
-        assertEquals("test case3: X, T, M, L, K"," 1/8",list.get(4).getValue());
-        assertEquals("test case3: X, T, M, L, K"," Am",list.get(5).getValue());
+        assertEquals("test case3: X, T, M, L, K","2/4",list.get(3).getValue());
+        assertEquals("test case3: X, T, M, L, K","1/8",list.get(4).getValue());
+        assertEquals("test case3: X, T, M, L, K","Am",list.get(5).getValue());
         
         list = processHeader("X:  25 \nT: Mr. title.special!character \n L: 4/2 \nM: 1/16\nK:  Cm \n\n");
         assertEquals("test case4: X, T, L, M, K",5,list.size());
-        assertEquals("test case4: X, T, L, M, K","  25 ",list.get(0).getValue());
+        assertEquals("test case4: X, T, L, M, K","25",list.get(0).getValue());
         assertEquals("test case4: X, T, L, M, K"," Mr. title.special!character ",list.get(1).getValue());
-        assertEquals("test case4: X, T, L, M, K"," 4/2 ",list.get(2).getValue());
-        assertEquals("test case4: X, T, L, M, K"," 1/16",list.get(3).getValue());
-        assertEquals("test case4: X, T, L, M, K","  Cm ",list.get(4).getValue());
+        assertEquals("test case4: X, T, L, M, K","4/2",list.get(2).getValue());
+        assertEquals("test case4: X, T, L, M, K","1/16",list.get(3).getValue());
+        assertEquals("test case4: X, T, L, M, K","Cm",list.get(4).getValue());
         
         // Voice test
         list = processHeader(" X:  25 \nT: Mr. title \nV: v1 \nV:  v23 42v\nL: 4/2 \nM: 1/16\nK:  Cm \n\n");
@@ -176,9 +175,6 @@ public class LexerTest extends Lexer
         // Rest / Multiplier / newline test
         //                        4            + 5        + 7                           + 17 = 33
         list = processBody(" \n z A3| B/1 \n g3 |C1/ a3 C1/ |\nD/ z1/2 z/ z/4 z/ \n z1/ z/4 z16/16|] ");
-        for (int i=0; i<list.size();i++){
-        	System.out.println(i + ": "+list.get(i).getValue());
-        }
         assertEquals("body test2: 0",Token.Type.REST,list.get(0).getType());
         assertEquals("body test2: 0","z",list.get(0).getValue());
         assertEquals("body test2: 1",Token.Type.BASENOTE,list.get(1).getType());
@@ -233,15 +229,12 @@ public class LexerTest extends Lexer
         // Multiple voices / Repeats 
         list = processBody(" A B C |: C D E | a b c | c d e :| e e e |]\nV: new voice\n"
                 + "C B A |: E D C |[1 E E E :|[2 F F F ||");
-        for (int i=0; i<list.size();i++){
-        	System.out.println(i + ": "+list.get(i).getValue());
-        }
         assertEquals("body test4: 3",Token.Type.REPEATSTART,list.get(3).getType());
         assertEquals("body test4: 3","|:",list.get(3).getValue());
         assertEquals("body test4: 15",Token.Type.REPEATEND,list.get(15).getType());
         assertEquals("body test4: 15",Token.Type.REPEATEND,list.get(15).getType());
         assertEquals("body test4: 20",Token.Type.VOICE,list.get(20).getType());
-        assertEquals("body test4: 20"," new voice",list.get(20).getValue());
+        assertEquals("body test4: 20","V: new voice",list.get(20).getValue());
         assertEquals("body test4: 28",Token.Type.BARLINE,list.get(28).getType());
         assertEquals("body test4: 28","|",list.get(28).getValue());
         assertEquals("body test4: 29",Token.Type.REPEATSECTION,list.get(29).getType());

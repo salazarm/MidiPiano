@@ -53,6 +53,7 @@ public class Lexer {
 
 	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
+		input = "  "+input;
 		for(int i = bodyStartIndex; i<input.length(); i++){
 				int j = 0;
 				for(int k =1;i+k<input.length() && !Pattern.matches("\\s",""+input.charAt(i+k)); k++){
