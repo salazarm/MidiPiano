@@ -2,10 +2,8 @@ package player;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
-
 import player.Token.Type;
 import visitors.Duration;
 import datatypes.Accidental;
@@ -39,11 +37,16 @@ public class Parser {
         parseBody();
     }
 
+    /**
+     * Creates a Player object from parsed head and body of an abc file
+     * @return Player object as above
+     * @throws RuntimeException if InvalidMidiDataException or MidiUnvailableException encountered
+     */
     public Player parse()
     {
         try
         {
-            if(body == null) System.out.println("body is null in parse()");
+            if(body == null || header == null) System.out.println("body is null in parse()");
             Player player = new Player(header, body);
             player.getBody().accept( new Duration(player) );
             return player;
@@ -59,6 +62,12 @@ public class Parser {
             
     }
     
+    /**
+     * Parses a String to be returned as a Fraction
+     * @param str String representation of a Fraction
+     * @return Fraction object corresponding to this representation
+     * @throws RuntimeException if str does not represent a Fraction
+     */
     private Fraction parseFraction(String str)
     {
         int split = str.indexOf("/");
@@ -69,6 +78,12 @@ public class Parser {
                             Integer.parseInt(str.substring(split+1, str.length())));
     }
     
+    /**
+     * Parses a duration multiplier (e.g. for a Note or a Rest)
+     * @param str String representation of the multiplier
+     * @return double value of the multiplier
+     * @throws RuntimeException if str does not represent a Fraction
+     */
     private double parseMultiplier(String str)
     {
         int split = str.indexOf('/');
@@ -85,6 +100,11 @@ public class Parser {
         }
     }
     
+    /**
+     * Reads the multiplier from the Lexer and returns its parsed value
+     * @return double value of the multiplier
+     * @throws RuntimeException if next Token not TYPE.NOTEMULTIPLIER
+     */
     private double readMultiplier()
     {
         Token token = lexer.nextBody();
@@ -92,6 +112,10 @@ public class Parser {
         return parseMultiplier(token.getValue());
     }
     
+    /**
+     * Parses a Rest token
+     * @return Rest object corresponding with the Rest token
+     */
     private Rest readRest()
     {
         double multiplier;
@@ -107,6 +131,11 @@ public class Parser {
         return new Rest(multiplier);
     }
     
+    /**
+     * Parses a Note token
+     * @return Note object corresponding with the Note token
+     * @throws RuntimeException in case of incorrectly formatted Note tokens
+     */
     private Note readNote()
     {
         Token token = lexer.nextBody();
@@ -189,6 +218,10 @@ public class Parser {
         return new Note(note, octave, accidental, multiplier);
     }
 
+    /**
+     * Parses a Chord token
+     * @return Chord object corresponding with the Chord token
+     */
     private Chord readChord()
     {
         Token token;
@@ -200,14 +233,19 @@ public class Parser {
             list.add(readNote());
         lexer.consumeBody(Type.CHORDEND);
 
-        double len = list.get(0).getNoteMultiplier();
+/*        double len = list.get(0).getNoteMultiplier();
         for(Note note : list)
             if(note.getNoteMultiplier() != len)
-                throw new RuntimeException("different length of nodes in a chord");
+                throw new RuntimeException("different length of nodes in a chord"); */
 
         return new Chord(list);
     }
     
+    /**
+     * Parses a Tuplet token
+     * @return Tuplet object corresponding with the Tuplet token
+     * @throws RuntimeException in case of invalid tuplet number or wrong tuplet length
+     */
     private Tuplet readTuplet()
     {
         Token token = lexer.nextBody();
@@ -226,6 +264,11 @@ public class Parser {
         return new Tuplet(list);
         
     }
+    /**
+     * Parses a Voice token
+     * @return Voice object corresponding with the Rest token
+     * @throws RuntimeException if next token is not a Voice or if no Voice with this name exists 
+     */
     private Voice readVoice()
     {
         Token token = lexer.nextBody();
@@ -242,6 +285,10 @@ public class Parser {
         throw new RuntimeException("No voice found with name: " + str);        
     }
     
+    /**
+     * Parses the header of the abc file, stores the result in this.header
+     * @throws RuntimeException in case of badly formatted header
+     */
     private void parseHeader()
     {
         //*****
@@ -307,12 +354,12 @@ public class Parser {
         if(meter != null) header.setMeter(meter);
         if(length!=null) header.setDefaultNoteLengthFraction(length);
         if(tempo>0) header.setTempo(tempo);
-        header.setVoiceNames(voiceNames.toArray(new String[]{}));
-        
+        header.setVoiceNames(voiceNames.toArray(new String[]{}));        
     }
     
     /**
-     * Parses the body of the abc file
+     * Parses the body of the abc file, stores the result in this.body
+     * @throws RuntimeException in case of badly formatted body
      */
     private void parseBody()
     {

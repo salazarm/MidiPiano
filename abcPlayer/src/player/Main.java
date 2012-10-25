@@ -7,11 +7,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-
 import javax.sound.midi.MidiUnavailableException;
-
 import org.junit.Test;
-
 import datatypes.Player;
 
 /**

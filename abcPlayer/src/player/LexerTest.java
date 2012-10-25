@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.junit.Test;
@@ -79,8 +78,8 @@ public class LexerTest extends Lexer
         String result = cb.toString();
         String lexToString = "";
         Lexer l = new Lexer(sb.toString());
-        ArrayList<Token> headerTokens = l.getHeader();
-        ArrayList<Token> bodyTokens = l.getBody();
+        List<Token> headerTokens = l.getHeader();
+        List<Token> bodyTokens = l.getBody();
         for (int i =0; i<headerTokens.size(); i++) {
         	lexToString.concat(headerTokens.get(i).getValue());
         }

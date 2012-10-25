@@ -11,8 +11,8 @@ public class Tuplet extends MusicSequence {
 	/**
 	 * Creates a Tuplet object
 	 * @param tupletNumber Identifier of tuple type. Must be 2, 3 or 4.
-	 * @param notes
-	 * @param player
+	 * @param notes List of Notes that compose this tuplet
+	 * @throws RuntimeException in case of invalid tuplet number
 	 */
 	public Tuplet(List<Note> notes) {
 	    tupletNumber = notes.size();
@@ -31,6 +31,10 @@ public class Tuplet extends MusicSequence {
 		return this.tupletNumber;
 	}
 
+	/**
+	 * Increments the current tick of this MusicSequence by 1
+	 * @param increment int ticks to increment by 
+	 */
 	public void incrementCurTick(int increment) {
 		this.curTick += increment;
 	}

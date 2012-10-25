@@ -7,6 +7,9 @@ public class Body extends MusicSequence {
 	
 	private List<Voice> voiceList;
 
+	/**
+	 * Creates an ArrayList of Voices that compose the body and sets the start tick to 0.
+	 */
 	public Body() {
 		this.voiceList = new ArrayList<Voice>();
 		super.setStartTick(0);

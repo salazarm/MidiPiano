@@ -56,12 +56,11 @@ public enum KeySignature {
         this.stringRep = stringRep;
     }
     
-    // temporary setting accidental
-    public void setKeyAccidental(int index,int accidental)
-    {
-        keyAccidentals[index] = accidental;
-    }
-    
+    /**
+     * Creates and returns a Map with the abc version of the key signature as the key to 
+     * each of the key signatures in the enum.
+     * @return Map<String, KeySignature> as above
+     */
     private static Map<String, KeySignature> makeKeySignatureMap() {
         Map<String, KeySignature> keySignatureMap = new HashMap<String, KeySignature>();
         keySignatureMap.put("C", C_MAJOR);

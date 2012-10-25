@@ -20,11 +20,12 @@ public class Note extends MusicSequence {
 	 * @param noteMultiplier double modifier of the note length. A passed value of 1 indicates
 	 * that note length is equal to the default note length specified in the Header 
 	 * associated with the Player object that this Note belongs to.
+	 * @throws RuntimeException in case of invalid baseNote
 	 */
 	public Note(char baseNote, int octaveModifier, Accidental accidentalModifier, 
 			double noteMultiplier) {
 	    
-	    if(baseNote>='a' && baseNote<='z') throw new RuntimeException("Note() : basenote is not capital");
+	    if(baseNote>='a' && baseNote<='z') throw new RuntimeException("Note() : baseNote is not capital");
 		this.baseNote = baseNote;
 		this.octaveModifier = octaveModifier;
 		this.accidentalModifier = setAccidentalModifier(accidentalModifier);
@@ -33,6 +34,12 @@ public class Note extends MusicSequence {
 		
 	}
 	
+	/**
+	 * Decides and returns the accidentalModifier of this Note
+	 * @param accidentalModifier Accidental object representing the accidentalModifier, value of
+	 * null implies a neutral Note.
+	 * @return Accidental object representing this Note's accidentalModifier
+	 */
 	private Accidental setAccidentalModifier(Accidental accidentalModifier) {		
 		if(accidentalModifier==null) {
 			return new Accidental("=");
@@ -42,6 +49,10 @@ public class Note extends MusicSequence {
 		}
 	}
 	
+	/**
+	 * Makes a Pitch out of this Note
+	 * @return Pitch object representing this Note
+	 */
 	private Pitch makePitch() {
 		return new Pitch(this.baseNote).accidentalTranspose(accidentalModifier.getIntRep()).octaveTranspose(octaveModifier); 
 	}

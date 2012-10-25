@@ -27,8 +27,6 @@ public class Player {
 			throws MidiUnavailableException, InvalidMidiDataException {
 		this.header = header;
 		this.body = body;
-		//header.getDefaultNoteLength()
-		//header.getTempo()
 		/*
 		 * Input :
 		 * (1) defaultNoteLength: 1/4, 1/8..
@@ -55,9 +53,14 @@ public class Player {
 	public Body getBody() {
 		return this.body;
 	}
-
+	
+	/**
+	 * Returns the seqPlayer, if initialized
+	 * @return SequencePlayer object associated with this Player
+	 * @throws RuntimeException if seqPlayer is null
+	 */
 	public SequencePlayer getSeqPlayer() {
-	    if(this.seqPlayer == null) System.out.println("seqPlayer is null in getSeqPlayer");
+	    if(this.seqPlayer == null) throw new RuntimeException("seqPlayer is null in getSeqPlayer");
 		return this.seqPlayer;
 	}
 
@@ -67,13 +70,6 @@ public class Player {
 
 	public int getBeatsPerMinute() {
 		return this.beatsPerMinute;
-	}
-	
-	public int getTicksPerSection()
-	{
-        // One default note = [(3)*(4)/tempo] ticks = (4) * defaultNoteLength * 4
-        // One section = (Meter / defaultNoteLength) default notes
-        return (int)(header.getMeter().getValue() * 4 * ticksPerQuarterNote);
 	}
 	
 	/**

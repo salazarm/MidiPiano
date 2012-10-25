@@ -2,23 +2,27 @@ package player;
 
 import java.util.regex.Pattern;
 
-
-public class Token{
+public class Token {
+	
 	private final Type type;
 	private String value;
 	
-	// header : V voicename
-	// body : V V 
-	Token(String inp, String string) {
+	/**
+	 * Creates a Token with desired input type and value
+	 * @param inp String representation of the Token type
+	 * @param string String value of the Token type (trimmed before storing)
+	 */ 
+	public Token(String inp, String string) {
 	    this.type = getType(inp);
-	    
-	    //if(type!=Type.TITLE && type!=Type.COMPOSER && type!=Type.VOICE)
-	    //    this.value = string.trim();
-	    //else
-	        this.value = string.trim();
-			
+        this.value = string.trim();			
 	}
 
+	/**
+	 * Returns the Type representation from a String 
+	 * @param type String representation of the type
+	 * @return Type object corresponding to the String representation
+	 * @throws RuntimeException if type does not match a valid Type
+	 */
 	private Type getType(String type) {
 		if (Pattern.matches("\\ACi\\z",type)){
 			return Type.COMPOSER;

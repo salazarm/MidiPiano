@@ -1,23 +1,24 @@
 package player;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
-	protected ArrayList<Token> headerTokens;
-	protected ArrayList<Token> bodyTokens;
+	protected List<Token> headerTokens;
+	protected List<Token> bodyTokens;
 	public int bodyStartIndex = 1;
 	private int headerIterator, bodyIterator;
 	
 	/**
-	 * @return an ArrayList of Tokens representing the tokens in the header of the abc file
+	 * @return an List of Tokens representing the tokens in the header of the abc file
 	 */
-	public ArrayList<Token> getHeader(){	return this.headerTokens; }
+	public List<Token> getHeader(){	return this.headerTokens; }
 	/**
-	 * @return an ArrayList of Tokens representing the tokens in the body of the abc file
+	 * @return a List of Tokens representing the tokens in the body of the abc file
 	 */
-	public ArrayList<Token> getBody(){	return this.bodyTokens;	}
+	public List<Token> getBody(){	return this.bodyTokens;	}
 	
 	
 	/**
@@ -34,17 +35,39 @@ public class Lexer {
 	Lexer() { }
 	
 	/**
-	 * Use next() to get next a token.
-	 * Use peek() to not advance the iterator.
-	 * @return The next token if exist, or null.
+	 * Use next() to get next token.
+	 * @return The next token if exists, or null.
 	 */
 	public Token nextHeader() { return 
 			(headerIterator < headerTokens.size())? headerTokens.get(headerIterator++) : null;}
+	/**
+	 * Use peek() to get a token without advancing the iterator.
+	 * @return The next token if exists, or null.
+	 */
 	public Token peekHeader() { return (headerIterator < headerTokens.size())? headerTokens.get(headerIterator  ) : null;}
+	/**
+	 * Use next() to get next token.
+	 * @return The next token if exists, or null.
+	 */
 	public Token nextBody() { return (bodyIterator < bodyTokens.size())? bodyTokens.get(bodyIterator++) : null;}
+	/**
+	 * Use peek() to get a token without advancing the iterator.
+	 * @return The next token if exists, or null.
+	 */
 	public Token peekBody() { return (bodyIterator < bodyTokens.size())? bodyTokens.get(bodyIterator  ) : null;}
 	
+	/**
+	 * Advances the header iterator
+	 * @param type Expected Token type of next token
+	 * @throws RuntimeException if next Token not the same Type as the passed Token
+	 */
 	public void consumeHeader(Token.Type type) { if( nextHeader().getType() != type ) throw new RuntimeException("Expected token: "+type.toString()); }
+
+	/**
+	 * Advances the Body iterator
+	 * @param type Expected Token type of next token
+	 * @throws RuntimeException if next Token not the same Type as the passed Token
+	 */
 	public void consumeBody(Token.Type type) { if( nextBody().getType() != type ) throw new RuntimeException("Expected token: "+type.toString()); }
 
 	private static final Pattern digitsFractdigits = Pattern.compile("\\A\\d+/\\d+");
@@ -53,7 +76,13 @@ public class Lexer {
 	private static final Pattern digitFract = Pattern.compile("\\A\\d+/");
 	private static final Pattern soloNumber = Pattern.compile("\\A\\d+");
 
-	protected ArrayList<Token> processBody(String input) {
+	/**
+	 * Processes the given input and creates Tokens
+	 * @param input String representation of the body of an abc file
+	 * @return List of Tokens representing the tokenized body of the input file
+	 * @throws RuntimeException if invalid substring encountered
+	 */
+	protected List<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		input = input + " ";
 		for (int i=bodyStartIndex; i <input.length(); i++){
@@ -147,7 +176,12 @@ public class Lexer {
 		return tokens;
 	}
 
-
+	/**
+	 * Processes the given input and creates Tokens
+	 * @param input String representation of the header of an abc file
+	 * @return List of Tokens representing the tokenized header of the input file
+	 * @throws RuntimeException if header formatted incorrectly or invalid substrings present
+	 */
 	protected ArrayList<Token> processHeader(String input){
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		for (int i=0; i< input.length(); i++){	

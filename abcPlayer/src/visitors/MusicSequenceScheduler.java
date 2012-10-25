@@ -20,6 +20,11 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	private final Duration duration;
 	private final SequencePlayer seqPlayer;
 	
+	/**
+	 * Creates a MusicSequenceScheduler for the given Player. Also stores a SequencePlayer
+	 * for the Player and creates a new Duration visitor for the Player.
+	 * @param player Player object representing desired player as above
+	 */
 	public MusicSequenceScheduler(Player player) {	    
 		this.player = player;
 		this.seqPlayer = player.getSeqPlayer();
@@ -56,6 +61,10 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		return null;
 	}
 
+	/**
+	 * Schedules nothing for a Rest object
+	 * @param rest Rest object
+	 */
 	@Override
 	public Void onRest(Rest rest) {
 		return null;

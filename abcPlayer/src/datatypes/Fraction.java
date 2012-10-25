@@ -8,6 +8,7 @@ public class Fraction {
 	/**
 	 * @param numerator int numerator of this Fraction
 	 * @param denominator positive int denominator of this Fraction
+	 * @throws RuntimeException if denominator <=0
 	 */
 	public Fraction(int numerator, int denominator) {
 		if(denominator<=0) {

@@ -3,10 +3,6 @@ package datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A class represents a single melody line.
- */
-
 public class Voice extends MusicSequence {
     
     private final String voiceName;

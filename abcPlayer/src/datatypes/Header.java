@@ -12,6 +12,12 @@ public class Header {
     private Fraction meter = new Fraction(4,4);
     private String[] voiceNames;
     
+    /**
+     * Represents the header of an abc file. The three mandatory values must be passed upon instantiation.
+     * @param indexNumber int index number of the file ("X")
+     * @param title String title of the file ("T")
+     * @param keySignature KeySignature object representing the key signature of this file ("K")
+     */
     public Header(int indexNumber, String title, KeySignature keySignature) {
         this.indexNumber = indexNumber;
         this.title = title;
@@ -22,6 +28,10 @@ public class Header {
         return this.composer;
     }
 
+    /**
+     * Sets the value of this.composer
+     * @param composer String value for the composer field
+     */
     public void setComposer(String composer) {
         this.composer = composer;
     }
@@ -30,6 +40,10 @@ public class Header {
         return this.tempo;
     }
 
+    /**
+     * Sets the value of this.tempo
+     * @param tempo int tempo of the file
+     */
     public void setTempo(int tempo) {
         this.tempo = tempo;
     }
@@ -38,6 +52,10 @@ public class Header {
         return this.defaultNoteLength;
     }
 
+    /**
+     * Sets the value for the default note length.
+     * @param defaultNoteLengthFraction Fraction representing the default note length
+     */
     public void setDefaultNoteLengthFraction(Fraction defaultNoteLengthFraction) {
         this.defaultNoteLengthFraction = defaultNoteLengthFraction;
         this.defaultNoteLength = this.defaultNoteLengthFraction.getValue();
@@ -51,6 +69,10 @@ public class Header {
         return this.meter;
     }
 
+    /**
+     * Sets the meter of the file
+     * @param meter Fraction representing the meter of the file
+     */
     public void setMeter(Fraction meter) {
         this.meter = meter;
     }
@@ -59,6 +81,10 @@ public class Header {
         return this.voiceNames;
     }
 
+    /**
+     * Adds an array of Voice names to the header
+     * @param voiceNames String array containing the names of the different voices present in the file
+     */
     public void setVoiceNames(String[] voiceNames) {
         this.voiceNames = voiceNames;
     }

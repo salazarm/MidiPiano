@@ -74,6 +74,7 @@ public class Duration implements Visitor<Integer> {
 	 * Returns the duration of this Tuplet in ticks. See abc subset for definition of
 	 * Tuplet duration.
 	 * @return duration int representation of the duration of this Tuplet in ticks.
+	 * @throws RuntimeException in case of badly formatted tuplet
 	 */
 	@Override
 	public Integer onTuplet(Tuplet tuplet) {
