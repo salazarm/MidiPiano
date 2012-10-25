@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-/**
+/***
  * LexerTest
  * To test private methods, it extends Lexer
  * 
@@ -26,7 +26,6 @@ public class LexerTest extends Lexer
     
 	@Test
 	public void testString(){
-		System.out.println(Pattern.matches("\\A[/0-9].*","2 z"));
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		DataInputStream dis = null;
@@ -176,6 +175,9 @@ public class LexerTest extends Lexer
         // Rest / Multiplier / newline test
         //                        4            + 5        + 7                           + 17 = 33
         list = processBody(" \n z A3| B1/1 \n g3 |C1/ a3 C1/ |\nD/ z1/2 z/ z/4 z/ \n z1/ z/4 z16/16|] ");
+        for (int i=0; i<list.size();i++){
+        	System.out.println(list.get(i).getValue());
+        }
         assertEquals("body test2: 0",Token.Type.REST,list.get(0).getType());
         assertEquals("body test2: 0","z",list.get(0).getValue());
         assertEquals("body test2: 1",Token.Type.BASENOTE,list.get(1).getType());

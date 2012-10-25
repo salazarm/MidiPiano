@@ -70,8 +70,9 @@ public class Lexer {
 					else if(Pattern.matches("\\A[/0-9]",input.charAt(i+k)+"")){
 						boolean slash = false;
 						StringBuilder num = new StringBuilder();
-						for(;Pattern.matches("\\A[/0-9]",input.charAt(i+k)+"");k++){
-							if(input.charAt(i+k) == '/'){
+						int s = 0;
+						while(Pattern.matches("\\A[/0-9]",input.charAt(i+k+s)+"")){
+							if(input.charAt(i+k+s) == '/'){
 								if(slash == true){
 									throw new RuntimeException("Invalid Character Sequence");
 								}
@@ -81,10 +82,11 @@ public class Lexer {
 							if(Pattern.matches("\\A[0-9]",""+input.charAt(i+k))){
 								num.append(input.charAt(i+k));
 							}	
+							s++;
 						}
 						tokens.add(new Token(num.toString(),num.toString()));
 //						System.out.println(num.toString()+" : "+ input.charAt(i+k) + (tokens.size()-1)); 
-						k-=1;
+						k += s-1;
 					}
 					else if(Pattern.matches("\\[[12]",""+input.charAt(i+k)+input.charAt(i+k+1))){
 						tokens.add(new Token("["+input.charAt(i+k+1), "["+input.charAt(i+k+1)));k++;
