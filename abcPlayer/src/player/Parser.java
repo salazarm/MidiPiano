@@ -161,19 +161,18 @@ public class Parser {
             if(str.equals(","))
             {
                 --octave;
-                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                while(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
                 {
                     if(lexer.nextBody().getValue().equals(","))
                         --octave;
                     else
                         throw new RuntimeException("mixed octave");
-                    
                 }
             }
             else if(str.equals("'"))
             {
                 ++octave;
-                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                while(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
                 {
                     if(lexer.nextBody().getValue().equals("'"))
                         ++octave;
@@ -181,7 +180,6 @@ public class Parser {
                         throw new RuntimeException("mixed octave");
                     
                 }
-                ++octave;
             }
         }
         
@@ -334,9 +332,6 @@ public class Parser {
         String voiceNames[] = header.getVoiceNames();
         Voice currentVoice;
         
-        
-        //header.getKeySignature()
-        
         if(voiceNames.length > 0)
         {
             voices = new Voice[voiceNames.length];
@@ -391,19 +386,21 @@ public class Parser {
                 lexer.nextBody();
                 // return to default keySignature
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
+                
+                // barline checking
+                //currentVoice.add(null);
             }
             else if(type == Type.ENDMAJORSECTION)
             {
                 lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
+                // barline checking
+                // currentVoice.add(null);
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else
             {
-                //if(token==null)
-                //    System.out.println("null in exception");
-                    //System.out.println("---: "+token.getValue() + " " + type.toString());
                 throw new RuntimeException("What's this token?" + " " + token.getValue() + " " + token.getType().toString());
             }
         }
@@ -413,6 +410,5 @@ public class Parser {
          * for(Voice voice : voices) if(!voice.getClosed())
             throw new RuntimeException("There is a voice not closed with || or |]");
          */
-        // TODO: Validate: all voices have same length?
     }
 }

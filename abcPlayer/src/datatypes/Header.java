@@ -75,18 +75,21 @@ public class Header {
         return this.keySignature;
     }
     
-    // TODO: print Voices
     @Override
     public String toString() {
+    	String voices = "";
+    	for (String voice : voiceNames) {
+    		voices += "V: " + voice + "\n";
+    	}
         return String.format("X: %s\n" +
                 "T: %s\n" +
                 "C: %s\n" +
                 "M: %s\n" +
-                "Q: %s\n" +
                 "L: %s\n" +
+                "Q: %s\n" +
+                "%s" + 
                 "K: %s\n", this.getIndexNumber(), this.getTitle(), this.getComposer(),
-                this.getMeter().toString(), this.getTempo(), 
-                this.getDefaultNoteLengthFraction().toString(), 
-                this.getKeySignature().getStringRep());
+                this.getMeter().toString(), this.getDefaultNoteLengthFraction().toString(),
+                this.getTempo(), voices, this.getKeySignature().getStringRep());
     }
 }

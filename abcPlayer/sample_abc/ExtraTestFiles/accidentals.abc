@@ -1,0 +1,9 @@
+X: 1
+T:Accidentals test
+C:Leon
+M:C
+L:1/4
+Q:100
+K:C
+|C ^C C =C | C ^C c C, | C ^^C ^C _C
+|C _C C =C | C _C c C, | C __C _C ^C |
