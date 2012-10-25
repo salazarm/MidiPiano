@@ -133,6 +133,8 @@ public class Duration implements Visitor<Integer> {
         
         if(duration%oneSection != 0)
         {
+            System.out.println(duration);
+            System.out.println(oneSection);
             throw new RuntimeException("not fulfilled section");
             
         }

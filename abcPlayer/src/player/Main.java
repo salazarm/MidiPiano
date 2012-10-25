@@ -81,7 +81,7 @@ public class Main {
         //play("sample_abc/little_night_music.abc");
 	    //play("sample_abc/invention.abc");
 	    //play("sample_abc/paddy.abc");
-	    play("sample_abc/piece1.abc");
+	    //play("sample_abc/piece1.abc");
     }
     @Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException

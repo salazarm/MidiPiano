@@ -40,9 +40,12 @@ public class Accidental {
         if(stringRep.equals("^^")) this.type = Type.DOUBLE_SHARP;
         else if(stringRep.equals("^")) this.type = Type.SHARP;
         else if(stringRep.equals("=")) this.type = Type.NEUTRAL;
-        else if(stringRep.equals(",")) this.type = Type.FLAT;
-        else if(stringRep.equals(",,")) this.type = Type.DOUBLE_FLAT;
-        else throw new RuntimeException("I can't understand this accidental!");
+        else if(stringRep.equals("_")) this.type = Type.FLAT;
+        else if(stringRep.equals("__")) this.type = Type.DOUBLE_FLAT;
+        else
+        {
+            throw new RuntimeException("I can't understand this accidental! : " + stringRep);
+        }
         
         this.stringRep = stringRep;
     }

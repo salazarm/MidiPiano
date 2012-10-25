@@ -176,7 +176,7 @@ public class Lexer {
 				tokens.add(t);
 				i+=k;
 				if(t.getType() == Token.Type.KEY){
-                     this.bodyStartIndex = i+k;
+                     this.bodyStartIndex = i;
                      break;
                 }			
 			}

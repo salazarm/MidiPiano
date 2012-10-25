@@ -84,6 +84,7 @@ public class ParserTest
         header.add(new Token("X","2"));
         header.add(new Token("T","title"));
         header.add(new Token("Q","200"));
+        header.add(new Token("M","4/8"));
         header.add(new Token("V","piano"));
         header.add(new Token("V","drum"));
         header.add(new Token("K","C"));
