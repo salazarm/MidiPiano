@@ -77,8 +77,8 @@ public class Main {
 	@Test
     public void testPlay_playPiece1() throws IOException, MidiUnavailableException
     {
-        //play("sample_abc/piece1.abc");
-	    play("sample_abc/paddy.abc");
+        play("sample_abc/piece1.abc");
+	    //play("sample_abc/paddy.abc");
     }
     @Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException

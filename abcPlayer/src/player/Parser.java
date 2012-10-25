@@ -46,6 +46,7 @@ public class Parser {
             if(body == null) System.out.println("body is null in parse()");
             Player player = new Player(header, body);
             player.getBody().accept( new Duration(player) );
+            //System.out.println(player.getHeader().getMeter().toString());
             return player;
         }
         catch(InvalidMidiDataException e)
