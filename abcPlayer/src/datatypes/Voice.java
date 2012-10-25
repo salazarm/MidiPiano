@@ -31,19 +31,27 @@ public class Voice extends MusicSequence {
 	}
 	
 	private int repeatLeft = -1, repeatSkip = -1;
+	
+	/**
+	 * Mark the start of repeat.
+	 * Used with repeatEnd()
+	 */
 	public void repeatStart()
 	{
 	    if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
 	    repeatLeft = musicSequences.size();
 	}
+	/**
+     * Mark the '[1' of repeat.
+     * Used with repeatEnd()
+     */
 	public void repeatSection()
 	{
 	    if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
 	    repeatSkip = musicSequences.size();
 	}
 	/**
-	 * Expand repeats,
-	 * by copying old sequence, assuming ADTs are immutable.
+	 * Expand a repeat, by copying old sequence, assuming music elements are immutable.
 	 */
 	public void repeatEnd()
     {

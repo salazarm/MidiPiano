@@ -121,13 +121,22 @@ public class Parser {
 	    double multiplier;
 	    
 	    // Read accidental if exist
+	    // ** Double accidentals are two tokens
 	    if(token.getType() == Type.ACCIDENTAL)
-	        accidental = new Accidental(token.getValue());
-	    else
 	    {
-	        accidental = null;
+	        Token second = lexer.peekBody();
+            if(second.getType() == Type.ACCIDENTAL)
+            {
+                lexer.nextBody();
+                accidental = new Accidental(token.getValue() + second.getValue());
+            }
+            else
+                accidental = new Accidental(token.getValue());
+
 	        token = lexer.nextBody();
 	    }
+	    else
+	        accidental = null;
 
 	    // Read basenote
 	    if(token.getType()!=Type.BASENOTE)

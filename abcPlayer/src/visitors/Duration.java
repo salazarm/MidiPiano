@@ -76,25 +76,8 @@ public class Duration implements Visitor<Integer> {
 	@Override
 	public Integer onTuplet(Tuplet tuplet) {
 		int duration = 0;
-		if(tuplet.getTupletNumber()==2) {
-			for (Note note : tuplet.getNotes()) {
-				duration += note.accept(this);
-			}
-			duration = (int) ((0.5*duration)*3);
-		}
-		else if(tuplet.getTupletNumber()==3) {
-			for(Note note: tuplet.getNotes()) {
-				duration += note.accept(this);
-			}
-			duration = (int) ((((double) (1/3)) * duration) * 2);
-		}
-		else if(tuplet.getTupletNumber()==4) {
-			for(Note note: tuplet.getNotes()) {
-				duration += note.accept(this);
-			}
-			duration = (int) ((((double) (1/4)) * duration) * 3);
-		}
-		return duration;
+        for (Note note : tuplet.getNotes()) duration += note.accept(this);
+        return (int) ( duration * Tuplet.ratio[tuplet.getTupletNumber()] );
 	}
 
 	

@@ -9,7 +9,6 @@ public class Body extends MusicSequence {
 
 	public Body() {
 		this.voiceList = new ArrayList<Voice>();
-		super.setStartTick(0);
 	}
 	
 	/**
