@@ -5,8 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
-	private ArrayList<Token> headerTokens;
-	private ArrayList<Token> bodyTokens;
+	protected ArrayList<Token> headerTokens;
+	protected ArrayList<Token> bodyTokens;
 	public int bodyStartIndex = 1;
 	private int headerIterator, bodyIterator;
 	
