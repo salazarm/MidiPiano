@@ -42,7 +42,7 @@ public class LexerTest extends Lexer
 //    			"sample_abc/piece2.abc", 
 //    			"sample_abc/prelude.abc", 
 //    			"sample_abc/scale.abc",
-//    			"sample_abc/ExtraTestFiles/tuples.abc",
+    			"sample_abc/ExtraTestFiles/tuples.abc",
     			"sample_abc/ExtraTestFiles/sample88.abc"};
     	for (String c: testFiles){
     		compare(c);
@@ -154,8 +154,8 @@ public class LexerTest extends Lexer
         list = processHeader("X: 3\nT: Turkish March\nC: W. Mozart\nM: 2/4\nL: 1/8\nK: Am");
         assertEquals("test case3: X, T, M, L, K",6,list.size());
         assertEquals("test case3: X, T, M, L, K","3",list.get(0).getValue());
-        assertEquals("test case3: X, T, M, L, K"," Turkish March",list.get(1).getValue());
-        assertEquals("test case3: X, T, M, L, K"," W. Mozart",list.get(2).getValue());
+        assertEquals("test case3: X, T, M, L, K","Turkish March",list.get(1).getValue());
+        assertEquals("test case3: X, T, M, L, K","W. Mozart",list.get(2).getValue());
         assertEquals("test case3: X, T, M, L, K","2/4",list.get(3).getValue());
         assertEquals("test case3: X, T, M, L, K","1/8",list.get(4).getValue());
         assertEquals("test case3: X, T, M, L, K","Am",list.get(5).getValue());
@@ -163,7 +163,7 @@ public class LexerTest extends Lexer
         list = processHeader("X:  25 \nT: Mr. title.special!character \n L: 4/2 \nM: 1/16\nK:  Cm \n\n");
         assertEquals("test case4: X, T, L, M, K",5,list.size());
         assertEquals("test case4: X, T, L, M, K","25",list.get(0).getValue());
-        assertEquals("test case4: X, T, L, M, K"," Mr. title.special!character ",list.get(1).getValue());
+        assertEquals("test case4: X, T, L, M, K","Mr. title.special!character",list.get(1).getValue());
         assertEquals("test case4: X, T, L, M, K","4/2",list.get(2).getValue());
         assertEquals("test case4: X, T, L, M, K","1/16",list.get(3).getValue());
         assertEquals("test case4: X, T, L, M, K","Cm",list.get(4).getValue());
@@ -171,8 +171,8 @@ public class LexerTest extends Lexer
         // Voice test
         list = processHeader(" X:  25 \nT: Mr. title \nV: v1 \nV:  v23 42v\nL: 4/2 \nM: 1/16\nK:  Cm \n\n");
         assertEquals("test case4: X, T, V, V, L, M, K",7,list.size());
-        assertEquals("test case4: X, T, V, V, L, M, K"," v1 ",list.get(2).getValue());
-        assertEquals("test case4: X, T, V, V, L, M, K","  v23 42v",list.get(3).getValue());
+        assertEquals("test case4: X, T, V, V, L, M, K","v1",list.get(2).getValue());
+        assertEquals("test case4: X, T, V, V, L, M, K","v23 42v",list.get(3).getValue());
     }
     
     @Test(expected = RuntimeException.class)
