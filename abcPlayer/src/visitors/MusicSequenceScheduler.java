@@ -6,13 +6,11 @@ import java.util.List;
 import sound.SequencePlayer;
 import datatypes.Body;
 import datatypes.Chord;
-import datatypes.KeySignature;
 import datatypes.MusicSequence;
 import datatypes.Note;
 import datatypes.Player;
 import datatypes.Repeat;
 import datatypes.Rest;
-import datatypes.Bar;
 import datatypes.Tuplet;
 import datatypes.Visitor;
 import datatypes.Voice;
@@ -122,9 +120,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 			note.setStartTick(tuplet.getCurTick());
 			note.accept(this);
 			tuplet.incrementCurTick(note.accept(this.duration));
-			System.out.println(note.accept(this.duration));
 		}
-		System.out.println("----------------");
 		return null;
 	}
 	
@@ -180,10 +176,5 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 			voice.accept(this);
 		}
 		return null;
-	}
-
-	@Override
-    public Void onBar(Bar bar) {
-	    return null;   
 	}
 }

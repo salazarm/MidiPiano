@@ -84,7 +84,6 @@ public class LexerTest extends Lexer
         	lexToString.concat(bodyTokens.get(i).getValue());
         }
         assertEquals(lexToString,result);
-        System.out.println(lexToString);
 	}
     
     @Test(expected = RuntimeException.class)

@@ -7,7 +7,6 @@ import datatypes.Note;
 import datatypes.Player;
 import datatypes.Repeat;
 import datatypes.Rest;
-import datatypes.Bar;
 import datatypes.Tuplet;
 import datatypes.Visitor;
 import datatypes.Voice;
@@ -161,13 +160,4 @@ public class Duration implements Visitor<Integer> {
 		}
 		return duration;
 	}
-	
-	@Override
-    public Integer onBar(Bar bar) {
-        int duration = 0;
-        for (int i = 0; i < bar.getSequences().size(); i++) {
-            duration += bar.getSequences().get(i).accept(this);
-        }
-        return duration;
-    }
 }

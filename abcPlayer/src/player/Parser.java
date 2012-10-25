@@ -161,7 +161,7 @@ public class Parser {
             if(str.equals(","))
             {
                 --octave;
-                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                while(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
                 {
                     if(lexer.nextBody().getValue().equals(","))
                         --octave;
@@ -173,7 +173,7 @@ public class Parser {
             else if(str.equals("'"))
             {
                 ++octave;
-                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                while(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
                 {
                     if(lexer.nextBody().getValue().equals("'"))
                         ++octave;
@@ -181,7 +181,6 @@ public class Parser {
                         throw new RuntimeException("mixed octave");
                     
                 }
-                ++octave;
             }
         }
         
@@ -413,6 +412,5 @@ public class Parser {
          * for(Voice voice : voices) if(!voice.getClosed())
             throw new RuntimeException("There is a voice not closed with || or |]");
          */
-        // TODO: Validate: all voices have same length?
     }
 }
