@@ -7,7 +7,7 @@ public class Fraction {
 	private final int numerator, denominator;
 	
 	public Fraction(int numerator, int denominator) {
-		if(denominator<=0) {
+		if(denominator==0) {
 			throw new InvalidInputException(
 					String.format("Invalid denominator: %s", denominator));
 		}
@@ -24,7 +24,7 @@ public class Fraction {
 	}
 	
 	public double getValue() {
-		return numerator/denominator;
+		return ((double)numerator)/denominator;
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package datatypes;
 public class Rest extends MusicSequence {
 
 	private final double noteMultiplier;
-	private final Player player;
 	
 	/**
 	 * Creates a Rest object
@@ -12,19 +11,14 @@ public class Rest extends MusicSequence {
 	 * associated with the Player object that this Note belongs to.
 	 * @param player Player object that this Note is to be played by
      */
-	public Rest(double noteMultiplier, Player player) {
+	public Rest(double noteMultiplier) {
 		this.noteMultiplier = noteMultiplier;
-		this.player = player;
 	}
 
 	public double getNoteMultiplier() {
 		return this.noteMultiplier;
 	}
-
-	public Player getPlayer() {
-		return this.player;
-	}
-
+	
 	public <R> R accept(Visitor<R> v)
     {
         return v.onRest(this);
