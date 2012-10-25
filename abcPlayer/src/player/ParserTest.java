@@ -160,11 +160,17 @@ public class ParserTest
         body = new ArrayList<Token>();
         body.add(new Token("A","A"));
         body.add(new Token("C","C"));
+        body.add(new Token(",",","));
+        body.add(new Token(",",","));
         body.add(new Token("c","c"));
         body.add(new Token("c","c"));
         body.add(new Token("|]","|]"));
         body.add(new Token("C","C"));
-        body.add(new Token("c","c"));
+        body.add(new Token("(2","(2"));
+        body.add(new Token("_","_"));
+        body.add(new Token("_","_"));
+        body.add(new Token("A","A"));
+        body.add(new Token("B","B"));
         body.add(new Token("[1","[1"));
         body.add(new Token("D","D"));
         body.add(new Token("[2","[2"));
