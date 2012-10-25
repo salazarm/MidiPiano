@@ -140,7 +140,7 @@ public class Lexer {
 				}
 			}
 			else{
-				throw new RuntimeException("Unexpected character sequence"+ input.substring(i-5,i+1));
+				throw new RuntimeException("Unexpected character sequence"+ input.substring(i-1,i+2));
 			}
 		}
 		

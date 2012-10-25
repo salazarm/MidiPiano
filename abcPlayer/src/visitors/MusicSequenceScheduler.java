@@ -9,7 +9,6 @@ import datatypes.Chord;
 import datatypes.MusicSequence;
 import datatypes.Note;
 import datatypes.Player;
-import datatypes.Repeat;
 import datatypes.Rest;
 import datatypes.Tuplet;
 import datatypes.Visitor;
@@ -21,9 +20,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	private final Duration duration;
 	private final SequencePlayer seqPlayer;
 	
-	public MusicSequenceScheduler(Player player) {
-	    //if(player.getSeqPlayer() == null) System.out.println("wrong init");
-	    
+	public MusicSequenceScheduler(Player player) {	    
 		this.player = player;
 		this.seqPlayer = player.getSeqPlayer();
 		duration = new Duration(this.player);
@@ -40,30 +37,9 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	 */
 	@Override
 	public Void onNote(Note note) {
-		/* Examines the key signature of this abc file to determine whether any
-		 * additional accidentals have to be applied to the note. */
-	    
-//		KeySignature ks = this.player.getHeader().getKeySignature();
-//		int[] accidentals = ks.getKeyAccidentals();
-//		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
-//		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
-	    
-	    //System.out.println("onNote: "+note.getStartTick()+" for "+this.duration);
-
 		this.seqPlayer.addNote(note.getNotePitch().toMidiNote(), 
 				note.getStartTick(), note.accept(this.duration));
 		return null;
-	}
-	
-	/**
-	 * Returns the corresponding values for baseNote arguments:
-	 * A = 1, B = 2, C = 3, D = 4, E = 5, F = 6, G = 7
-	 * @param baseNote char uppercase representation of the baseNote, must be uppercase
-	 * character between A-G inclusive
-	 * @return int index in the KeySignature accidentals array of that baseNote
-	 */
-	private int getCurNoteAsInt(char baseNote) {
-		return (int) (baseNote-64);
 	}
 
 	/**
@@ -82,27 +58,6 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 
 	@Override
 	public Void onRest(Rest rest) {
-		return null;
-	}
-
-	/**
-	 * Schedules a repeated MusicSequence on the Player
-	 * @param repeat Repeat object to be scheduled
-	 * @return null
-	 */
-	@Override
-	public Void onRepeat(Repeat repeat) {
-		repeat.incrementCurTick(repeat.getStartTick());
-		for(MusicSequence firstPass : repeat.getSequences()) {
-			firstPass.setStartTick(repeat.getCurTick());
-			firstPass.accept(this);
-			repeat.incrementCurTick(firstPass.accept(this.duration));
-		}
-		for(MusicSequence secondPass : repeat.getSecondPass()) {
-			secondPass.setStartTick(repeat.getCurTick());
-			secondPass.accept(this);
-			repeat.incrementCurTick(secondPass.accept(this.duration));
-		}
 		return null;
 	}
 

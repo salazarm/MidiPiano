@@ -46,7 +46,6 @@ public class Parser {
             if(body == null) System.out.println("body is null in parse()");
             Player player = new Player(header, body);
             player.getBody().accept( new Duration(player) );
-//            System.out.println(player.getHeader().getMeter().toString());
             return player;
         }
         catch(InvalidMidiDataException e)
@@ -69,6 +68,7 @@ public class Parser {
         return new Fraction(Integer.parseInt(str.substring(0, split)),
                             Integer.parseInt(str.substring(split+1, str.length())));
     }
+    
     private double parseMultiplier(String str)
     {
         int split = str.indexOf('/');
@@ -84,12 +84,14 @@ public class Parser {
             return ((double) numerator) / denominator;
         }
     }
+    
     private double readMultiplier()
     {
         Token token = lexer.nextBody();
         if(token.getType() != Type.NOTEMULTIPLIER) throw new RuntimeException("multiplier expected");
         return parseMultiplier(token.getValue());
     }
+    
     private Rest readRest()
     {
         double multiplier;
@@ -104,13 +106,7 @@ public class Parser {
         
         return new Rest(multiplier);
     }
-
-    /**
-     * Read [ (^, b) (Basenote) (Octave up/down) multiplier ] 
-     * @param lastAccidental 
-     * @return
-     */
-
+    
     private Note readNote()
     {
         Token token = lexer.nextBody();
@@ -211,16 +207,17 @@ public class Parser {
 
         return new Chord(list);
     }
+    
     private Tuplet readTuplet()
     {
         Token token = lexer.nextBody();
         String str = token.getValue();
         
         if(token.getType() != Type.TUPLET || str.length()!=2 || str.charAt(0)!='(')
-            throw new RuntimeException("A bug in program");
+            throw new RuntimeException("Invalid token: " + token.getType() + ": " + token.getValue());
         
         if(!(str.charAt(1)>='2' && str.charAt(1)<='4'))
-            throw new RuntimeException("A wrong length of tuplet");
+            throw new RuntimeException("Invalid tuplet length.");
         
         List<Note> list = new ArrayList<Note>();
         int i, n = str.charAt(1) - '0';
@@ -242,8 +239,9 @@ public class Parser {
             if(v.getVoiceName().trim().equals(str.trim()))
                 return v;
         }
-        throw new RuntimeException("No voice found with such name: " + str);
+        throw new RuntimeException("No voice found with name: " + str);        
     }
+    
     private void parseHeader()
     {
         //*****
@@ -265,9 +263,7 @@ public class Parser {
         title = token.getValue();
         
         while( (token=lexer.nextHeader()).getType() != Type.KEY)
-        {
-            if(token == null) throw new RuntimeException("Header ended before keySignature found");
-            
+        {            
             Type type = token.getType();
             
             if(type == Type.VOICE)
@@ -303,7 +299,7 @@ public class Parser {
                 throw new RuntimeException("I don't know this header token");
         }
         // last is Key
-        if(token.getType() != Type.KEY) throw new RuntimeException("Last should be key");
+        if(token.getType() != Type.KEY) throw new RuntimeException("Last token must be the key signature.");
         keySignature = KeySignature.getType(token.getValue());
         
         header = new Header(index, title, keySignature);
@@ -316,10 +312,7 @@ public class Parser {
     }
     
     /**
-     * Parsing body needs a header.
-     * Parse body first.
-     * 
-     * @return
+     * Parses the body of the abc file
      */
     private void parseBody()
     {
@@ -347,10 +340,6 @@ public class Parser {
         }
         
         currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
-        
-
-//        while( (token=lexer.nextBody()) != null)
-//            System.out.println(token.getValue() + " " + token.getType().toString());
 
         while( (token=lexer.peekBody()) != null)
         {            
@@ -386,29 +375,18 @@ public class Parser {
                 lexer.nextBody();
                 // return to default keySignature
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
-                
-                // barline checking
-                //currentVoice.add(null);
             }
             else if(type == Type.ENDMAJORSECTION)
             {
                 lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
-                // barline checking
-                // currentVoice.add(null);
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else
             {
-                throw new RuntimeException("What's this token?" + " " + token.getValue() + " " + token.getType().toString());
+                throw new RuntimeException("Invalid token:" + " " + token.getValue() + " " + token.getType().toString());
             }
         }
-
-        /*
-         * Checking double bars -> but can't pass examples
-         * for(Voice voice : voices) if(!voice.getClosed())
-            throw new RuntimeException("There is a voice not closed with || or |]");
-         */
     }
 }

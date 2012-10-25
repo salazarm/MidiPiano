@@ -1,13 +1,9 @@
 package player;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-
 import javax.sound.midi.MidiUnavailableException;
-
 import org.junit.Test;
-
 import datatypes.Player;
 
 public class ParserTest
@@ -77,7 +73,7 @@ public class ParserTest
         player.play();
     }
     
-    @Test //(expected = RuntimeException.class)
+    @Test
     public void testParser_simple3() throws MidiUnavailableException
     {
         ArrayList<Token> header, body;

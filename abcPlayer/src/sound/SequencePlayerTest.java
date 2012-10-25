@@ -9,7 +9,6 @@ import org.junit.Test;
 
 /**
  * Practice test for piece1.abc and piece2.abc
- * 
  * @author Donggu Kang
  *
  */
@@ -53,7 +52,7 @@ public class SequencePlayerTest
         }
         public void addTuplet(String pitches, double length)
         {
-            int i=0,len=(int)(length * unit / pitches.length());
+            int len=(int)(length * unit / pitches.length());
             if(pitches.length()==2) len*=3;
             else if(pitches.length()==3) len*=2;
             else if(pitches.length()==4) len*=3;
@@ -62,7 +61,6 @@ public class SequencePlayerTest
             {
                 player.addNote(new Pitch(pitch).toMidiNote(), t, len);
                 t += len;
-                i++;
             }
         }
         public void addTuplet(String pitches, double length, int transpose[])
@@ -135,13 +133,6 @@ public class SequencePlayerTest
            
             
             player.play();
-            
-            /* After implementing player,
-             * We can compare this player with the player from reading piece*.abc.
-             */
-            
-            // assertEquals(player.toString(), "C C C3/4 D/4 E | E3/4 D/4 E3/4 F/4 G2 | (3DDD (3GGG (3EEE (3CCC | G3/4 F/4 E3/4 D/4 C2 ||");
-            
 
             /*
              * Note: A possible weird behavior of the Java sequencer: Even if the
