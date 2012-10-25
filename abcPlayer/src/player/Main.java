@@ -60,7 +60,7 @@ public class Main {
 	{
 	    readFile("non_exist_hello_abc.abc");
 	}
-	@Test
+//	@Test
     public void testReadFile_sampleABC() throws IOException
     {
         String str;
@@ -77,13 +77,14 @@ public class Main {
 	@Test
     public void testPlay_playPiece1() throws IOException, MidiUnavailableException
     {
+		play("sample_abc/ExtraTestFiles/octaves.abc");
 	    //play("sample_abc/scale.abc");
         //play("sample_abc/little_night_music.abc");
 	    //play("sample_abc/invention.abc");
 	    //play("sample_abc/paddy.abc");
 	    //play("sample_abc/piece1.abc");
     }
-    @Test
+//    @Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
