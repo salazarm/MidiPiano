@@ -7,10 +7,7 @@ public class Tuplet extends MusicSequence {
 	
 	private final int tupletNumber;
 	private final List<Note> notes;
-	public static final double ratio[] = new double [] {0, 0, 3./2, 2./3, 3./4};
-	// * 2)AB   2 notes in time of 3 -> 3/2
-    // * 3)ABC  3       in time of 2 -> 2/3
-    // * 4)ABCD 4       in time of 3 -> 3/4
+	private int curTick = 0;
 	
 	/**
 	 * Creates a Tuplet object
@@ -33,6 +30,14 @@ public class Tuplet extends MusicSequence {
 	
 	public int getTupletNumber() {
 		return this.tupletNumber;
+	}
+	
+	public void incrementCurTick(int increment) {
+		this.curTick += increment;
+	}
+	
+	public int getCurTick() {
+		return this.curTick;
 	}
 
 	public <R> R accept(Visitor<R> v)
