@@ -46,7 +46,7 @@ public class Parser {
             if(body == null) System.out.println("body is null in parse()");
             Player player = new Player(header, body);
             player.getBody().accept( new Duration(player) );
-            //System.out.println(player.getHeader().getMeter().toString());
+//            System.out.println(player.getHeader().getMeter().toString());
             return player;
         }
         catch(InvalidMidiDataException e)
@@ -353,11 +353,9 @@ public class Parser {
         
         currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
         
-        //while( (token=lexer.nextBody()) != null)
-        //    System.out.println(token.getValue() + " " + token.getType().toString());
-        
-        //while( (token=lexer.nextBody()) != null)
-        //    System.out.println(token.getValue());
+
+//        while( (token=lexer.nextBody()) != null)
+//            System.out.println(token.getValue() + " " + token.getType().toString());
 
         while( (token=lexer.peekBody()) != null)
         {            
