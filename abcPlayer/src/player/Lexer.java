@@ -56,7 +56,8 @@ public class Lexer {
 
 	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
-		for (int i=bodyStartIndex-1; i <input.length(); i++){
+		input.concat(" ");
+		for (int i=bodyStartIndex; i <input.length(); i++){
 			if (Pattern.matches("\\A[za-gA-G\\^,_\\='][\\s\\S]*", input.substring(i,input.length()-1))){ // Note, Accidentals, Octaves
 				tokens.add(new Token(input.charAt(i)+"",input.charAt(i)+""));
 				continue;
@@ -129,8 +130,13 @@ public class Lexer {
 			else if(Pattern.matches("\\A\\s[\\s\\S]*",input.substring(i,input.length()))){ // whitespace
 				continue;
 			}
+			else if(input.charAt(i)=='%'){
+				while(input.charAt(i)!='\n'){
+					i++;
+				}
+			}
 			else{
-				throw new RuntimeException("Unexpected character sequence"+ input.substring(i,i+2));
+				throw new RuntimeException("Unexpected character sequence"+ input.substring(i-5,i+3));
 			}
 		}
 		
@@ -158,8 +164,14 @@ public class Lexer {
 					a = input.charAt(i-1)+"";
 				}
 				Token t = new Token(a,sb.toString());
-				if(Pattern.matches("\\A[MLX]",a)){
+				if(Pattern.matches("\\A[LX]",a)){
 					if (!Pattern.matches("\\A\\s*\\d++(/{1}\\d++)??\\s*\\z", t.getValue())){
+						throw new RuntimeException("Got: "+t.getValue()+", For: "+t.getType()+", Instead of: Number");
+					}
+				}
+				else if(Pattern.matches("\\AM", a)){
+					if (!Pattern.matches("\\A\\s*\\d++(/{1}\\d++)??\\s*\\z", t.getValue())
+							&& !Pattern.matches("\\s*C\\|?\\s*", t.getValue())){
 						throw new RuntimeException("Got: "+t.getValue()+", For: "+t.getType()+", Instead of: Number");
 					}
 				}
