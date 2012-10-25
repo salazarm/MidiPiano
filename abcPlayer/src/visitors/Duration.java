@@ -97,19 +97,19 @@ public class Duration implements Visitor<Integer> {
 			for (Note note : tuplet.getNotes()) {
 				duration += note.accept(this);
 			}
-			duration = (int) ((0.5*duration)*3);
+			duration = (int) (duration * 3./2);
 		}
 		else if(tuplet.getTupletNumber()==3) {
 			for(Note note: tuplet.getNotes()) {
 				duration += note.accept(this);
 			}
-			duration = (int) ((((double) (1/3)) * duration) * 2);
+			duration = (int) (duration * 2./3);
 		}
 		else if(tuplet.getTupletNumber()==4) {
 			for(Note note: tuplet.getNotes()) {
 				duration += note.accept(this);
 			}
-			duration = (int) ((((double) (1/4)) * duration) * 3);
+			duration = (int) (duration * 3./4);
 		}
 		return duration;
 	}

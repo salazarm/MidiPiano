@@ -52,7 +52,7 @@ public enum KeySignature {
     private static Map<String, KeySignature> keySignatureMap = makeKeySignatureMap();
     
     KeySignature(int[] keyAccidentals, String stringRep) {
-        this.keyAccidentals = keyAccidentals;
+        this.keyAccidentals = keyAccidentals.clone();
         this.stringRep = stringRep;
     }
     

@@ -126,7 +126,7 @@ public class Parser {
             if(second.getType() == Type.ACCIDENTAL)
             {
                 lexer.nextBody();
-                accidental = new Accidental(token.getValue() + second.getValue());
+                accidental = new Accidental(token.getValue() + second.getValue()); // double sharp or flat
             }
             else
                 accidental = new Accidental(token.getValue());
@@ -142,14 +142,14 @@ public class Parser {
         note = token.getValue().charAt(0);
         if(note>='a' && note<='z') {octave++; note=(char)(note-'a'+'A');}
         
-        if(accidental != null)
-        {
-            currentKey.setKeyAccidental(note-'A', accidental.getIntRep());
-        }
-        else
-        {
-            accidental = new Accidental(currentKey.getKeyAccidentals()[note-'A']);
-        }
+//        if(accidental != null)
+//        {
+//            currentKey.setKeyAccidental(note-'A', accidental.getIntRep());
+//        }
+//        else
+//        {
+//            accidental = new Accidental(currentKey.getKeyAccidentals()[note-'A']);
+//        }
         
         // Read octave modifiers
         if(lexer.peekBody().getType()==Type.OCTAVE)
@@ -172,7 +172,6 @@ public class Parser {
                 octave += str.length();
             }
         }
-        else octave = 0;
         
         
        // Read 1/4, /3, 5/, ..
@@ -180,7 +179,7 @@ public class Parser {
            multiplier = readMultiplier();
        else
            multiplier = 1;
-        
+
         return new Note(note, octave, accidental, multiplier);
     }
 
@@ -214,7 +213,8 @@ public class Parser {
         
         List<Note> list = new ArrayList<Note>();
         int i, n = str.charAt(1) - '0';
-        for(i=0 ; i<n; ++i) list.add(readNote());
+        for(i=0 ; i<n; ++i)
+            list.add(readNote());
         return new Tuplet(list);
         
     }
@@ -352,16 +352,15 @@ public class Parser {
                 currentVoice.add(readTuplet());
             else if(type == Type.REPEATSTART)
             {
-                ;
+                currentVoice.repeatStart();
             }
             else if(type == Type.REPEATSECTION) // [1 or [2
             {
-                ;
+                currentVoice.repeatSection();
             }
             else if(type == Type.REPEATEND)
             {
-                // new Repeat();
-                
+                currentVoice.repeatEnd();
             }
             else if(type == Type.BARLINE)
             {
@@ -378,7 +377,7 @@ public class Parser {
             }
             else
             {
-                System.out.println("---: "+token.getValue());
+                System.err.println("---: "+token.getValue());
                 //if(token==null)
                 //    System.out.println("null in exception");
                     //System.out.println("---: "+token.getValue() + " " + type.toString());

@@ -23,11 +23,15 @@ public class Note extends MusicSequence {
 	 */
 	public Note(char baseNote, int octaveModifier, Accidental accidentalModifier, 
 			double noteMultiplier) {
+	    
+	    if(baseNote>='a' && baseNote<='z') throw new RuntimeException("Note() : basenote is not capital");
 		this.baseNote = baseNote;
 		this.octaveModifier = octaveModifier;
 		this.accidentalModifier = setAccidentalModifier(accidentalModifier);
 		this.noteMultiplier = noteMultiplier;
 		this.notePitch = makePitch();
+		
+//		if(noteMultiplier < 0.001) System.out.println(baseNote + " ocatve: "+octaveModifier);
 	}
 	
 	private Accidental setAccidentalModifier(Accidental accidentalModifier) {		

@@ -45,7 +45,6 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		/* Examines the key signature of this abc file to determine whether any
 		 * additional accidentals have to be applied to the note. */
 	    
-	    // note is already transposed
 //		KeySignature ks = this.player.getHeader().getKeySignature();
 //		int[] accidentals = ks.getKeyAccidentals();
 //		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
@@ -116,13 +115,10 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	 */
 	@Override
 	public Void onTuplet(Tuplet tuplet) {
-		List<Note> notesCorrectDuration = correctDuration(tuplet.getNotes(), 
-				tuplet.accept(this.duration));
+		List<Note> notesCorrectDuration = correctDuration(tuplet.getNotes(), tuplet.accept(this.duration));
 		tuplet.incrementCurTick(tuplet.getStartTick());
 		for (Note note: notesCorrectDuration) {
 			note.setStartTick(tuplet.getCurTick());
-			//System.out.println("tick : " + note.getStartTick());
-			System.out.println("tick : " + note.accept(this.duration));
 			note.accept(this);
 			tuplet.incrementCurTick(note.accept(this.duration));
 		}
@@ -143,12 +139,13 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 			totalNoteDuration += note.accept(this.duration);
 		}
 		for (Note note: notes) {
-			double ratio = note.accept(this.duration)/totalNoteDuration;
+			double ratio = ((float)note.accept(this.duration))/totalNoteDuration;
 			double ticksThisNote = (ratio*tupletDuration);
-			double noteMultipler = (ticksThisNote)/(this.getPlayer().getHeader().getDefaultNoteLength() 
+			double noteMultiplier = ((float)ticksThisNote)/(this.getPlayer().getHeader().getDefaultNoteLength() 
 				* 4 * this.getPlayer().getTicksPerQuarterNote());
+			
 			correctDurationNotes.add(new Note(note.getBaseNote(), note.getOctaveModifier(), 
-					note.getAccidentalModifier(), noteMultipler));
+					note.getAccidentalModifier(), noteMultiplier));
 		}
 		return correctDurationNotes;
 	}
