@@ -24,6 +24,8 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	private final SequencePlayer seqPlayer;
 	
 	public MusicSequenceScheduler(Player player) {
+	    //if(player.getSeqPlayer() == null) System.out.println("wrong init");
+	    
 		this.player = player;
 		this.seqPlayer = player.getSeqPlayer();
 		duration = new Duration(this.player);
@@ -42,10 +44,14 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	public Void onNote(Note note) {
 		/* Examines the key signature of this abc file to determine whether any
 		 * additional accidentals have to be applied to the note. */
-		KeySignature ks = this.player.getHeader().getKeySignature();
-		int[] accidentals = ks.getKeyAccidentals();
-		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
-		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
+	    
+//		KeySignature ks = this.player.getHeader().getKeySignature();
+//		int[] accidentals = ks.getKeyAccidentals();
+//		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
+//		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
+	    
+	    //System.out.println("onNote: "+note.getStartTick()+" for "+this.duration);
+
 		this.seqPlayer.addNote(note.getNotePitch().toMidiNote(), 
 				note.getStartTick(), note.accept(this.duration));
 		return null;
@@ -109,14 +115,16 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	 */
 	@Override
 	public Void onTuplet(Tuplet tuplet) {
-		List<Note> notesCorrectDuration = correctDuration(tuplet.getNotes(), 
-				tuplet.accept(this.duration));
+		List<Note> notesCorrectDuration = correctDuration(tuplet.getNotes(), tuplet.accept(this.duration));
+
 		tuplet.incrementCurTick(tuplet.getStartTick());
 		for (Note note: notesCorrectDuration) {
 			note.setStartTick(tuplet.getCurTick());
 			note.accept(this);
 			tuplet.incrementCurTick(note.accept(this.duration));
+			System.out.println(note.accept(this.duration));
 		}
+		System.out.println("----------------");
 		return null;
 	}
 	
@@ -134,12 +142,13 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 			totalNoteDuration += note.accept(this.duration);
 		}
 		for (Note note: notes) {
-			double ratio = note.accept(this.duration)/totalNoteDuration;
+			double ratio = ((float)note.accept(this.duration))/totalNoteDuration;
 			double ticksThisNote = (ratio*tupletDuration);
-			double noteMultipler = (ticksThisNote)/(this.getPlayer().getHeader().getDefaultNoteLength() 
+			double noteMultiplier = ((float)ticksThisNote)/(this.getPlayer().getHeader().getDefaultNoteLength() 
 				* 4 * this.getPlayer().getTicksPerQuarterNote());
+			
 			correctDurationNotes.add(new Note(note.getBaseNote(), note.getOctaveModifier(), 
-					note.getAccidentalModifier(), noteMultipler));
+					note.getAccidentalModifier(), noteMultiplier));
 		}
 		return correctDurationNotes;
 	}

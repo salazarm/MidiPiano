@@ -7,7 +7,7 @@ public class Repeat extends MusicSequence {
 	
 	private final List<MusicSequence> sequences;
 	private int curTick = 0;
-	private final Player player;
+	//private final Player player;
 	private final List<MusicSequence> alternateEnding;
 	private final List<MusicSequence> secondPass; /* Contains the MusicSequences played in the
 	                                                 second pass while repeating */
@@ -22,10 +22,8 @@ public class Repeat extends MusicSequence {
 	 * second pass. If passed value is null, same ending as last time is used. The size of this
 	 * List is the number of MusicSequences replaced from the end of sequences
 	 */
-	public Repeat(List<MusicSequence> sequences, Player player, 
-			List<MusicSequence> alternateEnding) {
+	public Repeat(List<MusicSequence> sequences, List<MusicSequence> alternateEnding) {
 		this.sequences = sequences;
-		this.player = player;
 		this.alternateEnding = alternateEnding;
 		if (this.alternateEnding==null) {
 			this.secondPass = this.sequences;
@@ -61,9 +59,9 @@ public class Repeat extends MusicSequence {
 		return this.secondPass;
 	}
 
-	public Player getPlayer() {
-		return this.player;
-	}
+//	public Player getPlayer() {
+//		return this.player;
+//	}
 
 	public List<MusicSequence> getAlternateEnding() {
 		return this.alternateEnding;

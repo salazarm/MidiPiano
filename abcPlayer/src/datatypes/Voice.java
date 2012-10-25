@@ -1,5 +1,6 @@
 package datatypes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ public class Voice extends MusicSequence {
      */
     public Voice(String voiceName) {
         this.voiceName = voiceName;
+        this.musicSequences = new ArrayList<MusicSequence>();
     }
     
     /**
@@ -26,8 +28,54 @@ public class Voice extends MusicSequence {
      * @param musicSequence MusicSequence to add to this Voice
      */
     public void add(MusicSequence musicSequence) {
-        if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+        closed = false;
         this.musicSequences.add(musicSequence);
+    }
+    
+    private int repeatLeft = 0, repeatSkip = -1;
+    
+    /**
+     * Mark the start of repeat.
+     * Used with repeatEnd()
+     */
+    public void repeatStart()
+    {
+        closed = false;
+        repeatLeft = musicSequences.size();
+    }
+    /**
+     * Mark the '[1' of repeat.
+     * Used with repeatEnd()
+     */
+    public void repeatSection()
+    {
+        closed = false;
+        repeatSkip = musicSequences.size();
+    }
+    /**
+     * Expand a repeat, by copying old sequence, assuming music elements are immutable.
+     */
+    public void repeatEnd()
+    {
+        closed = true;
+
+        int i;
+        if(repeatSkip == -1) // |: C D E F | G A B c :|
+        {
+            int repeatRight = musicSequences.size();
+            // [repeatLeft, repeatRight)
+            for(i=repeatLeft;i<repeatRight;++i)
+                musicSequences.add(musicSequences.get(i));
+        }
+        else // |: C D E F |[1 G A B c :|[2 F E D C |
+        {
+         // [repeatLeft, repeatSkip) 
+            for(i=repeatLeft;i<repeatSkip;++i)
+                musicSequences.add(musicSequences.get(i));
+        }
+        
+        repeatLeft = 0;
+        repeatSkip = -1;
     }
     
     /**
@@ -36,7 +84,6 @@ public class Voice extends MusicSequence {
     private boolean closed = false;
     public void setClosed()
     {
-        if(closed) throw new RuntimeException("You can't close a voice more than once");
         closed = true;
     }
     public boolean getClosed() { return closed; }

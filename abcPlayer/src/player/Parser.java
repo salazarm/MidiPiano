@@ -43,11 +43,9 @@ public class Parser {
     {
         try
         {
+            if(body == null) System.out.println("body is null in parse()");
             Player player = new Player(header, body);
-            
-            // check timing
             player.getBody().accept( new Duration(player) );
-
             return player;
         }
         catch(InvalidMidiDataException e)
@@ -117,7 +115,7 @@ public class Parser {
         Token token = lexer.nextBody();
         Accidental accidental;
         char note;
-        int octave;
+        int octave = 0;
         double multiplier;
         
         // Read accidental if exist
@@ -128,7 +126,7 @@ public class Parser {
             if(second.getType() == Type.ACCIDENTAL)
             {
                 lexer.nextBody();
-                accidental = new Accidental(token.getValue() + second.getValue());
+                accidental = new Accidental(token.getValue() + second.getValue()); // double sharp or flat
             }
             else
                 accidental = new Accidental(token.getValue());
@@ -142,11 +140,16 @@ public class Parser {
         if(token.getType()!=Type.BASENOTE)
             throw new RuntimeException("readNote: This is not basenote!");
         note = token.getValue().charAt(0);
+        if(note>='a' && note<='z') {octave++; note=(char)(note-'a'+'A');}
         
-        if(accidental != null)
-            currentKey.setKeyAccidental(note-'A', accidental.getIntRep());
-        else
-            accidental = new Accidental(currentKey.getKeyAccidentals()[note-'A']);
+//        if(accidental != null)
+//        {
+//            currentKey.setKeyAccidental(note-'A', accidental.getIntRep());
+//        }
+//        else
+//        {
+//            accidental = new Accidental(currentKey.getKeyAccidentals()[note-'A']);
+//        }
         
         // Read octave modifiers
         if(lexer.peekBody().getType()==Type.OCTAVE)
@@ -159,17 +162,16 @@ public class Parser {
                 // validate!
                 for(char chr : str.toCharArray()) if(chr!=',')
                     throw new RuntimeException("bad char in octave modifier");
-                octave = -str.length();
+                octave -= str.length();
             }
             else
             {
                 // validate!
                 for(char chr : str.toCharArray()) if(chr!='\'')
                     throw new RuntimeException("bad char in octave modifier");
-                octave = str.length();
+                octave += str.length();
             }
         }
-        else octave = 0;
         
         
        // Read 1/4, /3, 5/, ..
@@ -177,7 +179,7 @@ public class Parser {
            multiplier = readMultiplier();
        else
            multiplier = 1;
-        
+
         return new Note(note, octave, accidental, multiplier);
     }
 
@@ -211,7 +213,8 @@ public class Parser {
         
         List<Note> list = new ArrayList<Note>();
         int i, n = str.charAt(1) - '0';
-        for(i=0 ; i<n; ++i) list.add(readNote());
+        for(i=0 ; i<n; ++i)
+            list.add(readNote());
         return new Tuplet(list);
         
     }
@@ -219,6 +222,7 @@ public class Parser {
     {
         Token token = lexer.nextBody();
         String str = token.getValue();
+        str = str.substring(2,  str.length());
         
         if(token.getType() != Type.VOICE)
             throw new RuntimeException("Voice expected");
@@ -287,9 +291,10 @@ public class Parser {
         header = new Header(index, title, keySignature);
         if(composer != null) header.setComposer(composer);
         if(meter != null) header.setMeter(meter);
-        header.setTempo(tempo);
+        if(length!=null) header.setDefaultNoteLengthFraction(length);
+        if(tempo>0) header.setTempo(tempo);
         header.setVoiceNames(voiceNames.toArray(new String[]{}));
-        header.setDefaultNoteLengthFraction(length);
+        
     }
     
     /**
@@ -304,7 +309,7 @@ public class Parser {
 
         int i;
         Token token;
-        Body body = new Body();
+        body = new Body();
         
         String voiceNames[] = header.getVoiceNames();
         Voice currentVoice;
@@ -314,25 +319,25 @@ public class Parser {
         
         if(voiceNames.length > 0)
         {
-            currentVoice = readVoice();
             voices = new Voice[voiceNames.length];
             for(i=0;i<voices.length;++i)
                 body.addVoice( voices[i] = new Voice(voiceNames[i]) );
+            currentVoice = readVoice();
         }
         else
         {
-            voices = null;
+            
             body.addVoice( currentVoice = new Voice("Default voice") );
+            voices = new Voice[] {currentVoice};
         }
         
         currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
         
-        System.out.println(lexer.getBody().get(2).getValue() + " " + lexer.getBody().get(2).toString());
-        while( (token=lexer.nextBody()) != null)
-            System.out.println(token.getValue() + " " + token.getType().toString());
+        //while( (token=lexer.nextBody()) != null)
+        //    System.out.println(token.getValue() + " " + token.getType().toString());
 
         while( (token=lexer.peekBody()) != null)
-        {
+        {            
             Type type = token.getType();
 
             if(type == Type.VOICE)
@@ -347,34 +352,44 @@ public class Parser {
                 currentVoice.add(readTuplet());
             else if(type == Type.REPEATSTART)
             {
-                ;
+                lexer.nextBody();
+                currentVoice.repeatStart();
             }
             else if(type == Type.REPEATSECTION) // [1 or [2
             {
-                ;
+                lexer.nextBody();
+                currentVoice.repeatSection();
             }
             else if(type == Type.REPEATEND)
             {
-                ;
+                lexer.nextBody();
+                currentVoice.repeatEnd();
             }
             else if(type == Type.BARLINE)
             {
+                lexer.nextBody();
                 // return to default keySignature
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
             }
             else if(type == Type.ENDMAJORSECTION)
             {
+                lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
             }
             else
             {
-                System.err.println(token.getValue() + " " + type.toString());
+                System.err.println("---: "+token.getValue());
+                //if(token==null)
+                //    System.out.println("null in exception");
+                    //System.out.println("---: "+token.getValue() + " " + type.toString());
                 throw new RuntimeException("What's this token?");
             }
         }
 
+        for(Voice voice : voices) if(!voice.getClosed())
+            throw new RuntimeException("There is a voice not closed with || or |]");
         // TODO: Validate: all voices have same length?
     }
 }

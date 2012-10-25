@@ -7,6 +7,8 @@ public class Token{
 	private final Type type;
 	private String value;
 	
+	// header : V voicename
+	// body : V V 
 	Token(String inp, String string) {
 	    this.type = getType(inp);
 	    

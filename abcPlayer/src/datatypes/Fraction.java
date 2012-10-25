@@ -22,7 +22,7 @@ public class Fraction {
 	public int getDenominator() {
 		return denominator;
 	}
-	
+
 	public double getValue() {
 		return ((double)numerator)/denominator;
 	}
