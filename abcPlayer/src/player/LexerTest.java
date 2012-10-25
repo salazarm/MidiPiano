@@ -34,14 +34,16 @@ public class LexerTest extends Lexer
     @Test
     public void testFiles(){
     	String[] testFiles = {
-    			"sample_abc/fur_elise.abc", 
-    			"sample_abc/invention.abc", 
-    			"sample_abc/little_night_music.abc", 
-    			"sample_abc/paddy.abc", 
-    			"sample_abc/piece1.abc", 
-    			"sample_abc/piece2.abc", 
-    			"sample_abc/prelude.abc", 
-    			"sample_abc/scale.abc"};
+//    			"sample_abc/fur_elise.abc", 
+//    			"sample_abc/invention.abc", 
+//    			"sample_abc/little_night_music.abc", 
+//    			"sample_abc/paddy.abc", 
+//    			"sample_abc/piece1.abc", 
+//    			"sample_abc/piece2.abc", 
+//    			"sample_abc/prelude.abc", 
+//    			"sample_abc/scale.abc",
+//    			"sample_abc/ExtraTestFiles/tuples.abc",
+    			"sample_abc/ExtraTestFiles/sample88.abc"};
     	for (String c: testFiles){
     		compare(c);
     	}
