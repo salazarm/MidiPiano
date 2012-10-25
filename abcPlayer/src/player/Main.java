@@ -77,7 +77,8 @@ public class Main {
 	@Test
     public void testPlay_playPiece1() throws IOException, MidiUnavailableException
     {
-        play("sample_abc/piece1.abc");
+        //play("sample_abc/piece1.abc");
+	    play("sample_abc/paddy.abc");
     }
     @Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException
@@ -87,6 +88,7 @@ public class Main {
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
         play("sample_abc/prelude.abc");
+        
         
         assertEquals(
             "X:8628\n"+

@@ -337,7 +337,7 @@ public class Parser {
         //    System.out.println(token.getValue() + " " + token.getType().toString());
 
         while( (token=lexer.peekBody()) != null)
-        {
+        {            
             Type type = token.getType();
 
             if(type == Type.VOICE)
@@ -352,14 +352,17 @@ public class Parser {
                 currentVoice.add(readTuplet());
             else if(type == Type.REPEATSTART)
             {
+                lexer.nextBody();
                 currentVoice.repeatStart();
             }
             else if(type == Type.REPEATSECTION) // [1 or [2
             {
+                lexer.nextBody();
                 currentVoice.repeatSection();
             }
             else if(type == Type.REPEATEND)
             {
+                lexer.nextBody();
                 currentVoice.repeatEnd();
             }
             else if(type == Type.BARLINE)

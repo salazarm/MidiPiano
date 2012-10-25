@@ -116,12 +116,15 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	@Override
 	public Void onTuplet(Tuplet tuplet) {
 		List<Note> notesCorrectDuration = correctDuration(tuplet.getNotes(), tuplet.accept(this.duration));
+
 		tuplet.incrementCurTick(tuplet.getStartTick());
 		for (Note note: notesCorrectDuration) {
 			note.setStartTick(tuplet.getCurTick());
 			note.accept(this);
 			tuplet.incrementCurTick(note.accept(this.duration));
+			System.out.println(note.accept(this.duration));
 		}
+		System.out.println("----------------");
 		return null;
 	}
 	

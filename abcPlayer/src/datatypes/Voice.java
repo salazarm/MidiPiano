@@ -28,11 +28,11 @@ public class Voice extends MusicSequence {
      * @param musicSequence MusicSequence to add to this Voice
      */
     public void add(MusicSequence musicSequence) {
-        if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+        closed = false;
         this.musicSequences.add(musicSequence);
     }
     
-    private int repeatLeft = -1, repeatSkip = -1;
+    private int repeatLeft = 0, repeatSkip = -1;
     
     /**
      * Mark the start of repeat.
@@ -40,7 +40,7 @@ public class Voice extends MusicSequence {
      */
     public void repeatStart()
     {
-        if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+        closed = false;
         repeatLeft = musicSequences.size();
     }
     /**
@@ -49,7 +49,7 @@ public class Voice extends MusicSequence {
      */
     public void repeatSection()
     {
-        if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+        closed = false;
         repeatSkip = musicSequences.size();
     }
     /**
@@ -57,10 +57,8 @@ public class Voice extends MusicSequence {
      */
     public void repeatEnd()
     {
-        if(closed) throw new RuntimeException("This voice is already closed with doubleBar");
+        closed = true;
 
-        // Expand
-        if(repeatLeft == -1) throw new RuntimeException("No repeat start found");
         int i;
         if(repeatSkip == -1) // |: C D E F | G A B c :|
         {
@@ -75,6 +73,9 @@ public class Voice extends MusicSequence {
             for(i=repeatLeft;i<repeatSkip;++i)
                 musicSequences.add(musicSequences.get(i));
         }
+        
+        repeatLeft = 0;
+        repeatSkip = -1;
     }
     
     /**
@@ -83,7 +84,6 @@ public class Voice extends MusicSequence {
     private boolean closed = false;
     public void setClosed()
     {
-        if(closed) throw new RuntimeException("You can't close a voice more than once");
         closed = true;
     }
     public boolean getClosed() { return closed; }
