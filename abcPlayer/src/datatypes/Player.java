@@ -11,7 +11,7 @@ public class Player {
 	private Body body;
 	private final int ticksPerQuarterNote, beatsPerMinute;
 	private final SequencePlayer seqPlayer;
-	private MusicSequenceScheduler scheduler = new MusicSequenceScheduler(this);
+	private MusicSequenceScheduler scheduler;
 	
 	/**
 	 * Creates a Player object that schedules and plays a series of MusicSequences, stored in
@@ -45,7 +45,7 @@ public class Player {
 		this.ticksPerQuarterNote = 48;
 
 		this.seqPlayer = new SequencePlayer(beatsPerMinute, ticksPerQuarterNote);
-		if(this.seqPlayer == null) System.out.println("seqPlayer is null in Player()");
+		this.scheduler = new MusicSequenceScheduler(this);
 	}
 		
 	public Header getHeader() {

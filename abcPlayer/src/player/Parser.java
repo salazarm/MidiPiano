@@ -115,7 +115,7 @@ public class Parser {
         Token token = lexer.nextBody();
         Accidental accidental;
         char note;
-        int octave;
+        int octave = 0;
         double multiplier;
         
         // Read accidental if exist
@@ -140,11 +140,16 @@ public class Parser {
         if(token.getType()!=Type.BASENOTE)
             throw new RuntimeException("readNote: This is not basenote!");
         note = token.getValue().charAt(0);
+        if(note>='a' && note<='z') {octave++; note=(char)(note-'a'+'A');}
         
         if(accidental != null)
+        {
             currentKey.setKeyAccidental(note-'A', accidental.getIntRep());
+        }
         else
+        {
             accidental = new Accidental(currentKey.getKeyAccidentals()[note-'A']);
+        }
         
         // Read octave modifiers
         if(lexer.peekBody().getType()==Type.OCTAVE)
@@ -157,14 +162,14 @@ public class Parser {
                 // validate!
                 for(char chr : str.toCharArray()) if(chr!=',')
                     throw new RuntimeException("bad char in octave modifier");
-                octave = -str.length();
+                octave -= str.length();
             }
             else
             {
                 // validate!
                 for(char chr : str.toCharArray()) if(chr!='\'')
                     throw new RuntimeException("bad char in octave modifier");
-                octave = str.length();
+                octave += str.length();
             }
         }
         else octave = 0;
@@ -287,7 +292,7 @@ public class Parser {
         if(composer != null) header.setComposer(composer);
         if(meter != null) header.setMeter(meter);
         if(length!=null) header.setDefaultNoteLengthFraction(length);
-        header.setTempo(tempo);
+        if(tempo>0) header.setTempo(tempo);
         header.setVoiceNames(voiceNames.toArray(new String[]{}));
         
     }
@@ -328,8 +333,8 @@ public class Parser {
         
         currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
         
-        while( (token=lexer.nextBody()) != null)
-            System.out.println(token.getValue() + " " + token.getType().toString());
+        //while( (token=lexer.nextBody()) != null)
+        //    System.out.println(token.getValue() + " " + token.getType().toString());
 
         while( (token=lexer.peekBody()) != null)
         {
@@ -373,7 +378,10 @@ public class Parser {
             }
             else
             {
-                System.out.println(token.getValue() + " " + type.toString());
+                System.out.println("---: "+token.getValue());
+                //if(token==null)
+                //    System.out.println("null in exception");
+                    //System.out.println("---: "+token.getValue() + " " + type.toString());
                 throw new RuntimeException("What's this token?");
             }
         }

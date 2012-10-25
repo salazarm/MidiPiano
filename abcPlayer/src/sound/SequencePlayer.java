@@ -196,7 +196,7 @@ public class SequencePlayer {
              * this case, you need to explicitly exit the program with
              * System.exit(0).
              */
-            // System.exit(0);
+             System.exit(0);
 
         } catch (MidiUnavailableException e) {
             e.printStackTrace();

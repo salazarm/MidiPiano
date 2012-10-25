@@ -51,6 +51,8 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 //		int curNote = getCurNoteAsInt(Character.toUpperCase(note.getBaseNote()));
 //		note.getNotePitch().accidentalTranspose(accidentals[curNote]);
 	    
+	    //System.out.println("onNote: "+note.getStartTick()+" for "+this.duration);
+
 		this.seqPlayer.addNote(note.getNotePitch().toMidiNote(), 
 				note.getStartTick(), note.accept(this.duration));
 		return null;
@@ -119,6 +121,8 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 		tuplet.incrementCurTick(tuplet.getStartTick());
 		for (Note note: notesCorrectDuration) {
 			note.setStartTick(tuplet.getCurTick());
+			//System.out.println("tick : " + note.getStartTick());
+			System.out.println("tick : " + note.accept(this.duration));
 			note.accept(this);
 			tuplet.incrementCurTick(note.accept(this.duration));
 		}
