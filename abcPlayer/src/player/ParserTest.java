@@ -73,7 +73,7 @@ public class ParserTest
         player.play();
     }
     
-    @Test //(expected = RuntimeException.class)
+    @Test
     public void testParser_simple3() throws MidiUnavailableException
     {
         ArrayList<Token> header, body;

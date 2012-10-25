@@ -27,6 +27,8 @@ public class Main {
 	 * System.exit()</p>
 	 * 
 	 * @param path the name of input abc file
+	 * @return String containing the contents of the abc file
+	 * @throws IOException in case of input/output error
 	 */
     public static String readFile(String path) throws IOException
     {
@@ -42,6 +44,13 @@ public class Main {
         
         return sb.toString();
     }
+    
+    /**
+     * Lexes, parses, schedules and plays the given abc file
+     * @param file String containing the path of the abc file to be played
+     * @throws IOException
+     * @throws MidiUnavailableException
+     */
 	public static void play(String file) throws IOException, MidiUnavailableException {
 	    Lexer lexer = new Lexer(readFile(file));
 	    Parser parser = new Parser(lexer);
@@ -52,12 +61,16 @@ public class Main {
 	}
 	
 	/////// JUnit Tests ///////
-	@Test(expected = IOException.class)
-	public void testReadFile_wrongPath() throws IOException
-	{
-	    readFile("non_exist_hello_abc.abc");
-	}
-//	@Test
+	/*
+	 * Our testing strategy in this case was to play back all of the supplied test files plus four extra files
+	 * that include the different types of abc tokens and their interactions. The files were tested by ear. 
+	 * In addition, we tested the header printed out by playing back sample_abc/prelude.abc against the header
+	 * in the file to ensure the various toString() methods are working correctly. We also tested for IOException
+	 * thrown when an invalid file path is passed to play(). We tested readFile to ensure correct and error-free
+	 * file reads. 
+	 */
+	// Tests readFile to ensure correct and error-free file reads.
+	@Test
     public void testReadFile_sampleABC() throws IOException
     {
         String str;
@@ -67,12 +80,14 @@ public class Main {
         assertTrue("wrong suffix from readFile(prelude.abc)", str.endsWith("V:3\nC,,16|C,,16|]\n"));
     }
 	
+	// Tests to make sure IOException thrown when invalid file path passed to play.
 	@Test(expected = IOException.class)
     public void testPlay_wrongPath() throws IOException, MidiUnavailableException
     {
         play("non_exist_hello_abc.abc");
     }
 	
+	// Tests various abc files to see if they are played correctly. Tested by ear by multiple people.
 	@Test
     public void testPlay_playPieces() throws IOException, MidiUnavailableException
     {
@@ -90,7 +105,8 @@ public class Main {
 	    play("sample_abc/paddy.abc");
     }
 
-	//@Test
+	// Tests to see if the correct header is printed out when an abc file is played.
+	@Test
     public void testPlay_sampleABC() throws IOException, MidiUnavailableException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

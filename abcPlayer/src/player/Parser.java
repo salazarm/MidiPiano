@@ -263,9 +263,7 @@ public class Parser {
         title = token.getValue();
         
         while( (token=lexer.nextHeader()).getType() != Type.KEY)
-        {
-            if(token == null) throw new RuntimeException("Header ended before keySignature found");
-            
+        {            
             Type type = token.getType();
             
             if(type == Type.VOICE)
@@ -301,7 +299,7 @@ public class Parser {
                 throw new RuntimeException("I don't know this header token");
         }
         // last is Key
-        if(token.getType() != Type.KEY) throw new RuntimeException("Last should be key");
+        if(token.getType() != Type.KEY) throw new RuntimeException("Last token must be the key signature.");
         keySignature = KeySignature.getType(token.getValue());
         
         header = new Header(index, title, keySignature);

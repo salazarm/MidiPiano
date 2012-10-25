@@ -102,31 +102,13 @@ public class Duration implements Visitor<Integer> {
 	@Override
     public Integer onVoice(Voice voice) {
 	    int i,n = voice.getMusicSequences().size();
-        int duration = 0, oneSection = player.getTicksPerSection(), checkPoint;
+        int duration = 0;
         List<MusicSequence> seq = voice.getMusicSequences();
         
-        checkPoint = oneSection;
         for(i=0;i<n;++i)
         {
             duration += seq.get(i).accept(this);
-            
-// measurement checking
-//            if(seq.get(i)!=null)
-//            {
-//                if(duration >= checkPoint) throw new RuntimeException("not fulfilled section");
-//                duration += seq.get(i).accept(this);
-//            }
-//            else // barline
-//            {
-//                if(duration == checkPoint)
-//                    checkPoint += oneSection;
-//                else
-//                    throw new RuntimeException("wrong position of barline");
-//            }
         }
-
-        //if(duration%oneSection != 0 || seq.get(n-1)!=null)
-        //    throw new RuntimeException("not fulfilled last section " + duration + " " + oneSection);
 
         return duration;
     }
@@ -139,15 +121,9 @@ public class Duration implements Visitor<Integer> {
 	@Override
 	public Integer onBody(Body body) {
 		int duration = 0;
-		Integer last = null;
 
 		for (Voice voice : body.getVoiceList()) {
 			duration = voice.accept(this);
-			
-//			if(last!=null && duration!=last)
-//			    throw new RuntimeException("Voices have different lengths");
-			
-			last=duration;
 		}
 		return duration;
 	}
