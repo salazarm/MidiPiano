@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
+
+// Marco was here
 /***
  * LexerTest
  * To test private methods, it extends Lexer
@@ -24,6 +26,9 @@ public class LexerTest extends Lexer
         super();
     }
     
+    @Test
+    public void emptyTest(){
+    }
     @Test
     public void testFiles(){
     	String[] testFiles = {"sample_abc/fur_elise.abc", "sample_abc/invention.abc", 
