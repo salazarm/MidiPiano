@@ -1,5 +1,7 @@
 package player;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
 import javax.sound.midi.MidiUnavailableException;
@@ -105,5 +107,79 @@ public class ParserTest
         player = parser.parse();
         player.schedule();
         player.play();
+    }
+    @Test
+    public void testParser_repeat1() throws MidiUnavailableException
+    {
+        ArrayList<Token> header, body;
+        
+        header = new ArrayList<Token>();
+        header.add(new Token("X","2"));
+        header.add(new Token("T","title"));
+        header.add(new Token("Q","200"));
+        header.add(new Token("M","4/4"));
+        header.add(new Token("K","C"));
+        
+        body = new ArrayList<Token>();
+        body.add(new Token("A","A"));
+        body.add(new Token("C","C"));
+        body.add(new Token("c","c"));
+        body.add(new Token("||","||"));
+        body.add(new Token("c","c"));
+        body.add(new Token("C","C"));
+        body.add(new Token("c","c"));
+        body.add(new Token("|:","|:"));
+        body.add(new Token("D","D"));
+        body.add(new Token("D","D"));
+        body.add(new Token("D","D"));
+        body.add(new Token("|","|"));
+        body.add(new Token("f","f"));
+        body.add(new Token("f","f"));
+        body.add(new Token("f","f"));
+        body.add(new Token(":|",":|"));
+        body.add(new Token("A","A"));
+
+        parser = new Parser(new FakeLexer(header, body));
+        player = parser.parse();
+        player.schedule();
+        player.play();
+        assertEquals(19,player.getBody().getVoiceList().get(0).getMusicSequences().size());
+    }
+    @Test
+    public void testParser_repeat2() throws MidiUnavailableException
+    {
+        ArrayList<Token> header, body;
+        
+        header = new ArrayList<Token>();
+        header.add(new Token("X","2"));
+        header.add(new Token("T","title"));
+        header.add(new Token("Q","200"));
+        header.add(new Token("M","4/4"));
+        header.add(new Token("K","C"));
+        
+        body = new ArrayList<Token>();
+        body.add(new Token("A","A"));
+        body.add(new Token("C","C"));
+        body.add(new Token("c","c"));
+        body.add(new Token("c","c"));
+        body.add(new Token("|]","|]"));
+        body.add(new Token("C","C"));
+        body.add(new Token("c","c"));
+        body.add(new Token("[1","[1"));
+        body.add(new Token("D","D"));
+        body.add(new Token("[2","[2"));
+        body.add(new Token("E","E"));
+        body.add(new Token(":|",":|"));
+        body.add(new Token("f","f"));
+        body.add(new Token("|:","|:"));
+        body.add(new Token("f","f"));
+        body.add(new Token(":|",":|"));
+        // 7 + 
+        parser = new Parser(new FakeLexer(header, body));
+        player = parser.parse();
+        player.schedule();
+        player.play();
+        
+        assertEquals(14,player.getBody().getVoiceList().get(0).getMusicSequences().size());
     }
 }
