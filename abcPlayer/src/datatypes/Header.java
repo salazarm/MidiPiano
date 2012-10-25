@@ -105,16 +105,16 @@ public class Header {
     public String toString() {
     	String voices = "";
     	for (String voice : voiceNames) {
-    		voices += "V: " + voice + "\n";
+    		voices += "V:" + voice.trim() + "\n";
     	}
-        return String.format("X: %s\n" +
-                "T: %s\n" +
-                "C: %s\n" +
-                "M: %s\n" +
-                "L: %s\n" +
-                "Q: %s\n" +
+        return String.format("X:%s\n" +
+                "T:%s\n" +
+                "C:%s\n" +
+                "M:%s\n" +
+                "L:%s\n" +
+                "Q:%s\n" +
                 "%s" + 
-                "K: %s\n", this.getIndexNumber(), this.getTitle(), this.getComposer(),
+                "K:%s\n", this.getIndexNumber(), this.getTitle(), this.getComposer(),
                 this.getMeter().toString(), this.getDefaultNoteLengthFraction().toString(),
                 this.getTempo(), voices, this.getKeySignature().getStringRep());
     }

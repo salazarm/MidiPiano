@@ -55,7 +55,7 @@ public class Parser {
         {
             throw new RuntimeException("Invalid Midi Data. Check your abc file.");
         }
-        catch( MidiUnavailableException e)
+        catch(MidiUnavailableException e)
         {
             throw new RuntimeException("Midi Unavailable");
         }
@@ -232,11 +232,6 @@ public class Parser {
         while((token = lexer.peekBody()).getType() != Type.CHORDEND) 
             list.add(readNote());
         lexer.consumeBody(Type.CHORDEND);
-
-/*        double len = list.get(0).getNoteMultiplier();
-        for(Note note : list)
-            if(note.getNoteMultiplier() != len)
-                throw new RuntimeException("different length of nodes in a chord"); */
 
         return new Chord(list);
     }
