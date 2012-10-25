@@ -26,7 +26,7 @@ public class LexerTest extends Lexer
     
 	@Test
 	public void testString(){
-		System.out.println(Pattern.matches("\\A[/0-9].*","2 z"));
+		System.out.println(Pattern.matches("\\A([0-9]+([\\s\\S]*)+)","2\nz \n\n\n fuck you"));
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		DataInputStream dis = null;
