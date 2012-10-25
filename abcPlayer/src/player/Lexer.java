@@ -52,16 +52,12 @@ public class Lexer {
 	private static final Pattern fractDigits = Pattern.compile("\\A/\\d+");
 	private static final Pattern loneFract = Pattern.compile("\\A/");
 	private static final Pattern digitFract = Pattern.compile("\\A\\d+/");
-	private static final Pattern bodyVoice = Pattern.compile("\\AV:[\\s\\S]*\\n");
 	private static final Pattern soloNumber = Pattern.compile("\\A\\d+");
 
 	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		input = input +" ";
 		for (int i=bodyStartIndex-1; i <input.length(); i++){
-//			if (tokens.size()>0){
-//				System.out.println(tokens.get(tokens.size()-1).getValue());
-//			}
 			if (Pattern.matches("\\A[za-gA-G\\^,_\\='][\\s\\S]*", input.substring(i,input.length()-1))){ // Note, Accidentals, Octaves
 				tokens.add(new Token(input.charAt(i)+"",input.charAt(i)+""));
 				continue;
@@ -114,7 +110,7 @@ public class Lexer {
 			else if(Pattern.matches("\\A\\([2-4][\\s\\S]*", input.substring(i,input.length()))){  // (2, (3, (4
 				tokens.add(new Token(""+input.substring(i,i+2), ""+input.substring(i,i+2))); i++; continue;
 			}
-			else if(Pattern.matches("\\A\\[[1-2][\\s\\S]*", input.substring(i,input.length()))){  // (2, (3, (4
+			else if(Pattern.matches("\\A\\[[1-2][\\s\\S]*", input.substring(i,input.length()))){  // [1, [2
 				tokens.add(new Token(""+input.substring(i,i+2), ""+input.substring(i,i+2))); i++; continue;
 			}
 			else if(Pattern.matches("\\A\\[[\\s\\S]*", input.substring(i,input.length()-1))){ // [
