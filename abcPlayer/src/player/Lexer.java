@@ -7,9 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
-    protected ArrayList<Token> headerTokens;
+	protected ArrayList<Token> headerTokens;
 	protected ArrayList<Token> bodyTokens;
-	public int bodyStartIndex;
+	public int bodyStartIndex = 1;
 	private int headerIterator, bodyIterator;
 	
 	/**
@@ -48,101 +48,97 @@ public class Lexer {
 	public void consumeHeader(Token.Type type) { if( nextHeader().getType() != type ) throw new RuntimeException("Expected token: "+type.toString()); }
 	public void consumeBody(Token.Type type) { if( nextBody().getType() != type ) throw new RuntimeException("Expected token: "+type.toString()); }
 
+	private static final Pattern digitsFractdigits = Pattern.compile("\\A\\d+/\\d+");
+	private static final Pattern fractDigits = Pattern.compile("\\A/\\d+");
+	private static final Pattern loneFract = Pattern.compile("\\A/");
+	private static final Pattern digitFract = Pattern.compile("\\A\\d+/");
+	private static final Pattern bodyVoice = Pattern.compile("\\AV:[\\s\\S]*\\n");
+	private static final Pattern soloNumber = Pattern.compile("\\A\\d+");
 
 	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
-		input = "  "+input;
-		for(int i = bodyStartIndex; i<input.length(); i++){
-				int j = 0;
-				for(int k =1;i+k<input.length() && !Pattern.matches("\\s",""+input.charAt(i+k)); k++){
-					j =k;
-					if (Pattern.matches("[a-gA-Gz,\\^_'=]",""+input.charAt(i+k))){
-						tokens.add(new Token(input.charAt(i+k)+"",input.charAt(i+k)+""));
-					}
-					else if(Pattern.matches("\\[[\\^za-gA-G_]",""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("[","["));
-					}
-					else if((""+input.charAt(i+k)).equals(":")){
-						tokens.add(new Token(":|",":|")); k+=1;
-					}
-					else if((""+input.charAt(i+k)+input.charAt(i+k+1)).equals("|:")){
-						tokens.add(new Token("|:","|:")); k+=1;
-					}
-					else if(Pattern.matches("\\([2-4]",""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("("+input.charAt(i+k+1), "("+input.charAt(i+k+1))); k+=1;
-					}
-					else if (Pattern.matches("\\A/\\d+[\\s\\S]*", input.substring(i+k,input.length()-1))){
-					Pattern pattern = Pattern.compile("\\A/\\d+");
-					Matcher matcher = pattern.matcher(input.substring(i+k,input.length()-1));
-					matcher.find();
-					tokens.add(new Token(matcher.group(),matcher.group()));
-					k += matcher.end()-1;
-					}
-					else if(Pattern.matches("\\A\\d+/\\d+[\\s\\S]*",input.substring(i+k,input.length()-1))){
-                        Pattern pattern = Pattern.compile("\\A\\d+/\\d+");
-                        Matcher matcher = pattern.matcher(input.substring(i+k,input.length()-1));
-                        matcher.find();
-                        tokens.add(new Token(matcher.group(),matcher.group()));
-                        k+=matcher.end();
-					}
-					else if(("|]").equals(input.charAt(i+k-1)+""+input.charAt(i+k))){
-						tokens.add(new Token("|]","|]"));
-					}
-					else if(Pattern.matches("\\A[/\\d]+[\\s\\S]*",input.substring(i+k,input.length()-1))){
-		                    Pattern pattern;
-		                    if(Pattern.matches("\\A/\\d+[\\s\\S]*]",input.substring(i+k,input.length()-1))){
-		                        pattern = Pattern.compile("\\A/\\d+");
-		                    } 
-		                    else if (Pattern.matches("\\A\\d+/[^\\d][\\s\\S]*", input.substring(i+k,input.length()-1))){
-		                    	pattern = Pattern.compile("\\A\\d+/");
-		                    }
-		                    else if(Pattern.matches("\\A/[^//d][\\s\\S]*", input.substring(i+k,input.length()-1))){
-		                    	pattern = Pattern.compile("\\A/");
-		                    }
-		                    else if(Pattern.matches("\\A\\d+[\\s\\S]*",input.substring(i+k,input.length()-1))){
-		                        pattern = Pattern.compile("\\A\\d+");
-		                    }
-		                    else{
-		                        throw new RuntimeException("Invalid Character Sequence Encountered"+input.charAt(i+k)+input.charAt(i+k+1)+input.charAt(i+k+2));
-		                    }
-		                    Matcher matcher = pattern.matcher(input.substring(i+k,input.length()-1));
-		                    matcher.find(); 
-		                    tokens.add(new Token(matcher.group(), matcher.group()));
-		                    k+= matcher.end()-1;
-					  }
-					else if(Pattern.matches("\\[[12]",""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("["+input.charAt(i+k+1), "["+input.charAt(i+k+1)));k++;
-					}
-					else if( ("|]").equals(""+input.charAt(i+k)+input.charAt(i+k+1)) || ("||") .equals(""+input.charAt(i+k)+input.charAt(i+k+1))){
-						tokens.add(new Token("|"+input.charAt(i+k+1),"|"+input.charAt(i+k+1)));k++;
-					}
-					else if(Pattern.matches("\\][,za-gA-G_0-9]",""+input.charAt(i+k)+input.charAt(i+k-1))){
-						tokens.add(new Token("]","]"));
-					}
-					else if(Pattern.matches("\\nV",""+input.charAt(i+k-1)+input.charAt(i+k))){
-						StringBuilder sb = new StringBuilder();
-						for(; !Pattern.matches("\\n",""+input.charAt(i+k));k++){
-							sb.append(input.charAt(i+k));
-						}
-						tokens.add(new Token("V1"+sb.toString(),sb.toString()));
-					}
-					else if(input.charAt(i+k) == '|'){
-						tokens.add(new Token("|","|"));
-					}
-					else if(input.charAt(i+k) == '%'){
-						while (!Pattern.matches("\\n",""+input.charAt(i+k))){
-							k++;
-						}
-					}
-					else if(input.charAt(i+k)=='/'){
-						tokens.add(new Token("/","/"));
-					}
-					else{
-						throw new RuntimeException("Unexpected Character: "+input.charAt(i+k)+" in: "+input.charAt(i+k-2) +input.charAt(i+k-1)+input.charAt(i+k)+input.charAt(i+k+1));
-					}
-				}i+=j;
-				
+		input = input +" ";
+		for (int i=bodyStartIndex-1; i <input.length(); i++){
+//			if (tokens.size()>0){
+//				System.out.println(tokens.get(tokens.size()-1).getValue());
+//			}
+			if (Pattern.matches("\\A[za-gA-G\\^,_\\='][\\s\\S]*", input.substring(i,input.length()-1))){ // Note, Accidentals, Octaves
+				tokens.add(new Token(input.charAt(i)+"",input.charAt(i)+""));
+				continue;
+			}
+			else if (Pattern.matches("\\A\\d+/\\d+[\\s\\S]*",input.substring(i,input.length()-1))){  // Number/Number
+				Matcher matcher = digitsFractdigits.matcher(input.substring(i,input.length()-1));
+				matcher.find();
+				tokens.add(new Token(matcher.group(),matcher.group()));
+				i += matcher.end()-1;
+				continue;
+			}
+			else if (Pattern.matches("\\A/\\d+[\\s\\S]*", input.substring(i,input.length()))){ //  /Number
+				Matcher matcher = fractDigits.matcher(input.substring(i,input.length()));
+				matcher.find();
+				tokens.add(new Token(matcher.group(),matcher.group()));
+				i+=matcher.end()-1;
+				continue;
+			}
+			else if(Pattern.matches("\\A/[^\\d][\\s\\S]*", input.substring(i,input.length()))){ // / (Lone Fraction Sign)
+				Matcher matcher = loneFract.matcher(input.substring(i,input.length()));
+				matcher.find();
+				tokens.add(new Token(matcher.group(),matcher.group()));
+				i+=matcher.end()-1;
+				continue;
+			}
+			else if(Pattern.matches("\\A\\d+/[^\\d][\\s\\S]*", input.substring(i,input.length()-1))){ // Number/
+				Matcher matcher = digitFract.matcher(input.substring(i,input.length()));
+				matcher.find();
+				tokens.add(new Token(matcher.group(),matcher.group()));
+				i+=matcher.end()-1; continue;
+			}
+			else if(Pattern.matches("\\A\\d+[^/][\\s\\S]*", input.substring(i,input.length()))){ // Number
+				Matcher matcher = soloNumber.matcher(input.substring(i,input.length()));
+				matcher.find();
+				tokens.add(new Token(matcher.group(), matcher.group()));
+				i+=matcher.end()-1; continue;
+			}
+			else if(Pattern.matches("\\A:\\|[\\s\\S]*", input.substring(i,input.length()))){ // :|
+				tokens.add(new Token(":|",":|")); i++; continue;
+			}
+			else if(Pattern.matches("\\A\\|:[\\s\\S]*", input.substring(i,input.length()))){  // |:
+				tokens.add(new Token("|:","|:")); i++; continue;
+			}
+			else if(Pattern.matches("\\A\\|(\\||\\])[\\s\\S]*", input.substring(i,input.length()))){ // || or |]
+				tokens.add(new Token("|"+input.charAt(i+1),"|"+input.charAt(i+1))); i++;
+			}
+			else if(Pattern.matches("\\A\\|[^|][\\s\\S]*", input.substring(i,input.length()))){  // |
+				tokens.add(new Token("|","|")); continue;
+			}
+			else if(Pattern.matches("\\A\\([2-4][\\s\\S]*", input.substring(i,input.length()))){  // (2, (3, (4
+				tokens.add(new Token(""+input.substring(i,i+2), ""+input.substring(i,i+2))); i++; continue;
+			}
+			else if(Pattern.matches("\\A\\[[1-2][\\s\\S]*", input.substring(i,input.length()))){  // (2, (3, (4
+				tokens.add(new Token(""+input.substring(i,i+2), ""+input.substring(i,i+2))); i++; continue;
+			}
+			else if(Pattern.matches("\\A\\[[\\s\\S]*", input.substring(i,input.length()-1))){ // [
+				tokens.add(new Token("[", "["));
+			}
+			else if(Pattern.matches("\\A\\][\\s\\S]*", input.substring(i,input.length()-1))){ // ]
+				tokens.add(new Token("]","]"));
+			}
+			else if(Pattern.matches("\\AV:[\\s\\S]*", input.substring(i,input.length()))){  // V:
+				StringBuilder sb = new StringBuilder();
+				for (int j = 0; !Pattern.matches("\n",input.charAt(i+j)+"");j++ ){
+					sb.append(input.charAt(i+j));
+				}
+				i+=sb.length()-1;
+				tokens.add(new Token(1+sb.toString(), sb.toString()));
+			}
+			else if(Pattern.matches("\\A\\s[\\s\\S]*",input.substring(i,input.length()))){ // whitespace
+				continue;
+			}
+			else{
+				throw new RuntimeException("Unexpected character sequence"+ input.substring(i,i+1));
+			}
 		}
+		
 		return tokens;
 	}
 

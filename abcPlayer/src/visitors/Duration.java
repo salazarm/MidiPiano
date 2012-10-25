@@ -130,7 +130,12 @@ public class Duration implements Visitor<Integer> {
             if(duration == checkPoint) checkPoint += oneSection;
             else if(duration > checkPoint) throw new RuntimeException("not fulfilled section");
         }
-        if(duration%oneSection != 0) throw new RuntimeException("not fulfilled section");
+        
+        if(duration%oneSection != 0)
+        {
+            throw new RuntimeException("not fulfilled section");
+            
+        }
         return duration;
     }
 

@@ -80,7 +80,7 @@ public class Token{
 		else if(Pattern.matches("\\A\\[[12]\\z",type)){
 			return Type.REPEATSECTION;
 		}
-		else if(Pattern.matches("\\AV1V:.*",type) ){
+		else if(Pattern.matches("\\A1V:[\\s\\S]*",type) ){
 			this.value = type.substring(4,type.length());
 			return Type.VOICE;
 		}

@@ -25,7 +25,6 @@ public class LexerTest extends Lexer
     
 	@Test
 	public void testString(){
-		System.out.println(Pattern.matches("\\A[0-9]+([\\s\\S]*)+","2\nz \n\n\n fuck you"));
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		DataInputStream dis = null;
@@ -175,6 +174,9 @@ public class LexerTest extends Lexer
         // Rest / Multiplier / newline test
         //                        4            + 5        + 7                           + 17 = 33
         list = processBody(" \n z A3| B/1 \n g3 |C1/ a3 C1/ |\nD/ z1/2 z/ z/4 z/ \n z1/ z/4 z16/16|] ");
+        for (int i=0; i<list.size(); i++){
+        	System.out.println(i+": "+list.get(i).getValue());
+        }
         assertEquals("body test2: 0",Token.Type.REST,list.get(0).getType());
         assertEquals("body test2: 0","z",list.get(0).getValue());
         assertEquals("body test2: 1",Token.Type.BASENOTE,list.get(1).getType());
@@ -200,9 +202,9 @@ public class LexerTest extends Lexer
         
         // Accidental / Octave / Chords / Tuplets
         list = processBody(" [^c'__a'EG]5/ | [_e'__a'EG,]/ | (4^g''__A,,^B'' | (2G,/16A1/16 (3a4a4a4 ||");
-        for (int i=0; i<list.size(); i++){
-        	System.out.println(i+": "+list.get(i).getValue());
-        }
+//        for (int i=0; i<list.size(); i++){
+//        	System.out.println(i+": "+list.get(i).getValue());
+//        }
         assertEquals("body test3: 0",Token.Type.CHORDSTART,list.get(0).getType());
         assertEquals("body test3: 1",Token.Type.ACCIDENTAL,list.get(1).getType());
         assertEquals("body test3: 2",Token.Type.BASENOTE,list.get(2).getType());
@@ -232,6 +234,9 @@ public class LexerTest extends Lexer
         // Multiple voices / Repeats 
         list = processBody(" A B C |: C D E | a b c | c d e :| e e e |]\nV: new voice\n"
                 + "C B A |: E D C |[1 E E E :|[2 F F F ||");
+      for (int i=0; i<list.size(); i++){
+    	System.out.println(i+": "+list.get(i).getValue());
+    }
         assertEquals("body test4: 3",Token.Type.REPEATSTART,list.get(3).getType());
         assertEquals("body test4: 3","|:",list.get(3).getValue());
         assertEquals("body test4: 15",Token.Type.REPEATEND,list.get(15).getType());

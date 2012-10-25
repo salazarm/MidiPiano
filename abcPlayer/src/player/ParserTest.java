@@ -88,13 +88,13 @@ public class ParserTest
         header.add(new Token("V","drum"));
         header.add(new Token("K","C"));
         body = new ArrayList<Token>();
-        body.add(new Token("V:piano","V:piano"));
+        body.add(new Token("1V:piano","V:piano"));
         body.add(new Token("A","A"));
         body.add(new Token("B","B"));
         body.add(new Token("C","C"));
-        body.add(new Token("a","a"));
+        body.add(new Token("A","A"));
         body.add(new Token("||","||"));
-        body.add(new Token("V:drum","V:drum"));
+        body.add(new Token("1V:drum","V:drum"));
         body.add(new Token("B","B"));
         body.add(new Token("A","A"));
         body.add(new Token("B","B"));
