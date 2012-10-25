@@ -80,6 +80,16 @@ public class Lexer {
 					tokens.add(new Token(matcher.group(),matcher.group()));
 					k += matcher.end()-1;
 					}
+					else if(Pattern.matches("\\A\\d+/\\d+[\\s\\S]*",input.substring(i+k,input.length()-1))){
+                        Pattern pattern = Pattern.compile("\\A\\d+/\\d+");
+                        Matcher matcher = pattern.matcher(input.substring(i+k,input.length()-1));
+                        matcher.find();
+                        tokens.add(new Token(matcher.group(),matcher.group()));
+                        k+=matcher.end();
+					}
+					else if(("|]").equals(input.charAt(i+k-1)+""+input.charAt(i+k))){
+						tokens.add(new Token("|]","|]"));
+					}
 					else if(Pattern.matches("\\A[/\\d]+[\\s\\S]*",input.substring(i+k,input.length()-1))){
 		                    Pattern pattern;
 		                    if(Pattern.matches("\\A/\\d+[\\s\\S]*]",input.substring(i+k,input.length()-1))){
@@ -90,9 +100,6 @@ public class Lexer {
 		                    }
 		                    else if(Pattern.matches("\\A/[^//d][\\s\\S]*", input.substring(i+k,input.length()-1))){
 		                    	pattern = Pattern.compile("\\A/");
-		                    }
-		                    else if(Pattern.matches("\\A\\d+/\\d+[\\s\\S]*",input.substring(i+k,input.length()-1))){
-		                        pattern = Pattern.compile("\\A\\d+/\\d+");
 		                    }
 		                    else if(Pattern.matches("\\A\\d+[\\s\\S]*",input.substring(i+k,input.length()-1))){
 		                        pattern = Pattern.compile("\\A\\d+");
