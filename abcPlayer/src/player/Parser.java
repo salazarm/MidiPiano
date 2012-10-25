@@ -158,19 +158,30 @@ public class Parser {
             token = lexer.nextBody();
             String str = token.getValue();
             
-            if(str.charAt(0)==',')
+            if(str.equals(","))
             {
-                // validate!
-                for(char chr : str.toCharArray()) if(chr!=',')
-                    throw new RuntimeException("bad char in octave modifier");
-                octave -= str.length();
+                --octave;
+                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                {
+                    if(lexer.nextBody().getValue().equals(","))
+                        --octave;
+                    else
+                        throw new RuntimeException("mixed octave");
+                    
+                }
             }
-            else
+            else if(str.equals("'"))
             {
-                // validate!
-                for(char chr : str.toCharArray()) if(chr!='\'')
-                    throw new RuntimeException("bad char in octave modifier");
-                octave += str.length();
+                ++octave;
+                if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
+                {
+                    if(lexer.nextBody().getValue().equals("'"))
+                        ++octave;
+                    else
+                        throw new RuntimeException("mixed octave");
+                    
+                }
+                ++octave;
             }
         }
         
@@ -342,8 +353,9 @@ public class Parser {
         
         currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
         
-        while( (token=lexer.nextBody()) != null)
-            System.out.println(token.getValue() + " " + token.getType().toString());
+
+//        while( (token=lexer.nextBody()) != null)
+//            System.out.println(token.getValue() + " " + token.getType().toString());
 
         while( (token=lexer.peekBody()) != null)
         {            
@@ -389,12 +401,10 @@ public class Parser {
             }
             else
             {
-                //System.err.println("---: "+token.getValue());
-                //System.err.println("---: "+token.getType().toString());
                 //if(token==null)
                 //    System.out.println("null in exception");
                     //System.out.println("---: "+token.getValue() + " " + type.toString());
-                throw new RuntimeException("What's this token?");
+                throw new RuntimeException("What's this token?" + " " + token.getValue() + " " + token.getType().toString());
             }
         }
 
