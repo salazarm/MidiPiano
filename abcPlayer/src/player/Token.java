@@ -8,8 +8,13 @@ public class Token{
 	private String value;
 	
 	Token(String inp, String string) {
-		this.value = string;
-		this.type = getType(inp);	
+	    this.type = getType(inp);
+	    
+	    if(type!=Type.TITLE && type!=Type.COMPOSER && type!=Type.VOICE)
+	        this.value = string.trim();
+	    else
+	        this.value = string;
+			
 	}
 
 	private Type getType(String type) {
