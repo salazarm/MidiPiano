@@ -20,9 +20,7 @@ public class MusicSequenceScheduler implements Visitor<Void> {
 	private final Duration duration;
 	private final SequencePlayer seqPlayer;
 	
-	public MusicSequenceScheduler(Player player) {
-	    //if(player.getSeqPlayer() == null) System.out.println("wrong init");
-	    
+	public MusicSequenceScheduler(Player player) {	    
 		this.player = player;
 		this.seqPlayer = player.getSeqPlayer();
 		duration = new Duration(this.player);

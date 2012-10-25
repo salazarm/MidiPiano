@@ -9,17 +9,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import org.junit.Test;
-
 
 /***
  * Testing Strategy:
- * We made 2 string buffers. One with whitespace and one without whitespace. We iterated over the output Tokens
+ * 
+ * For testing files: We made 2 string buffers. One with whitespace and one without whitespace. We iterated over the output Tokens
  * and used our Token's getValue() method (equivalent to a toString() method) to build a string representing all
  * of the tokens. Essentially this should be equivalent to filtering out whitespace from the original string representation.
  * This makes the test accurate and reliable.
  * 
+ * Other testing: We added tests to ensure correct lexing of the different abc token types, as well as the token types
+ * in interaction with each other. Some regression tests were added (voices with repeats, newlines). In addition, tests
+ * were added to ensure that the Lexer throws an exception upon encountering invalid tokens. 
  */
 public class LexerTest extends Lexer
 { 
@@ -29,19 +31,17 @@ public class LexerTest extends Lexer
     }
     
     @Test
-    public void emptyTest(){
-    }
-    @Test
     public void testFiles(){
+        // Tests the files in the array, comparing as stated above
     	String[] testFiles = {
-//    			"sample_abc/fur_elise.abc", 
-//    			"sample_abc/invention.abc", 
-//    			"sample_abc/little_night_music.abc", 
-//    			"sample_abc/paddy.abc", 
-//    			"sample_abc/piece1.abc", 
-//    			"sample_abc/piece2.abc", 
-//    			"sample_abc/prelude.abc", 
-//    			"sample_abc/scale.abc",
+    			"sample_abc/fur_elise.abc", 
+    			"sample_abc/invention.abc", 
+    			"sample_abc/little_night_music.abc", 
+    			"sample_abc/paddy.abc", 
+    			"sample_abc/piece1.abc", 
+    			"sample_abc/piece2.abc", 
+    			"sample_abc/prelude.abc", 
+    			"sample_abc/scale.abc",
     			"sample_abc/ExtraTestFiles/tuples.abc",
     			"sample_abc/ExtraTestFiles/sample88.abc"};
     	for (String c: testFiles){
@@ -90,6 +90,8 @@ public class LexerTest extends Lexer
         assertEquals(lexToString,result);
 	}
     
+	// The next few methods test illegal headers, whether due to invalid tokens, invalid start 
+	// or invalid end.
     @Test(expected = RuntimeException.class)
     public void testProcessHeader_wrongHeader1()
     {
@@ -138,6 +140,7 @@ public class LexerTest extends Lexer
         processHeader("X:9\nT:title\nM:5/\nK:C");
     }
     
+    // This test ensures that a correct header is lexed correctly.
     @Test
     public void testProcessHeader_correct()
     {
@@ -175,11 +178,14 @@ public class LexerTest extends Lexer
         assertEquals("test case4: X, T, V, V, L, M, K","v23 42v",list.get(3).getValue());
     }
     
+    // Test for invalid note
     @Test(expected = RuntimeException.class)
     public void testProcessBody_wrongNote1()
     {
         processBody("A|B|C|Z||");
     }
+    
+    // Basic test of body lexing
     @Test
     public void testProcessBodyBasic()
     {
@@ -202,6 +208,9 @@ public class LexerTest extends Lexer
         assertEquals("body test1: 7","||",list.get(7).getValue());
         assertEquals("body test1: # token",8,list.size());
     }
+    
+    // Test to ensure rest multiplers and newlines are handled correctly
+    @Test
     public void testRestMultiplierNewline(){
     	List<Token> list;
         list = processBody(" \n z A3| B/1 \n g3 |C1/ a3 C1/ |\nD/ z1/2 z/ z/4 z/ \n z1/ z/4 z16/16|] ");
@@ -228,6 +237,7 @@ public class LexerTest extends Lexer
         assertEquals("body test2: # token",33,list.size());
     }
     
+    // Test to ensure chords, tuplets and note modifiers (accidentals, octaves) are lexed correctly
     public void testAccidentalOctaveChordsTuplets(){    
     	List<Token> list;
         list = processBody(" [^c'__a'EG]5/ | [_e'__a'EG,]/ | (4^g''__A,,^B'' | (2G,/16A1/16 (3a4a4a4 ||");
@@ -257,6 +267,8 @@ public class LexerTest extends Lexer
         assertEquals("body test3: 49","a",list.get(49).getValue());
         assertEquals("body test3: # token",56,list.size());
     }
+    
+    // Tests to ensure voices are lexed correctly
     public void testMultipleVoicesRepeats(){
     	List<Token> list;
         list = processBody(" A B C |: C D E | a b c | c d e :| e e e |]\nV: new voice\n"

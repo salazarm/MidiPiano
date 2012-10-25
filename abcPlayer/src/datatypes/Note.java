@@ -31,7 +31,6 @@ public class Note extends MusicSequence {
 		this.noteMultiplier = noteMultiplier;
 		this.notePitch = makePitch();
 		
-//		if(noteMultiplier < 0.001) System.out.println(baseNote + " ocatve: "+octaveModifier);
 	}
 	
 	private Accidental setAccidentalModifier(Accidental accidentalModifier) {		
