@@ -104,7 +104,7 @@ public enum KeySignature {
     public String getStringRep() {
         return this.stringRep;
     }
-    
+
     public static KeySignature getType(String keySignature) {
         return KeySignature.keySignatureMap.get(keySignature);
     }

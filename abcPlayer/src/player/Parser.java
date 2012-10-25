@@ -27,7 +27,7 @@ public class Parser {
     private Body body;
     private Voice[] voices;
     
-    private KeySignature currentKey; // used when parsing 
+    private int currentKey[]; // used when parsing 
 
     /**
      * Creates Parser over passed Lexer.
@@ -97,7 +97,7 @@ public class Parser {
         lexer.consumeBody(Type.REST);
         
        // Read 1/4, /3, 5/, ..
-       if(lexer.peekBody().getType()==Type.NOTEMULTIPLIER)
+       if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.NOTEMULTIPLIER)
            multiplier = readMultiplier();
        else
            multiplier = 1;
@@ -143,17 +143,17 @@ public class Parser {
         note = token.getValue().charAt(0);
         if(note>='a' && note<='z') {octave++; note=(char)(note-'a'+'A');}
         
-//        if(accidental != null)
-//        {
-//            currentKey.setKeyAccidental(note-'A', accidental.getIntRep());
-//        }
-//        else
-//        {
-//            accidental = new Accidental(currentKey.getKeyAccidentals()[note-'A']);
-//        }
+        if(accidental != null)
+        {
+            currentKey[note-'A'] = accidental.getIntRep();
+        }
+        else
+        {
+            accidental = new Accidental(currentKey[note-'A']);
+        }
         
         // Read octave modifiers
-        if(lexer.peekBody().getType()==Type.OCTAVE)
+        if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.OCTAVE)
         {
             token = lexer.nextBody();
             String str = token.getValue();
@@ -176,7 +176,7 @@ public class Parser {
         
         
        // Read 1/4, /3, 5/, ..
-       if(lexer.peekBody().getType()==Type.NOTEMULTIPLIER)
+       if(lexer.peekBody()!=null && lexer.peekBody().getType()==Type.NOTEMULTIPLIER)
            multiplier = readMultiplier();
        else
            multiplier = 1;
@@ -276,7 +276,14 @@ public class Parser {
             else if(type == Type.METER)
             {
                 if(meter != null) throw new RuntimeException("Duplicated Meter");
-                meter = parseFraction(token.getValue());
+                String str = token.getValue();
+                if(str.charAt(0)=='C')
+                    if(str.equals("C|"))
+                        meter = new Fraction(2,2);
+                    else if(str.equals("C")) meter = new Fraction(4,4);
+                    else  throw new RuntimeException("Can't understand meter");
+                else
+                    meter = parseFraction(token.getValue());
             }
             else if(type == Type.TEMPO)
             {
@@ -333,7 +340,7 @@ public class Parser {
             voices = new Voice[] {currentVoice};
         }
         
-        currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
+        currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
         
         //while( (token=lexer.nextBody()) != null)
         //    System.out.println(token.getValue() + " " + token.getType().toString());
@@ -371,14 +378,14 @@ public class Parser {
             {
                 lexer.nextBody();
                 // return to default keySignature
-                currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
+                currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else if(type == Type.ENDMAJORSECTION)
             {
                 lexer.nextBody();
                 // over! but there can be still other voices
                 currentVoice.setClosed();
-                currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
+                currentKey = KeySignature.getType(header.getKeySignature().getStringRep()).getKeyAccidentals().clone();
             }
             else
             {

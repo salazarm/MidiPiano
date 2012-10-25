@@ -46,8 +46,6 @@ public class Player {
 
 		this.seqPlayer = new SequencePlayer(beatsPerMinute, ticksPerQuarterNote);
 		this.scheduler = new MusicSequenceScheduler(this);
-		
-		System.out.println(body.getVoiceList().get(0).getMusicSequences().size());
 	}
 		
 	public Header getHeader() {
