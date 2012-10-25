@@ -1,14 +1,12 @@
 package player;
 
-// TODO: Octave token ' and , are not accidentals.
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
-	protected ArrayList<Token> headerTokens;
-	protected ArrayList<Token> bodyTokens;
+	private ArrayList<Token> headerTokens;
+	private ArrayList<Token> bodyTokens;
 	public int bodyStartIndex = 1;
 	private int headerIterator, bodyIterator;
 	
@@ -56,7 +54,7 @@ public class Lexer {
 
 	protected ArrayList<Token> processBody(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
-		input.concat(" ");
+		input = input + " ";
 		for (int i=bodyStartIndex; i <input.length(); i++){
 			if (Pattern.matches("\\A[za-gA-G\\^,_\\='][\\s\\S]*", input.substring(i,input.length()-1))){ // Note, Accidentals, Octaves
 				tokens.add(new Token(input.charAt(i)+"",input.charAt(i)+""));
@@ -136,7 +134,7 @@ public class Lexer {
 				}
 			}
 			else{
-				throw new RuntimeException("Unexpected character sequence"+ input.substring(i-5,i+3));
+				throw new RuntimeException("Unexpected character sequence"+ input.substring(i-5,i+2));
 			}
 		}
 		
