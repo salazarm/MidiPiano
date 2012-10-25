@@ -189,17 +189,20 @@ public class LexerTest extends Lexer
         assertEquals("body test2: 7","3",list.get(7).getValue());
         assertEquals("body test2: 10",Token.Type.NOTEMULTIPLIER,list.get(10).getType());
         assertEquals("body test2: 10","1/",list.get(10).getValue());
-        assertEquals("body test2: 30",Token.Type.NOTEMULTIPLIER,list.get(30).getType());
-        assertEquals("body test2: 30","z",list.get(31).getValue());
-        assertEquals("body test2: 31",Token.Type.REST,list.get(31).getType());
-        assertEquals("body test2: 32","16/16",list.get(32).getValue());
-        assertEquals("body test2: 33",Token.Type.ENDMAJORSECTION,list.get(33).getType());
-        assertEquals("body test2: 33","|]",list.get(33).getValue());
-        assertEquals("body test2: # token",34,list.size());
+        assertEquals("body test2: 30",Token.Type.REST,list.get(30).getType());
+        assertEquals("body test2: 30","z",list.get(30).getValue());
+        assertEquals("body test2: 31",Token.Type.NOTEMULTIPLIER,list.get(31).getType());
+        assertEquals("body test2: 31","16/16",list.get(31).getValue());
+        assertEquals("body test2: 32",Token.Type.ENDMAJORSECTION,list.get(32).getType());
+        assertEquals("body test2: 32","|]",list.get(32).getValue());
+        assertEquals("body test2: # token",33,list.size());
         
         
         // Accidental / Octave / Chords / Tuplets
         list = processBody(" [^c'__a'EG]5/ | [_e'__a'EG,]/ | (4^g''__A,,^B'' | (2G,/16A1/16 (3a4a4a4 ||");
+        for (int i=0; i<list.size(); i++){
+        	System.out.println(i+": "+list.get(i).getValue());
+        }
         assertEquals("body test3: 0",Token.Type.CHORDSTART,list.get(0).getType());
         assertEquals("body test3: 1",Token.Type.ACCIDENTAL,list.get(1).getType());
         assertEquals("body test3: 2",Token.Type.BASENOTE,list.get(2).getType());
@@ -222,9 +225,9 @@ public class LexerTest extends Lexer
         assertEquals("body test3: 30","'",list.get(30).getValue());
         assertEquals("body test3: 42",Token.Type.TUPLET,list.get(42).getType());
         assertEquals("body test3: 42","(2",list.get(42).getValue());
-        assertEquals("body test3: 49",Token.Type.TUPLET,list.get(49).getType());
-        assertEquals("body test3: 49","(3",list.get(49).getValue());
-        assertEquals("body test3: # token",57,list.size());
+        assertEquals("body test3: 49",Token.Type.BASENOTE,list.get(49).getType());
+        assertEquals("body test3: 49","a",list.get(49).getValue());
+        assertEquals("body test3: # token",56,list.size());
         
         // Multiple voices / Repeats 
         list = processBody(" A B C |: C D E | a b c | c d e :| e e e |]\nV: new voice\n"
