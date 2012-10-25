@@ -249,7 +249,7 @@ public class Parser {
         if(token.getType() != Type.TITLE) throw new RuntimeException("title expected");
         title = token.getValue();
         
-        while( (token=lexer.nextBody()).getType() != Type.KEY)
+        while( (token=lexer.nextHeader()).getType() != Type.KEY)
         {
             if(token == null) throw new RuntimeException("Header ended before keySignature found");
             
@@ -288,7 +288,7 @@ public class Parser {
         if(composer != null) header.setComposer(composer);
         if(meter != null) header.setMeter(meter);
         header.setTempo(tempo);
-        header.setVoiceNames((String[]) voiceNames.toArray());
+        header.setVoiceNames(voiceNames.toArray(new String[]{}));
         header.setDefaultNoteLengthFraction(length);
     }
     
@@ -314,10 +314,10 @@ public class Parser {
         
         if(voiceNames.length > 0)
         {
-            voices = new Voice[voiceNames.length];
-            for(Voice voice : voices) body.addVoice(voice);
-            
             currentVoice = readVoice();
+            voices = new Voice[voiceNames.length];
+            for(i=0;i<voices.length;++i)
+                body.addVoice( voices[i] = new Voice(voiceNames[i]) );
         }
         else
         {
@@ -325,10 +325,12 @@ public class Parser {
             body.addVoice( currentVoice = new Voice("Default voice") );
         }
         
-        for(i=0;i<voices.length;++i)
-            body.addVoice( voices[i] = new Voice(voiceNames[i]) );
+        currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
         
-        
+        System.out.println(lexer.getBody().get(2).getValue() + " " + lexer.getBody().get(2).toString());
+        while( (token=lexer.nextBody()) != null)
+            System.out.println(token.getValue() + " " + token.getType().toString());
+
         while( (token=lexer.peekBody()) != null)
         {
             Type type = token.getType();
@@ -345,12 +347,15 @@ public class Parser {
                 currentVoice.add(readTuplet());
             else if(type == Type.REPEATSTART)
             {
+                ;
             }
             else if(type == Type.REPEATSECTION) // [1 or [2
             {
+                ;
             }
             else if(type == Type.REPEATEND)
             {
+                ;
             }
             else if(type == Type.BARLINE)
             {
@@ -364,10 +369,12 @@ public class Parser {
                 currentKey = KeySignature.getType(header.getKeySignature().getStringRep());
             }
             else
+            {
+                System.err.println(token.getValue() + " " + type.toString());
                 throw new RuntimeException("What's this token?");
+            }
         }
 
         // TODO: Validate: all voices have same length?
-        
     }
 }
