@@ -46,6 +46,7 @@ public class Parser {
             if(body == null) System.out.println("body is null in parse()");
             Player player = new Player(header, body);
             player.getBody().accept( new Duration(player) );
+            //System.out.println(player.getHeader().getMeter().toString());
             return player;
         }
         catch(InvalidMidiDataException e)
@@ -192,6 +193,7 @@ public class Parser {
         
         while((token = lexer.peekBody()).getType() != Type.CHORDEND) 
             list.add(readNote());
+        lexer.consumeBody(Type.CHORDEND);
 
         double len = list.get(0).getNoteMultiplier();
         for(Note note : list)
@@ -380,7 +382,8 @@ public class Parser {
             }
             else
             {
-                System.err.println("---: "+token.getValue());
+                //System.err.println("---: "+token.getValue());
+                //System.err.println("---: "+token.getType().toString());
                 //if(token==null)
                 //    System.out.println("null in exception");
                     //System.out.println("---: "+token.getValue() + " " + type.toString());
@@ -388,8 +391,11 @@ public class Parser {
             }
         }
 
-        for(Voice voice : voices) if(!voice.getClosed())
+        /*
+         * Checking double bars -> but can't pass examples
+         * for(Voice voice : voices) if(!voice.getClosed())
             throw new RuntimeException("There is a voice not closed with || or |]");
+         */
         // TODO: Validate: all voices have same length?
     }
 }

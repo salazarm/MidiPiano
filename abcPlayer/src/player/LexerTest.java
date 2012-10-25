@@ -269,6 +269,5 @@ public class LexerTest extends Lexer
         assertEquals("body test4: 33",":|",list.get(33).getValue());
         assertEquals("body test4: 34",Token.Type.REPEATSECTION,list.get(34).getType());
         assertEquals("body test4: 34","[2",list.get(34).getValue());
-        
     }
 }

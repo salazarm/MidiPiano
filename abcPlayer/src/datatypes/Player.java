@@ -46,6 +46,8 @@ public class Player {
 
 		this.seqPlayer = new SequencePlayer(beatsPerMinute, ticksPerQuarterNote);
 		this.scheduler = new MusicSequenceScheduler(this);
+		
+		System.out.println(body.getVoiceList().get(0).getMusicSequences().size());
 	}
 		
 	public Header getHeader() {
@@ -67,6 +69,13 @@ public class Player {
 
 	public int getBeatsPerMinute() {
 		return this.beatsPerMinute;
+	}
+	
+	public int getTicksPerSection()
+	{
+        // One default note = [(3)*(4)/tempo] ticks = (4) * defaultNoteLength * 4
+        // One section = (Meter / defaultNoteLength) default notes
+        return (int)(header.getMeter().getValue() * 4 * ticksPerQuarterNote);
 	}
 	
 	/**

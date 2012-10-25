@@ -121,13 +121,23 @@ public class Duration implements Visitor<Integer> {
 	 * @return duration int value of duration as defined above in ticks
 	 */
 	@Override
-	public Integer onVoice(Voice voice) {
-		int duration = 0;
-		for (MusicSequence musicSequence : voice.getMusicSequences()) {
-			duration += musicSequence.accept(this);
-		}
-		return duration;
-	}
+    public Integer onVoice(Voice voice) {
+        int duration = 0, oneSection = player.getTicksPerSection(), checkPoint;
+        
+        checkPoint = oneSection;
+        for (MusicSequence musicSequence : voice.getMusicSequences()) {
+            duration += musicSequence.accept(this);
+            if(duration == checkPoint) checkPoint += oneSection;
+            else if(duration > checkPoint) throw new RuntimeException("not fulfilled section");
+        }
+        
+        if(duration%oneSection != 0)
+        {
+            throw new RuntimeException("not fulfilled section");
+            
+        }
+        return duration;
+    }
 
 	/**
 	 * Returns duration of this Body, defined as the duration of the Voice with the longest
