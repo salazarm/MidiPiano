@@ -13,10 +13,12 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 
-// Marco was here
 /***
- * LexerTest
- * To test private methods, it extends Lexer
+ * Testing Strategy:
+ * We made 2 string buffers. One with whitespace and one without whitespace. We iterated over the output Tokens
+ * and used our Token's getValue() method (equivalent to a toString() method) to build a string representing all
+ * of the tokens. Essentially this should be equivalent to filtering out whitespace from the original string representation.
+ * This makes the test accurate and reliable.
  * 
  */
 public class LexerTest extends Lexer

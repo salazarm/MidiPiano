@@ -38,7 +38,8 @@ public class Lexer {
 	 * Use peek() to not advance the iterator.
 	 * @return The next token if exist, or null.
 	 */
-	public Token nextHeader() { return (headerIterator < headerTokens.size())? headerTokens.get(headerIterator++) : null;}
+	public Token nextHeader() { return 
+			(headerIterator < headerTokens.size())? headerTokens.get(headerIterator++) : null;}
 	public Token peekHeader() { return (headerIterator < headerTokens.size())? headerTokens.get(headerIterator  ) : null;}
 	public Token nextBody() { return (bodyIterator < bodyTokens.size())? bodyTokens.get(bodyIterator++) : null;}
 	public Token peekBody() { return (bodyIterator < bodyTokens.size())? bodyTokens.get(bodyIterator  ) : null;}
