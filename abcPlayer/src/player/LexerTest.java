@@ -116,7 +116,7 @@ public class LexerTest extends Lexer
     public void testProcessHeader_wrongHeader_NotEndedWithKey()
     {
     	String inp = "X:9\nT:title\nK:D\nM:2/4";
-        Lexer l = new Lexer(inp);
+        new Lexer(inp);
     }
     @Test(expected = RuntimeException.class)
     public void testProcessHeader_wrongHeader_NotCapital()

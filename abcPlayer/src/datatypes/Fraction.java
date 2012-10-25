@@ -6,6 +6,11 @@ public class Fraction {
 	
 	private final int numerator, denominator;
 	
+	/**
+	 * 
+	 * @param numerator
+	 * @param denominator
+	 */
 	public Fraction(int numerator, int denominator) {
 		if(denominator<=0) {
 			throw new InvalidInputException(
