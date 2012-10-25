@@ -24,7 +24,7 @@ public class Fraction {
 	}
 	
 	public double getValue() {
-		return numerator/denominator;
+		return ((double)numerator)/denominator;
 	}
 	
 	@Override

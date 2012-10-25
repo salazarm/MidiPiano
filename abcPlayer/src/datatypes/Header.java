@@ -9,7 +9,7 @@ public class Header {
 	private Fraction defaultNoteLengthFraction = new Fraction(1, 8);
 	private double defaultNoteLength = defaultNoteLengthFraction.getValue();
 	private final KeySignature keySignature;
-	private Meter meter = new Meter(4,4);
+	private Fraction meter = new Fraction(4,4);
 	private String[] voiceNames;
 	
 	public Header(int indexNumber, String title, KeySignature keySignature) {
@@ -47,11 +47,11 @@ public class Header {
 		return this.defaultNoteLengthFraction;
 	}
 
-	public Meter getMeter() {
+	public Fraction getMeter() {
 		return this.meter;
 	}
 
-	public void setMeter(Meter meter) {
+	public void setMeter(Fraction meter) {
 		this.meter = meter;
 	}
 
@@ -75,6 +75,7 @@ public class Header {
 		return this.keySignature;
 	}
 	
+	// TODO: print Voices
 	@Override
 	public String toString() {
 		return String.format("X: %s\n" +

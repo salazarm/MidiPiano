@@ -99,7 +99,7 @@ public enum KeySignature {
 		return this.stringRep;
 	}
 	
-	public KeySignature getType(String keySignature) {
+	public static KeySignature getType(String keySignature) {
 		return KeySignature.keySignatureMap.get(keySignature);
 	}
 }

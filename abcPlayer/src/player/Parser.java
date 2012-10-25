@@ -11,13 +11,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import datatypes.Accidental;
 import datatypes.Body;
 import datatypes.Chord;
+import datatypes.Fraction;
 import datatypes.Header;
+import datatypes.KeySignature;
 import datatypes.Note;
 import datatypes.Player;
 import datatypes.Rest;
 import datatypes.Tuplet;
 import datatypes.Voice;
-import exception.ParseException;
 
 public class Parser {
 	
@@ -56,18 +57,18 @@ public class Parser {
 	        
 	}
 	
-	// Read [ (^, b) (Basenote) (Octave up/down) multiplier ]
-	/**
-	 * 
-	 * @param lastAccidental 
-	 * @return
-	 */
-	
-	private double readMultiplier()
+	private Fraction parseFraction(String str)
 	{
-	    Token token = lexer.nextBody();
-        String str = token.getValue();
-	    int split = str.indexOf('/');
+        int split = str.indexOf("/");
+        if(split<=0 || split==str.length()-1)
+            throw new RuntimeException("Not a complete fraction");
+        
+        return new Fraction(Integer.parseInt(str.substring(0, split)),
+                            Integer.parseInt(str.substring(split+1, str.length())));
+	}
+	private double parseMultiplier(String str)
+	{
+        int split = str.indexOf('/');
         
         if(split == -1) // not fraction
             return Integer.parseInt(str);
@@ -79,6 +80,12 @@ public class Parser {
             if(split<str.length()-1) denominator = Integer.parseInt(str.substring(split+1, str.length())); else denominator=2;
             return ((double) numerator) / denominator;
         }
+	}
+	private double readMultiplier()
+	{
+	    Token token = lexer.nextBody();
+	    if(token.getType() != Type.NOTEMULTIPLIER) throw new RuntimeException("multiplier expected");
+	    return parseMultiplier(token.getValue());
 	}
 	private Rest readRest()
     {
@@ -94,6 +101,12 @@ public class Parser {
         
         return new Rest(multiplier);
     }
+
+    /**
+     * Read [ (^, b) (Basenote) (Octave up/down) multiplier ] 
+     * @param lastAccidental 
+     * @return
+     */
 
 	private Note readNote()
 	{
@@ -201,15 +214,65 @@ public class Parser {
 	}
 	private void parseHeader()
 	{
-//	    Header header = new Header();
-		List<Token> headerTokens = this.lexer.getHeader();
-		if(headerTokens.get(0).getType()!=Token.Type.INDEX) {
-			throw new ParseException("Header must start with index number");
-		}
-		String index = headerTokens.get(0).getValue();
-	    
-	    //return header();
-		throw new NotImplementedException();
+	    //*****
+        int index, tempo = 0;
+        String title, composer = null;
+        Fraction length = null,meter = null;
+        KeySignature keySignature = null;
+        List<String> voiceNames = new ArrayList<String>();
+        //*****
+        
+        Token token;
+        
+        token=lexer.nextHeader();
+        if(token.getType() != Type.INDEX) throw new RuntimeException("index expected");
+        index = Integer.parseInt(token.getValue());
+        
+        token=lexer.nextHeader();
+        if(token.getType() != Type.TITLE) throw new RuntimeException("title expected");
+        title = token.getValue();
+        
+        while( (token=lexer.nextBody()).getType() != Type.KEY)
+        {
+            if(token == null) throw new RuntimeException("Header ended before keySignature found");
+            
+            Type type = token.getType();
+            
+            if(type == Type.VOICE)
+                voiceNames.add(token.getValue());
+            else if(type == Type.COMPOSER)
+            {
+                if(composer != null) throw new RuntimeException("Duplicated composer");
+                composer = token.getValue();
+            }
+            else if(type == Type.NOTELENGTH)
+            {
+                if(length != null) throw new RuntimeException("Duplicated Note length");
+                length = parseFraction(token.getValue());
+            }
+            else if(type == Type.METER)
+            {
+                if(meter != null) throw new RuntimeException("Duplicated Meter");
+                meter = parseFraction(token.getValue());
+            }
+            else if(type == Type.TEMPO)
+            {
+                if(tempo != 0) throw new RuntimeException("Duplicated tempo");
+                tempo = Integer.parseInt(token.getValue());
+            }
+            else
+                throw new RuntimeException("I don't know this header token");
+        }
+        // last is Key
+        if(token.getType() != Type.KEY) throw new RuntimeException("Last should be key");
+        keySignature = KeySignature.getType(token.getValue());
+        
+        header = new Header(index, title, keySignature);
+        if(composer != null) header.setComposer(composer);
+        if(meter != null) header.setMeter(meter);
+        header.setTempo(tempo);
+        header.setVoiceNames((String[]) voiceNames.toArray());
+        header.setDefaultNoteLengthFraction(length);
 	}
 	
 	/**
