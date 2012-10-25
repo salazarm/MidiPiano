@@ -4,8 +4,11 @@ import sound.Pitch;
 
 public class Note extends MusicSequence {
 	
+	private final char baseNote;
+	private final int octaveModifier;
+	private final Accidental accidentalModifier;
 	private final double noteMultiplier;
-	private final Pitch pitch;
+	private final Pitch notePitch;
 	
 	/**
 	 * Creates a Note object
@@ -20,21 +23,49 @@ public class Note extends MusicSequence {
 	 */
 	public Note(char baseNote, int octaveModifier, Accidental accidentalModifier, 
 			double noteMultiplier) {
-        if(accidentalModifier==null) accidentalModifier = new Accidental("=");
+		this.baseNote = baseNote;
+		this.octaveModifier = octaveModifier;
+		this.accidentalModifier = setAccidentalModifier(accidentalModifier);
 		this.noteMultiplier = noteMultiplier;
-		this.pitch = new Pitch(baseNote).accidentalTranspose(accidentalModifier.getIntRep()).octaveTranspose(octaveModifier);
+		this.notePitch = makePitch();
 	}
+	
+	private Accidental setAccidentalModifier(Accidental accidentalModifier) {		
+		if(accidentalModifier==null) {
+			return new Accidental("=");
+		}
+		else {
+			return accidentalModifier;
+		}
+	}
+	
+	private Pitch makePitch() {
+		return new Pitch(this.baseNote).accidentalTranspose(accidentalModifier.getIntRep()).octaveTranspose(octaveModifier); 
+	}
+
 	
 	public <R> R accept(Visitor<R> v)
 	{
 	    return v.onNote(this);
+	}
+	
+	public char getBaseNote() {
+		return this.baseNote;
+	}
+
+	public int getOctaveModifier() {
+		return this.octaveModifier;
+	}
+
+	public Accidental getAccidentalModifier() {
+		return this.accidentalModifier;
 	}
 
 	public double getNoteMultiplier() {
 		return this.noteMultiplier;
 	}
 
-	public Pitch getPitch() {
-		return this.pitch;
+	public Pitch getNotePitch() {
+		return this.notePitch;
 	}
 }

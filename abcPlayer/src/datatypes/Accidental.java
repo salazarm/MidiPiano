@@ -28,14 +28,6 @@ public class Accidental {
 	private final Type type;
 	private final String stringRep;
 	
-	public Accidental(int intRep) {
-	    if(intRep == 2) {this.type=Type.DOUBLE_SHARP; this.stringRep = "^^";}
-	    else if(intRep == 1) {this.type=Type.SHARP;stringRep = "^";}
-	    else if(intRep == 0) {this.type=Type.NEUTRAL; stringRep = "=";}
-	    else if(intRep == -1) {this.type=Type.FLAT; stringRep = "_";}
-	    else if(intRep == -2) {this.type=Type.DOUBLE_FLAT; stringRep = "__";}
-	    else throw new RuntimeException("wrong Accidental");
-	}
 	public Accidental(String stringRep) {
 		if(stringRep.equals("^^")) this.type = Type.DOUBLE_SHARP;
 		else if(stringRep.equals("^")) this.type = Type.SHARP;
