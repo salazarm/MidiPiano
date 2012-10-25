@@ -28,6 +28,10 @@ public class Accidental {
     private final Type type;
     private final String stringRep;
     
+    /**
+     * Initializes an Accidental with the given integer representation
+     * @param intRep int representation of desired Accidental
+     */
     public Accidental(int intRep) {
         if(intRep == 2) {this.type=Type.DOUBLE_SHARP; this.stringRep = "^^";}
         else if(intRep == 1) {this.type=Type.SHARP;stringRep = "^";}
@@ -36,6 +40,10 @@ public class Accidental {
         else if(intRep == -2) {this.type=Type.DOUBLE_FLAT; stringRep = "__";}
         else throw new RuntimeException("wrong Accidental");
     }
+    /**
+     * Initializes an Accidental with the given integer representation
+     * @param stringRep String representation of desired Accidental
+     */
     public Accidental(String stringRep) {
         if(stringRep.equals("^^")) this.type = Type.DOUBLE_SHARP;
         else if(stringRep.equals("^")) this.type = Type.SHARP;

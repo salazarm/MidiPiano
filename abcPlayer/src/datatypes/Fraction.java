@@ -6,9 +6,8 @@ public class Fraction {
 	private final int numerator, denominator;
 
 	/**
-	 *
-	 * @param numerator
-	 * @param denominator
+	 * @param numerator int numerator of this Fraction
+	 * @param denominator positive int denominator of this Fraction
 	 */
 	public Fraction(int numerator, int denominator) {
 		if(denominator<=0) {
