@@ -7,5 +7,6 @@ public interface Visitor<R> {
 	public R onRepeat(Repeat repeat);
 	public R onTuplet(Tuplet tuplet);
 	public R onVoice(Voice voice);
-	public R onBody(Body body);	
+	public R onBody(Body body);
+	public R onBar(Bar bar);
 }

@@ -19,12 +19,15 @@ public class Bar extends MusicSequence {
 			throw new InvalidInputException("Invalid operation: Bar must consist of Note," +
 					"Chord, Tuplet or Rest");
 		}
+		components.add(component);
 	}
 	
+	public List<MusicSequence> getSequences()
+	{
+	    return components;
+	}
 
 	public <R> R accept(Visitor<R> v) {
-		v.onBar(this);
+		return v.onBar(this);
 	}
-	
-
 }

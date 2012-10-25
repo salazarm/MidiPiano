@@ -344,11 +344,14 @@ public class Parser {
             else if(type == Type.TUPLET)
                 currentVoice.add(readTuplet());
             else if(type == Type.REPEATSTART)
-                currentVoice.repeatStart();
-            else if(type == Type.REPEATSECTION) // [1. ignore "[2".
-                if(token.getValue().charAt(1)=='1') currentVoice.repeatSection(); // [1
+            {
+            }
+            else if(type == Type.REPEATSECTION) // [1 or [2
+            {
+            }
             else if(type == Type.REPEATEND)
-                currentVoice.repeatEnd();
+            {
+            }
             else if(type == Type.BARLINE)
             {
                 // return to default keySignature
