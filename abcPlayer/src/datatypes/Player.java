@@ -18,8 +18,6 @@ public class Player {
 	 * the Voices List of the Body associated with the Player.
 	 * @param header Header object containing required header info for an abc file
 	 * @param body Body object containing a List of Voices that makes up the body of this abc file
-	 * @param beatsPerMinute int value for beats per minute
-	 * @param ticksPerQuarterNote int value for ticks per quarter note
 	 * @throws MidiUnavailableException
 	 * @throws InvalidMidiDataException
 	 */

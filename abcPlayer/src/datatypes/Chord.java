@@ -8,8 +8,7 @@ public class Chord extends MusicSequence {
 	
 	/**
 	 * Creates a Chord object
-	 * @param notes List of Notes in the chord, all Notes must be associated with the 
-	 * Player object passed to constructor
+	 * @param notes List of Notes in the chord, all Notes must be associated with the Player object passed to constructor
 	 * @param player Player object associated with all Notes in the chord, and hence 
 	 * the chord as well 
 	 */

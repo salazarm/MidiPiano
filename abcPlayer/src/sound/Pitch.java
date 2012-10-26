@@ -47,10 +47,10 @@ public class Pitch {
     }
 
     /**
-     * Make a Pitch.
-     * @requires c in {'A',...,'G'}
-     * @returns Pitch named c in the middle octave of the piano keyboard.
-     * For example, new Pitch('C') constructs middle C 
+     * Make a Pitch representing a pitch named c in the middle octave of the piano keyboard.
+     * For example, new Pitch('C') constructs middle C
+     * 
+     * @requires c in {'A',...,'G'
      */
     public Pitch(char c) {
     	int index = c - 'A';

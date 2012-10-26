@@ -12,7 +12,6 @@ public class Voice extends MusicSequence {
     /**
      * Creates a Voice object associated with the passed Player.
      * @param voiceName String name of Voice object to create.
-     * @param player Player that Voice is associated with.
      */
     public Voice(String voiceName) {
         this.voiceName = voiceName;

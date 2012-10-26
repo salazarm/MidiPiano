@@ -10,8 +10,7 @@ public class Tuplet extends MusicSequence {
 
 	/**
 	 * Creates a Tuplet object
-	 * @param tupletNumber Identifier of tuple type. Must be 2, 3 or 4.
-	 * @param notes List of Notes that compose this tuplet
+	 * @param notes List of Notes that compose this tuplet. It should be a list of 2, 3, or 4 notes.
 	 * @throws RuntimeException in case of invalid tuplet number
 	 */
 	public Tuplet(List<Note> notes) {
