@@ -1,0 +1,13 @@
+X: 1
+T:Octaves test
+C:Leon
+V:1
+V:2
+M:6/4
+L:1/4
+Q:200
+K:C
+V:1
+| C D E F G A | B c z4 |(4CDEF (4GABC | (2CD (2EF | (2GA (2Bc |]
+V:2
+| C D E F G A | B c z4 |(3CDE (3FGA (3BcC | (2CD (2EF | (2GA (2Bc |]
