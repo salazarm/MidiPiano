@@ -1,0 +1,21 @@
+note: this score is out of 95, your individual reflection grade will be added in your project score on stellar. 
+the grade distribution is
+
+25 for design document (15 original + 10 final)
+5 team contract
+5 warm up exercise 
+15 code readability and specifications (7 + 8)
+15 unit testing and system testing you performed 
+15 system testing for different musical constructs (tuple, chords, repeats, voices, key signature, accedentals and rhythms)
+15 how well it runs for given and new abc files
+
+
+your score:89
+comments:
+excellent presentation of code, very well written specs and testing strategy ! good job. 
+your project runs perfectly well and passes all the tests or fails with decent error message. 
+
+the only section you lost points in is your original design document. 
+it has both grammar and data type, but an overview of the system was missing. 
+final design is a lot better. design decisions are thoroughly documented. 
+but you can still do better. try to improve the opening section and how you start introducing your solution. 
